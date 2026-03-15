@@ -155,7 +155,7 @@ export const translations = {
         googleNote:
           "Du musst zuerst Google Photos API-Zugangsdaten einrichten.",
         synologyUrl: "Synology URL",
-        synologyUrlPlaceholder: "https://dein-nas.local:5000",
+        synologyUrlPlaceholder: "https://dein-nas.tld",
         username: "Benutzername",
         password: "Passwort",
         saveButton: "Konfiguration speichern",
@@ -370,7 +370,7 @@ export const translations = {
         googleNote:
           "You'll need to set up Google Photos API credentials first.",
         synologyUrl: "Synology URL",
-        synologyUrlPlaceholder: "https://your-nas.local:5000",
+        synologyUrlPlaceholder: "https://your-nas.tld",
         username: "Username",
         password: "Password",
         saveButton: "Save Configuration",
