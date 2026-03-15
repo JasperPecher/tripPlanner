@@ -135,8 +135,8 @@ export const translations = {
         "Lade Fotos von deiner Reise hoch, um sie mit allen zu teilen.",
       uploadFirst: "Erste Fotos hochladen",
       uploadedBy: "Hochgeladen von",
-      uploadToSynology: "Auf Synology hochladen",
-      viewOnSynology: "Auf Synology ansehen",
+      uploadToSynology: "Auf Synology NAS hochladen",
+      viewOnSynology: "Auf Synology NAS ansehen",
       synologyActions: "Synology NAS",
       synologyHint:
         "Fotos werden lokal in der App gespeichert. Nutze die Buttons oben, um sie auch auf deiner Synology NAS hochzuladen oder anzusehen.",
@@ -350,8 +350,8 @@ export const translations = {
       noPhotosDesc: "Upload photos from your trip to share with everyone.",
       uploadFirst: "Upload First Photos",
       uploadedBy: "Uploaded by",
-      uploadToSynology: "Upload to Synology",
-      viewOnSynology: "View on Synology",
+      uploadToSynology: "Upload to Synology NAS",
+      viewOnSynology: "View on Synology NAS",
       synologyActions: "Synology NAS",
       synologyHint:
         "Photos are stored locally in the app. Use the buttons above to also upload to or view photos on your Synology NAS.",
@@ -392,7 +392,8 @@ export const translations = {
       google: "Google Photos",
       synology: "Synology File Station",
       googlePhotosLink: "Google Photos Link",
-      googlePhotosLinkDesc: "Link to a shared Google Photos album. In Google Photos: open album -> Share -> Copy link.",
+      googlePhotosLinkDesc:
+        "Link to a shared Google Photos album. In Google Photos: open album -> Share -> Copy link.",
       synologyHowTo: "How to set up Synology:",
       synologyStep1: "Open File Station on your Synology NAS",
       synologyStep2: 'Right-click a folder -> "Create sharing link"',

@@ -9,8 +9,6 @@ import {
   AlertTriangle,
   Cloud,
   Server,
-  HardDrive,
-  ExternalLink,
   Info,
 } from "lucide-react";
 import { useLocale } from "@/lib/LocaleContext";
@@ -51,7 +49,6 @@ export function SettingsPage({
   });
 
   const [storage, setStorage] = useState({
-    type: trip.storageConfig?.type || "local",
     googlePhotosLink: "",
     synologyShareLink: "",
     synologyRequestLink: "",
@@ -64,7 +61,6 @@ export function SettingsPage({
       .then((data) => {
         if (data.configured && data.credentials) {
           setStorage({
-            type: data.type,
             googlePhotosLink: data.credentials.googlePhotosLink || "",
             synologyShareLink: data.credentials.synologyShareLink || "",
             synologyRequestLink: data.credentials.synologyRequestLink || "",
@@ -249,64 +245,49 @@ export function SettingsPage({
         <h2 className="text-lg font-semibold mb-6 dark:text-white">
           {t.settings.storageConfig}
         </h2>
-        <div className="space-y-4">
+        <div className="space-y-6">
           <div>
-            <label className={labelClasses}>{t.settings.storageType}</label>
-            <div className="grid grid-cols-3 gap-3">
-              {[
-                { value: "local", icon: HardDrive, label: t.settings.local },
-                { value: "google", icon: Cloud, label: t.settings.google },
-                { value: "synology", icon: Server, label: t.settings.synology },
-              ].map(({ value, icon: Icon, label }) => (
-                <button
-                  key={value}
-                  type="button"
-                  onClick={() => setStorage({ ...storage, type: value })}
-                  className={`flex flex-col items-center gap-2 p-4 rounded-lg border transition ${
-                    storage.type === value
-                      ? "border-orange-500 bg-orange-50 dark:bg-orange-900/30 text-orange-700 dark:text-orange-400"
-                      : "border-stone-200 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-800"
-                  }`}
-                >
-                  <Icon className="w-6 h-6" />
-                  <span className="text-sm font-medium">{label}</span>
-                </button>
-              ))}
+            <div className="flex items-center gap-2 mb-3">
+              <Cloud className="w-5 h-5 text-blue-500" />
+              <h3 className="text-sm font-semibold text-stone-700 dark:text-stone-300">
+                Google Photos
+              </h3>
+            </div>
+            <div>
+              <label className={labelClasses}>
+                {t.settings.googlePhotosLink}
+              </label>
+              <input
+                type="url"
+                value={storage.googlePhotosLink}
+                onChange={(e) =>
+                  setStorage({ ...storage, googlePhotosLink: e.target.value })
+                }
+                className={inputClasses}
+                placeholder="https://photos.app.goo.gl/..."
+              />
+              <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
+                {t.settings.googlePhotosLinkDesc}
+              </p>
             </div>
           </div>
 
-          {storage.type === "google" && (
-            <div className="space-y-4">
-              <div>
-                <label className={labelClasses}>
-                  {t.settings.googlePhotosLink}
-                </label>
-                <input
-                  type="url"
-                  value={storage.googlePhotosLink}
-                  onChange={(e) =>
-                    setStorage({ ...storage, googlePhotosLink: e.target.value })
-                  }
-                  className={inputClasses}
-                  placeholder="https://photos.app.goo.gl/..."
-                />
-                <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
-                  {t.settings.googlePhotosLinkDesc}
-                </p>
-              </div>
+          <div className="border-t border-stone-200 dark:border-stone-700 pt-6">
+            <div className="flex items-center gap-2 mb-3">
+              <Server className="w-5 h-5 text-orange-500" />
+              <h3 className="text-sm font-semibold text-stone-700 dark:text-stone-300">
+                Synology NAS
+              </h3>
             </div>
-          )}
-
-          {storage.type === "synology" && (
             <div className="space-y-4">
-              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
-                <div className="flex items-start gap-3">
-                  <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
-                  <div>
-                    <h4 className="font-medium text-blue-800 dark:text-blue-300">
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                <div className="flex items-start gap-2">
+                  <Info className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                  <div className="text-xs text-blue-700 dark:text-blue-400">
+                    <p className="font-medium mb-1">
                       {t.settings.synologyHowTo}
-                    </h4>
-                    <ol className="text-sm text-blue-700 dark:text-blue-400 mt-2 list-decimal list-inside space-y-1">
+                    </p>
+                    <ol className="list-decimal list-inside space-y-0.5">
                       <li>{t.settings.synologyStep1}</li>
                       <li>{t.settings.synologyStep2}</li>
                       <li>{t.settings.synologyStep3}</li>
@@ -358,7 +339,7 @@ export function SettingsPage({
                 </p>
               </div>
             </div>
-          )}
+          </div>
 
           <div className="flex gap-3">
             <button
@@ -384,7 +365,7 @@ export function SettingsPage({
                 ) : (
                   <Server className="w-4 h-4" />
                 )}
-                Test Connection
+                Test Links
               </button>
             )}
           </div>

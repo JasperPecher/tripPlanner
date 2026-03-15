@@ -10,7 +10,6 @@ export async function POST(
     const { tripId } = await params;
     const body = await request.json();
     const {
-      type,
       googlePhotosLink,
       synologyShareLink,
       synologyRequestLink,
@@ -24,13 +23,12 @@ export async function POST(
 
     const storageConfig = await prisma.storageConfig.upsert({
       where: { tripId },
-      update: { type, config },
-      create: { tripId, type, config },
+      update: { type: "links", config },
+      create: { tripId, type: "links", config },
     });
 
     return NextResponse.json({
       id: storageConfig.id,
-      type: storageConfig.type,
       configured: true,
     });
   } catch (error) {
@@ -60,7 +58,6 @@ export async function GET(
 
     return NextResponse.json({
       id: storageConfig.id,
-      type: storageConfig.type,
       configured: true,
       credentials,
     });

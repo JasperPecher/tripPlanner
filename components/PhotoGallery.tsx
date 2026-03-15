@@ -8,8 +8,6 @@ import {
   Loader2,
   Image as ImageIcon,
   ExternalLink,
-  CloudUpload,
-  FolderOpen,
 } from "lucide-react";
 import { useLocale } from "@/lib/LocaleContext";
 
@@ -33,9 +31,9 @@ interface PhotoGalleryProps {
 }
 
 interface ExternalLinks {
-  type: "synology" | "google";
-  viewLink: string;
-  uploadLink: string;
+  googlePhotosLink: string;
+  synologyShareLink: string;
+  synologyRequestLink: string;
 }
 
 export function PhotoGallery({
@@ -48,9 +46,7 @@ export function PhotoGallery({
   const [photos, setPhotos] = useState(initialPhotos);
   const [uploading, setUploading] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
-  const [externalLinks, setExternalLinks] = useState<ExternalLinks | null>(
-    null,
-  );
+  const [links, setLinks] = useState<ExternalLinks | null>(null);
 
   useEffect(() => {
     if (!storageConfig) return;
@@ -59,27 +55,11 @@ export function PhotoGallery({
       .then((res) => res.json())
       .then((data) => {
         if (!data.configured || !data.credentials) return;
-
-        if (data.type === "synology") {
-          const shareLink = data.credentials.synologyShareLink || "";
-          const requestLink = data.credentials.synologyRequestLink || "";
-          if (shareLink || requestLink) {
-            setExternalLinks({
-              type: "synology",
-              viewLink: shareLink,
-              uploadLink: requestLink,
-            });
-          }
-        } else if (data.type === "google") {
-          const link = data.credentials.googlePhotosLink || "";
-          if (link) {
-            setExternalLinks({
-              type: "google",
-              viewLink: link,
-              uploadLink: link,
-            });
-          }
-        }
+        setLinks({
+          googlePhotosLink: data.credentials.googlePhotosLink || "",
+          synologyShareLink: data.credentials.synologyShareLink || "",
+          synologyRequestLink: data.credentials.synologyRequestLink || "",
+        });
       })
       .catch(() => {});
   }, [tripId, storageConfig]);
@@ -111,26 +91,11 @@ export function PhotoGallery({
     }
   };
 
-  const uploadLabel =
-    externalLinks?.type === "google"
-      ? t.photos.uploadToGoogle
-      : externalLinks?.type === "synology"
-        ? t.photos.uploadToSynology
-        : null;
-
-  const viewLabel =
-    externalLinks?.type === "google"
-      ? t.photos.viewOnGoogle
-      : externalLinks?.type === "synology"
-        ? t.photos.viewOnSynology
-        : null;
-
-  const hint =
-    externalLinks?.type === "google"
-      ? t.photos.googleHint
-      : externalLinks?.type === "synology"
-        ? t.photos.synologyHint
-        : "";
+  const hasLinks =
+    links &&
+    (links.googlePhotosLink ||
+      links.synologyShareLink ||
+      links.synologyRequestLink);
 
   return (
     <div className="space-y-6">
@@ -139,7 +104,7 @@ export function PhotoGallery({
           <Camera className="w-6 h-6 text-orange-500" />
           {t.photos.title}
         </h2>
-        {!externalLinks ? (
+        {!hasLinks ? (
           <label className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 text-sm font-medium cursor-pointer">
             {uploading ? (
               <>
@@ -166,46 +131,42 @@ export function PhotoGallery({
         )}
       </div>
 
-      {externalLinks ? (
-        <div className="bg-stone-50 dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700 rounded-xl p-4">
-          <div className="flex items-center gap-2 mb-3">
-            <CloudUpload className="w-5 h-5 text-stone-500 dark:text-stone-400" />
-            <span className="text-sm font-medium text-stone-700 dark:text-stone-300">
-              {externalLinks.type === "google"
-                ? "Google Photos"
-                : "Synology NAS"}
-            </span>
-          </div>
-          <div className="flex flex-wrap gap-3">
-            {externalLinks.uploadLink && (
-              <a
-                href={externalLinks.uploadLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm font-medium transition"
-              >
-                <Upload className="w-4 h-4" />
-                {uploadLabel}
-                <ExternalLink className="w-3 h-3 opacity-70" />
-              </a>
-            )}
-            {externalLinks.viewLink &&
-              externalLinks.viewLink !== externalLinks.uploadLink && (
-                <a
-                  href={externalLinks.viewLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-stone-700 border border-stone-200 dark:border-stone-600 text-stone-700 dark:text-stone-200 rounded-lg hover:bg-stone-50 dark:hover:bg-stone-600 text-sm font-medium transition"
-                >
-                  <FolderOpen className="w-4 h-4" />
-                  {viewLabel}
-                  <ExternalLink className="w-3 h-3 opacity-70" />
-                </a>
-              )}
-          </div>
-          <p className="text-xs text-stone-500 dark:text-stone-400 mt-2">
-            {hint}
-          </p>
+      {hasLinks ? (
+        <div className="flex flex-wrap gap-3">
+          {links.synologyRequestLink && (
+            <a
+              href={links.synologyRequestLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm font-medium transition"
+            >
+              <Upload className="w-4 h-4" />
+              {t.photos.uploadToSynology}
+              <ExternalLink className="w-3 h-3 opacity-70" />
+            </a>
+          )}
+          {links.synologyShareLink && (
+            <a
+              href={links.synologyShareLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-stone-700 border border-stone-200 dark:border-stone-600 text-stone-700 dark:text-stone-200 rounded-lg hover:bg-stone-50 dark:hover:bg-stone-600 text-sm font-medium transition"
+            >
+              {t.photos.viewOnSynology}
+              <ExternalLink className="w-3 h-3 opacity-70" />
+            </a>
+          )}
+          {links.googlePhotosLink && (
+            <a
+              href={links.googlePhotosLink}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-stone-700 border border-stone-200 dark:border-stone-600 text-stone-700 dark:text-stone-200 rounded-lg hover:bg-stone-50 dark:hover:bg-stone-600 text-sm font-medium transition"
+            >
+              {t.photos.viewOnGoogle}
+              <ExternalLink className="w-3 h-3 opacity-70" />
+            </a>
+          )}
         </div>
       ) : (
         <div>
