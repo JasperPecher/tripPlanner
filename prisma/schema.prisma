@@ -1,0 +1,121 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model Trip {
+  id          String   @id @default(cuid())
+  name        String
+  description String?
+  shareCode   String   @unique
+  startDate   DateTime?
+  endDate     DateTime?
+  notes       String   @default("")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  members       Member[]
+  expenses      Expense[]
+  bookings      Booking[]
+  photos        Photo[]
+  storageConfig StorageConfig?
+
+  @@map("trips")
+}
+
+model Member {
+  id        String   @id @default(cuid())
+  name      String
+  joinedAt  DateTime @default(now())
+  isAdmin   Boolean  @default(false)
+
+  tripId String
+  trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  paidExpenses   Expense[]    @relation("PaidBy")
+  splitMembers   SplitMember[]
+
+  @@unique([tripId, name])
+  @@map("members")
+}
+
+model Expense {
+  id          String   @id @default(cuid())
+  description String
+  amount      Float
+  currency    String   @default("EUR")
+  createdAt   DateTime @default(now())
+
+  tripId String
+  trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  paidById String
+  paidBy   Member @relation("PaidBy", fields: [paidById], references: [id])
+
+  splits SplitMember[]
+
+  @@map("expenses")
+}
+
+model SplitMember {
+  id       String @id @default(cuid())
+  amount   Float
+
+  expenseId String
+  expense   Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
+
+  memberId String
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@map("split_members")
+}
+
+model Booking {
+  id          String   @id @default(cuid())
+  title       String
+  description String?
+  type        String   @default("other")
+  reference   String?
+  checkIn     DateTime?
+  checkOut    DateTime?
+  location    String?
+  price       Float?
+  currency    String   @default("EUR")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  tripId String
+  trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@map("bookings")
+}
+
+model Photo {
+  id        String   @id @default(cuid())
+  filename  String
+  url       String
+  thumbnail String?
+  caption   String?
+  uploadedBy String?
+  createdAt DateTime @default(now())
+
+  tripId String
+  trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@map("photos")
+}
+
+model StorageConfig {
+  id        String @id @default(cuid())
+  type      String
+  config    String
+
+  tripId String @unique
+  trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  @@map("storage_configs")
+}
