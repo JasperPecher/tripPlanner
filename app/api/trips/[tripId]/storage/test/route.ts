@@ -65,9 +65,34 @@ export async function POST(
         message: `Synology connected: ${parts.join(", ")}`,
       });
     } else if (storageConfig.type === "google") {
+      let credentials;
+      try {
+        credentials = JSON.parse(storageConfig.config);
+      } catch {
+        return NextResponse.json({
+          success: false,
+          error: "Invalid stored configuration. Please re-enter your link.",
+        });
+      }
+
+      const link = credentials.googlePhotosLink || "";
+      if (!link) {
+        return NextResponse.json({
+          success: false,
+          error: "No Google Photos link configured. Please add a link.",
+        });
+      }
+
+      if (!link.includes("photos.app.goo.gl") && !link.includes("photos.google.com")) {
+        return NextResponse.json({
+          success: false,
+          error: "Link does not look like a valid Google Photos sharing link.",
+        });
+      }
+
       return NextResponse.json({
-        success: false,
-        error: "Google Photos testing requires OAuth2 implementation.",
+        success: true,
+        message: "Google Photos link configured",
       });
     } else {
       return NextResponse.json({

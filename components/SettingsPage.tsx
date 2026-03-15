@@ -52,7 +52,7 @@ export function SettingsPage({
 
   const [storage, setStorage] = useState({
     type: trip.storageConfig?.type || "local",
-    googleAlbumId: "",
+    googlePhotosLink: "",
     synologyShareLink: "",
     synologyRequestLink: "",
   });
@@ -65,7 +65,7 @@ export function SettingsPage({
         if (data.configured && data.credentials) {
           setStorage({
             type: data.type,
-            googleAlbumId: data.credentials.googleAlbumId || "",
+            googlePhotosLink: data.credentials.googlePhotosLink || "",
             synologyShareLink: data.credentials.synologyShareLink || "",
             synologyRequestLink: data.credentials.synologyRequestLink || "",
           });
@@ -276,49 +276,23 @@ export function SettingsPage({
           </div>
 
           {storage.type === "google" && (
-            <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-lg p-4">
-              <div className="flex items-start gap-3">
-                <AlertTriangle className="w-5 h-5 text-amber-600 dark:text-amber-400 shrink-0 mt-0.5" />
-                <div>
-                  <h4 className="font-medium text-amber-800 dark:text-amber-300">
-                    Google Photos Setup Required
-                  </h4>
-                  <p className="text-sm text-amber-700 dark:text-amber-400 mt-1">
-                    To use Google Photos, you need to:
-                  </p>
-                  <ol className="text-sm text-amber-700 dark:text-amber-400 mt-2 list-decimal list-inside space-y-1">
-                    <li>
-                      Create a Google Cloud project and enable the Photos
-                      Library API
-                    </li>
-                    <li>Set up OAuth 2.0 credentials</li>
-                    <li>
-                      Add{" "}
-                      <code className="bg-amber-100 dark:bg-amber-800 px-1 rounded">
-                        GOOGLE_CLIENT_ID
-                      </code>{" "}
-                      and{" "}
-                      <code className="bg-amber-100 dark:bg-amber-800 px-1 rounded">
-                        GOOGLE_CLIENT_SECRET
-                      </code>{" "}
-                      to your .env file
-                    </li>
-                  </ol>
-                </div>
-              </div>
-              <div className="mt-4">
+            <div className="space-y-4">
+              <div>
                 <label className={labelClasses}>
-                  {t.settings.googleAlbumId}
+                  {t.settings.googlePhotosLink}
                 </label>
                 <input
-                  type="text"
-                  value={storage.googleAlbumId}
+                  type="url"
+                  value={storage.googlePhotosLink}
                   onChange={(e) =>
-                    setStorage({ ...storage, googleAlbumId: e.target.value })
+                    setStorage({ ...storage, googlePhotosLink: e.target.value })
                   }
                   className={inputClasses}
-                  placeholder="Album ID"
+                  placeholder="https://photos.app.goo.gl/..."
                 />
+                <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
+                  {t.settings.googlePhotosLinkDesc}
+                </p>
               </div>
             </div>
           )}

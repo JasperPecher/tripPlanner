@@ -19,16 +19,19 @@ export const translations = {
       title: "Reiseplaner",
       subtitle: "Plane gemeinsam mit Freunden. Teile Ausgaben und Momente.",
       feature1Title: "Freunde einladen",
-      feature1Desc: "Teile einen Link mit deinen Reisebegleitern. Jeder mit dem Link kann der Gruppe beitreten.",
+      feature1Desc:
+        "Teile einen Link mit deinen Reisebegleitern. Jeder mit dem Link kann der Gruppe beitreten.",
       feature2Title: "Ausgaben teilen",
-      feature2Desc: "Behalte den Überblick, wer was bezahlt hat. Automatische Berechnung, wer wem wie viel schuldet.",
+      feature2Desc:
+        "Behalte den Überblick, wer was bezahlt hat. Automatische Berechnung, wer wem wie viel schuldet.",
       feature3Title: "Fotos teilen",
-      feature3Desc: "Lade Fotos zu Google Photos oder Synology hoch. Alle tragen zum geteilten Album bei.",
+      feature3Desc:
+        "Lade Fotos zu Google Photos oder Synology hoch. Alle tragen zum geteilten Album bei.",
       createTitle: "Neue Reise erstellen",
       adminName: "Dein Name",
       adminNamePlaceholder: "Deinen Namen eingeben",
       tripName: "Reisename",
-      tripNamePlaceholder: "z.B. Sommer in Italien 2024",
+      tripNamePlaceholder: "z.B. Sommer in Italien",
       description: "Beschreibung (optional)",
       descriptionPlaceholder: "Worum geht es bei dieser Reise?",
       startDate: "Startdatum",
@@ -42,7 +45,8 @@ export const translations = {
       admin: "Admin",
       shareLink: "Link teilen",
       inviteTitle: "Freunde einladen",
-      inviteDesc: "Teile diesen Link mit Freunden, damit sie der Reise beitreten können.",
+      inviteDesc:
+        "Teile diesen Link mit Freunden, damit sie der Reise beitreten können.",
       tabs: {
         overview: "Übersicht",
         expenses: "Ausgaben",
@@ -60,8 +64,10 @@ export const translations = {
     notes: {
       title: "Notizen & Wichtige Infos",
       edit: "Bearbeiten",
-      placeholder: "Notizen, Buchungsreferenzen, wichtige Informationen hinzufügen...",
-      noNotes: "Noch keine Notizen. Klicke auf Bearbeiten, um wichtige Informationen hinzuzufügen.",
+      placeholder:
+        "Notizen, Buchungsreferenzen, wichtige Informationen hinzufügen...",
+      noNotes:
+        "Noch keine Notizen. Klicke auf Bearbeiten, um wichtige Informationen hinzuzufügen.",
       saving: "Wird gespeichert...",
     },
     bookings: {
@@ -125,13 +131,19 @@ export const translations = {
         synology: "Synology File Station",
       },
       noPhotos: "Noch keine Fotos",
-      noPhotosDesc: "Lade Fotos von deiner Reise hoch, um sie mit allen zu teilen.",
+      noPhotosDesc:
+        "Lade Fotos von deiner Reise hoch, um sie mit allen zu teilen.",
       uploadFirst: "Erste Fotos hochladen",
       uploadedBy: "Hochgeladen von",
       uploadToSynology: "Auf Synology hochladen",
       viewOnSynology: "Auf Synology ansehen",
       synologyActions: "Synology NAS",
-      synologyHint: "Fotos werden lokal in der App gespeichert. Nutze die Buttons oben, um sie auch auf deiner Synology NAS hochzuladen oder anzusehen.",
+      synologyHint:
+        "Fotos werden lokal in der App gespeichert. Nutze die Buttons oben, um sie auch auf deiner Synology NAS hochzuladen oder anzusehen.",
+      uploadToGoogle: "Auf Google Photos öffnen",
+      viewOnGoogle: "Auf Google Photos ansehen",
+      googleHint:
+        "Fotos werden lokal in der App gespeichert. Nutze den Button oben, um das geteilte Google Photos Album zu öffnen.",
       form: {
         title: "Speicher-Konfiguration",
         type: "Speichertyp",
@@ -140,7 +152,8 @@ export const translations = {
         synologyDesc: "Auf dein Synology NAS hochladen",
         googleAlbumId: "Google Photos Album-ID",
         googleAlbumPlaceholder: "Album-ID eingeben",
-        googleNote: "Du musst zuerst Google Photos API-Zugangsdaten einrichten.",
+        googleNote:
+          "Du musst zuerst Google Photos API-Zugangsdaten einrichten.",
         synologyUrl: "Synology URL",
         synologyUrlPlaceholder: "https://dein-nas.local:5000",
         username: "Benutzername",
@@ -157,22 +170,30 @@ export const translations = {
       endDate: "Enddatum",
       dangerZone: "Gefahrenzone",
       deleteTrip: "Reise löschen",
-      deleteWarning: "Diese Aktion kann nicht rückgängig gemacht werden. Alle Daten gehen verloren.",
+      deleteWarning:
+        "Diese Aktion kann nicht rückgängig gemacht werden. Alle Daten gehen verloren.",
       storageConfig: "Speicher-Konfiguration",
       storageType: "Speichertyp",
       local: "Lokaler Speicher",
       google: "Google Photos",
       synology: "Synology File Station",
-      googleAlbumId: "Google Photos Album-ID",
+      googlePhotosLink: "Google Photos Link",
+      googlePhotosLinkDesc:
+        "Link zum geteilten Google Photos Album. In Google Photos: Album öffnen -> Teilen -> Link kopieren.",
       synologyHowTo: "So richtest du Synology ein:",
       synologyStep1: "Öffne File Station auf deiner Synology NAS",
-      synologyStep2: "Klicke mit der rechten Maustaste auf einen Ordner -> \"Freigabelink erstellen\"",
-      synologyStep3: "Aktiviere \"Schreibgeschützt\" -> Kopiere den Link (fuer die Galerie)",
-      synologyStep4: "Erstelle einen zweiten Link mit \"Dateianforderung\" -> Kopiere den Link (fuer Uploads)",
+      synologyStep2:
+        'Klicke mit der rechten Maustaste auf einen Ordner -> "Freigabelink erstellen"',
+      synologyStep3:
+        'Aktiviere "Schreibgeschützt" -> Kopiere den Link (fuer die Galerie)',
+      synologyStep4:
+        'Erstelle einen zweiten Link mit "Dateianforderung" -> Kopiere den Link (fuer Uploads)',
       synologyShareLink: "Freigabelink (Galerie)",
-      synologyShareLinkDesc: "Link zum Anzeigen und Herunterladen von Fotos. In File Station: Rechtsklick auf Ordner -> Freigabelink erstellen.",
+      synologyShareLinkDesc:
+        "Link zum Anzeigen und Herunterladen von Fotos. In File Station: Rechtsklick auf Ordner -> Freigabelink erstellen.",
       synologyRequestLink: "Dateianforderungslink (Upload)",
-      synologyRequestLinkDesc: "Link zum Hochladen von Fotos. In File Station: Rechtsklick auf Ordner -> Dateianforderung erstellen.",
+      synologyRequestLinkDesc:
+        "Link zum Hochladen von Fotos. In File Station: Rechtsklick auf Ordner -> Dateianforderung erstellen.",
       saveStorage: "Speicher-Konfiguration speichern",
       saveTripInfo: "Reiseinformationen speichern",
       tripUpdated: "Reise aktualisiert!",
@@ -214,18 +235,22 @@ export const translations = {
     },
     home: {
       title: "Trip Planner",
-      subtitle: "Plan trips together with friends. Split expenses and share moments.",
+      subtitle:
+        "Plan trips together with friends. Split expenses and share moments.",
       feature1Title: "Invite Friends",
-      feature1Desc: "Share a link with your travel buddies. Anyone with the link can join your trip group.",
+      feature1Desc:
+        "Share a link with your travel buddies. Anyone with the link can join your trip group.",
       feature2Title: "Split Expenses",
-      feature2Desc: "Track who paid for what. Automatically calculate who owes whom.",
+      feature2Desc:
+        "Track who paid for what. Automatically calculate who owes whom.",
       feature3Title: "Share Photos",
-      feature3Desc: "Upload photos to Google Photos or Synology. Everyone contributes to the shared album.",
+      feature3Desc:
+        "Upload photos to Google Photos or Synology. Everyone contributes to the shared album.",
       createTitle: "Create a New Trip",
       adminName: "Your Name",
       adminNamePlaceholder: "Enter your name",
       tripName: "Trip Name",
-      tripNamePlaceholder: "e.g., Summer in Italy 2024",
+      tripNamePlaceholder: "e.g., Summer in Italy",
       description: "Description (optional)",
       descriptionPlaceholder: "What's this trip about?",
       startDate: "Start Date",
@@ -328,7 +353,12 @@ export const translations = {
       uploadToSynology: "Upload to Synology",
       viewOnSynology: "View on Synology",
       synologyActions: "Synology NAS",
-      synologyHint: "Photos are stored locally in the app. Use the buttons above to also upload to or view photos on your Synology NAS.",
+      synologyHint:
+        "Photos are stored locally in the app. Use the buttons above to also upload to or view photos on your Synology NAS.",
+      uploadToGoogle: "Open in Google Photos",
+      viewOnGoogle: "View on Google Photos",
+      googleHint:
+        "Photos are stored locally in the app. Use the button above to open the shared Google Photos album.",
       form: {
         title: "Storage Configuration",
         type: "Storage Type",
@@ -337,7 +367,8 @@ export const translations = {
         synologyDesc: "Upload to your Synology NAS",
         googleAlbumId: "Google Photos Album ID",
         googleAlbumPlaceholder: "Enter album ID",
-        googleNote: "You'll need to set up Google Photos API credentials first.",
+        googleNote:
+          "You'll need to set up Google Photos API credentials first.",
         synologyUrl: "Synology URL",
         synologyUrlPlaceholder: "https://your-nas.local:5000",
         username: "Username",
@@ -360,16 +391,20 @@ export const translations = {
       local: "Local Storage",
       google: "Google Photos",
       synology: "Synology File Station",
-      googleAlbumId: "Google Photos Album ID",
+      googlePhotosLink: "Google Photos Link",
+      googlePhotosLinkDesc: "Link to a shared Google Photos album. In Google Photos: open album -> Share -> Copy link.",
       synologyHowTo: "How to set up Synology:",
       synologyStep1: "Open File Station on your Synology NAS",
-      synologyStep2: "Right-click a folder -> \"Create sharing link\"",
-      synologyStep3: "Enable \"Read-only\" -> Copy the link (for the gallery)",
-      synologyStep4: "Create a second link with \"Create file request\" -> Copy the link (for uploads)",
+      synologyStep2: 'Right-click a folder -> "Create sharing link"',
+      synologyStep3: 'Enable "Read-only" -> Copy the link (for the gallery)',
+      synologyStep4:
+        'Create a second link with "Create file request" -> Copy the link (for uploads)',
       synologyShareLink: "Sharing Link (Gallery)",
-      synologyShareLinkDesc: "Link to view and download photos. In File Station: right-click folder -> Create sharing link.",
+      synologyShareLinkDesc:
+        "Link to view and download photos. In File Station: right-click folder -> Create sharing link.",
       synologyRequestLink: "File Request Link (Upload)",
-      synologyRequestLinkDesc: "Link to upload photos. In File Station: right-click folder -> Create file request.",
+      synologyRequestLinkDesc:
+        "Link to upload photos. In File Station: right-click folder -> Create file request.",
       saveStorage: "Save Storage Configuration",
       saveTripInfo: "Save Trip Information",
       tripUpdated: "Trip updated!",

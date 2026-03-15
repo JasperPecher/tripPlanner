@@ -32,6 +32,12 @@ interface PhotoGalleryProps {
   currentMember: Member;
 }
 
+interface ExternalLinks {
+  type: "synology" | "google";
+  viewLink: string;
+  uploadLink: string;
+}
+
 export function PhotoGallery({
   tripId,
   photos: initialPhotos,
@@ -42,22 +48,36 @@ export function PhotoGallery({
   const [photos, setPhotos] = useState(initialPhotos);
   const [uploading, setUploading] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
-  const [synologyLinks, setSynologyLinks] = useState<{
-    shareLink: string;
-    requestLink: string;
-  } | null>(null);
+  const [externalLinks, setExternalLinks] = useState<ExternalLinks | null>(
+    null,
+  );
 
   useEffect(() => {
-    if (storageConfig?.type !== "synology") return;
+    if (!storageConfig) return;
 
     fetch(`/api/trips/${tripId}/storage`)
       .then((res) => res.json())
       .then((data) => {
-        if (data.configured && data.credentials) {
+        if (!data.configured || !data.credentials) return;
+
+        if (data.type === "synology") {
           const shareLink = data.credentials.synologyShareLink || "";
           const requestLink = data.credentials.synologyRequestLink || "";
           if (shareLink || requestLink) {
-            setSynologyLinks({ shareLink, requestLink });
+            setExternalLinks({
+              type: "synology",
+              viewLink: shareLink,
+              uploadLink: requestLink,
+            });
+          }
+        } else if (data.type === "google") {
+          const link = data.credentials.googlePhotosLink || "";
+          if (link) {
+            setExternalLinks({
+              type: "google",
+              viewLink: link,
+              uploadLink: link,
+            });
           }
         }
       })
@@ -91,6 +111,27 @@ export function PhotoGallery({
     }
   };
 
+  const uploadLabel =
+    externalLinks?.type === "google"
+      ? t.photos.uploadToGoogle
+      : externalLinks?.type === "synology"
+        ? t.photos.uploadToSynology
+        : null;
+
+  const viewLabel =
+    externalLinks?.type === "google"
+      ? t.photos.viewOnGoogle
+      : externalLinks?.type === "synology"
+        ? t.photos.viewOnSynology
+        : null;
+
+  const hint =
+    externalLinks?.type === "google"
+      ? t.photos.googleHint
+      : externalLinks?.type === "synology"
+        ? t.photos.synologyHint
+        : "";
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -121,47 +162,50 @@ export function PhotoGallery({
         </label>
       </div>
 
-      {synologyLinks ? (
+      {externalLinks ? (
         <div className="bg-stone-50 dark:bg-stone-800/50 border border-stone-200 dark:border-stone-700 rounded-xl p-4">
           <div className="flex items-center gap-2 mb-3">
             <CloudUpload className="w-5 h-5 text-stone-500 dark:text-stone-400" />
             <span className="text-sm font-medium text-stone-700 dark:text-stone-300">
-              {t.photos.synologyActions}
+              {externalLinks.type === "google"
+                ? "Google Photos"
+                : "Synology NAS"}
             </span>
           </div>
           <div className="flex flex-wrap gap-3">
-            {synologyLinks.requestLink && (
+            {externalLinks.uploadLink && (
               <a
-                href={synologyLinks.requestLink}
+                href={externalLinks.uploadLink}
                 target="_blank"
                 rel="noopener noreferrer"
                 className="flex items-center gap-2 px-4 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm font-medium transition"
               >
                 <Upload className="w-4 h-4" />
-                {t.photos.uploadToSynology}
+                {uploadLabel}
                 <ExternalLink className="w-3 h-3 opacity-70" />
               </a>
             )}
-            {synologyLinks.shareLink && (
-              <a
-                href={synologyLinks.shareLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-stone-700 border border-stone-200 dark:border-stone-600 text-stone-700 dark:text-stone-200 rounded-lg hover:bg-stone-50 dark:hover:bg-stone-600 text-sm font-medium transition"
-              >
-                <FolderOpen className="w-4 h-4" />
-                {t.photos.viewOnSynology}
-                <ExternalLink className="w-3 h-3 opacity-70" />
-              </a>
-            )}
+            {externalLinks.viewLink &&
+              externalLinks.viewLink !== externalLinks.uploadLink && (
+                <a
+                  href={externalLinks.viewLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-stone-700 border border-stone-200 dark:border-stone-600 text-stone-700 dark:text-stone-200 rounded-lg hover:bg-stone-50 dark:hover:bg-stone-600 text-sm font-medium transition"
+                >
+                  <FolderOpen className="w-4 h-4" />
+                  {viewLabel}
+                  <ExternalLink className="w-3 h-3 opacity-70" />
+                </a>
+              )}
           </div>
           <p className="text-xs text-stone-500 dark:text-stone-400 mt-2">
-            {t.photos.synologyHint}
+            {hint}
           </p>
         </div>
       ) : (
         <div>
-          {selectedPhoto ? (
+          {selectedPhoto && (
             <div
               className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
               onClick={() => setSelectedPhoto(null)}
@@ -193,53 +237,50 @@ export function PhotoGallery({
                 )}
               </div>
             </div>
+          )}
+          {photos.length === 0 ? (
+            <div className="bg-white dark:bg-stone-900 rounded-xl p-12 shadow-sm border border-stone-200 dark:border-stone-800 text-center">
+              <ImageIcon className="w-16 h-16 mx-auto mb-4 text-stone-300 dark:text-stone-600" />
+              <h3 className="text-lg font-medium text-stone-700 dark:text-stone-300 mb-2">
+                {t.photos.noPhotos}
+              </h3>
+              <p className="text-stone-500 dark:text-stone-400 mb-4">
+                {t.photos.noPhotosDesc}
+              </p>
+              <label className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 text-sm font-medium cursor-pointer">
+                <Upload className="w-4 h-4" />
+                {t.photos.uploadFirst}
+                <input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleUpload}
+                  className="hidden"
+                  disabled={uploading}
+                />
+              </label>
+            </div>
           ) : (
-            <div>
-              {photos.length === 0 ? (
-                <div className="bg-white dark:bg-stone-900 rounded-xl p-12 shadow-sm border border-stone-200 dark:border-stone-800 text-center">
-                  <ImageIcon className="w-16 h-16 mx-auto mb-4 text-stone-300 dark:text-stone-600" />
-                  <h3 className="text-lg font-medium text-stone-700 dark:text-stone-300 mb-2">
-                    {t.photos.noPhotos}
-                  </h3>
-                  <p className="text-stone-500 dark:text-stone-400 mb-4">
-                    {t.photos.noPhotosDesc}
-                  </p>
-                  <label className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 text-sm font-medium cursor-pointer">
-                    <Upload className="w-4 h-4" />
-                    {t.photos.uploadFirst}
-                    <input
-                      type="file"
-                      multiple
-                      accept="image/*"
-                      onChange={handleUpload}
-                      className="hidden"
-                      disabled={uploading}
-                    />
-                  </label>
-                </div>
-              ) : (
-                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-                  {photos.map((photo) => (
-                    <button
-                      key={photo.id}
-                      onClick={() => setSelectedPhoto(photo)}
-                      className="relative aspect-square rounded-lg overflow-hidden bg-stone-100 dark:bg-stone-800 hover:opacity-90 transition group"
-                    >
-                      <img
-                        src={photo.thumbnail || photo.url}
-                        alt={photo.caption || photo.filename}
-                        className="w-full h-full object-cover"
-                      />
-                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition" />
-                      {photo.uploadedBy && (
-                        <span className="absolute bottom-2 left-2 text-xs text-white bg-black/50 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition">
-                          {photo.uploadedBy}
-                        </span>
-                      )}
-                    </button>
-                  ))}
-                </div>
-              )}
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+              {photos.map((photo) => (
+                <button
+                  key={photo.id}
+                  onClick={() => setSelectedPhoto(photo)}
+                  className="relative aspect-square rounded-lg overflow-hidden bg-stone-100 dark:bg-stone-800 hover:opacity-90 transition group"
+                >
+                  <img
+                    src={photo.thumbnail || photo.url}
+                    alt={photo.caption || photo.filename}
+                    className="w-full h-full object-cover"
+                  />
+                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition" />
+                  {photo.uploadedBy && (
+                    <span className="absolute bottom-2 left-2 text-xs text-white bg-black/50 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition">
+                      {photo.uploadedBy}
+                    </span>
+                  )}
+                </button>
+              ))}
             </div>
           )}
         </div>

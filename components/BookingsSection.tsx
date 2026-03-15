@@ -259,6 +259,23 @@ export function BookingsSection({
                     placeholder="0.00"
                   />
                 </div>
+                <div>
+                  <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
+                    {t.bookings.form.currency}
+                  </label>
+                  <select
+                    value={formData.currency}
+                    onChange={(e) =>
+                      setFormData({ ...formData, currency: e.target.value })
+                    }
+                    className={inputClasses}
+                  >
+                    <option value="EUR">EUR</option>
+                    <option value="USD">USD</option>
+                    <option value="Spielgeld">Spielgeld</option>
+                    <option value="Monopoly $">Monopoly $</option>
+                  </select>
+                </div>
               </div>
               <div>
                 <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">

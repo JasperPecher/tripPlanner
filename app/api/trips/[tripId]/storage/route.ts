@@ -11,13 +11,13 @@ export async function POST(
     const body = await request.json();
     const {
       type,
-      googleAlbumId,
+      googlePhotosLink,
       synologyShareLink,
       synologyRequestLink,
     } = body;
 
     const config = JSON.stringify({
-      googleAlbumId: googleAlbumId || "",
+      googlePhotosLink: googlePhotosLink || "",
       synologyShareLink: synologyShareLink || "",
       synologyRequestLink: synologyRequestLink || "",
     });
