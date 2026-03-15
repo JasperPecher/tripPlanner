@@ -139,27 +139,31 @@ export function PhotoGallery({
           <Camera className="w-6 h-6 text-orange-500" />
           {t.photos.title}
         </h2>
-        <label className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 text-sm font-medium cursor-pointer">
-          {uploading ? (
-            <>
-              <Loader2 className="w-4 h-4 animate-spin" />
-              {t.photos.uploading}
-            </>
-          ) : (
-            <>
-              <Upload className="w-4 h-4" />
-              {t.photos.upload}
-            </>
-          )}
-          <input
-            type="file"
-            multiple
-            accept="image/*"
-            onChange={handleUpload}
-            className="hidden"
-            disabled={uploading}
-          />
-        </label>
+        {!externalLinks ? (
+          <label className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 text-sm font-medium cursor-pointer">
+            {uploading ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin" />
+                {t.photos.uploading}
+              </>
+            ) : (
+              <>
+                <Upload className="w-4 h-4" />
+                {t.photos.upload}
+              </>
+            )}
+            <input
+              type="file"
+              multiple
+              accept="image/*"
+              onChange={handleUpload}
+              className="hidden"
+              disabled={uploading}
+            />
+          </label>
+        ) : (
+          ""
+        )}
       </div>
 
       {externalLinks ? (
