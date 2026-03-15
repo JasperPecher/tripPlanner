@@ -11,7 +11,7 @@ export default async function JoinTripPage({ params }: PageProps) {
 
   const trip = await prisma.trip.findUnique({
     where: { shareCode },
-    select: { id: true, name: true, description: true, members: { select: { id: true, name: true } } },
+    select: { id: true, name: true, description: true, members: { select: { id: true, name: true, isAdmin: true } } },
   });
 
   if (!trip) notFound();

@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { decryptStorageCredentials } from "@/lib/crypto";
-import { SynologyClient } from "@/lib/synology";
+import { isValidSynologyLink } from "@/lib/synology";
 
 export async function POST(
   request: NextRequest,
@@ -22,49 +21,53 @@ export async function POST(
     }
 
     if (storageConfig.type === "synology") {
-      // Decrypt credentials to verify they work
       let credentials;
       try {
-        credentials = decryptStorageCredentials(storageConfig.config);
-      } catch (e: any) {
+        credentials = JSON.parse(storageConfig.config);
+      } catch {
         return NextResponse.json({
           success: false,
-          error: "Failed to decrypt stored credentials. Please re-enter your credentials.",
+          error: "Invalid stored configuration. Please re-enter your links.",
         });
       }
 
-      if (!credentials.synologyUrl || !credentials.synologyUsername) {
+      const shareLink = credentials.synologyShareLink || "";
+      const requestLink = credentials.synologyRequestLink || "";
+
+      if (!shareLink && !requestLink) {
         return NextResponse.json({
           success: false,
-          error: "Missing Synology URL or username in stored config. Please re-save your settings.",
+          error: "No Synology links configured. Please add at least one link.",
         });
       }
 
-      const client = new SynologyClient({
-        synologyUrl: credentials.synologyUrl,
-        synologyUsername: credentials.synologyUsername,
-        synologyPassword: credentials.synologyPassword || "",
+      const errors: string[] = [];
+      if (shareLink && !isValidSynologyLink(shareLink)) {
+        errors.push("Share link is not a valid Synology sharing URL");
+      }
+      if (requestLink && !isValidSynologyLink(requestLink)) {
+        errors.push("Request link is not a valid Synology sharing URL");
+      }
+
+      if (errors.length > 0) {
+        return NextResponse.json({
+          success: false,
+          error: errors.join(". "),
+        });
+      }
+
+      const parts: string[] = [];
+      if (shareLink) parts.push("gallery link configured");
+      if (requestLink) parts.push("upload link configured");
+
+      return NextResponse.json({
+        success: true,
+        message: `Synology connected: ${parts.join(", ")}`,
       });
-
-      try {
-        // Test API discovery
-        await client.testConnection();
-
-        return NextResponse.json({
-          success: true,
-          message: `Connected to ${credentials.synologyUrl}`,
-        });
-      } catch (error: any) {
-        return NextResponse.json({
-          success: false,
-          error: error.message,
-        });
-      }
     } else if (storageConfig.type === "google") {
       return NextResponse.json({
         success: false,
-        error:
-          "Google Photos testing requires OAuth2 implementation.",
+        error: "Google Photos testing requires OAuth2 implementation.",
       });
     } else {
       return NextResponse.json({

@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Save,
@@ -10,7 +10,8 @@ import {
   Cloud,
   Server,
   HardDrive,
-  Shield,
+  ExternalLink,
+  Info,
 } from "lucide-react";
 import { useLocale } from "@/lib/LocaleContext";
 
@@ -52,11 +53,26 @@ export function SettingsPage({
   const [storage, setStorage] = useState({
     type: trip.storageConfig?.type || "local",
     googleAlbumId: "",
-    synologyUrl: "",
-    synologyUsername: "",
-    synologyPassword: "",
-    synologySharedFolder: "",
+    synologyShareLink: "",
+    synologyRequestLink: "",
   });
+
+  useEffect(() => {
+    if (!trip.storageConfig) return;
+    fetch(`/api/trips/${trip.id}/storage`)
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.configured && data.credentials) {
+          setStorage({
+            type: data.type,
+            googleAlbumId: data.credentials.googleAlbumId || "",
+            synologyShareLink: data.credentials.synologyShareLink || "",
+            synologyRequestLink: data.credentials.synologyRequestLink || "",
+          });
+        }
+      })
+      .catch(() => {});
+  }, [trip.id, trip.storageConfig]);
 
   const [savingTrip, setSavingTrip] = useState(false);
   const [savingStorage, setSavingStorage] = useState(false);
@@ -309,84 +325,62 @@ export function SettingsPage({
 
           {storage.type === "synology" && (
             <div className="space-y-4">
-              <div className="bg-orange-50 dark:bg-orange-900/20 border border-orange-200 dark:border-orange-800 rounded-lg p-3 flex items-center gap-2">
-                <Shield className="w-4 h-4 text-orange-600 dark:text-orange-400" />
-                <span className="text-sm text-orange-700 dark:text-orange-300">
-                  Credentials are encrypted before storage
-                </span>
+              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-4">
+                <div className="flex items-start gap-3">
+                  <Info className="w-5 h-5 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                  <div>
+                    <h4 className="font-medium text-blue-800 dark:text-blue-300">
+                      {t.settings.synologyHowTo}
+                    </h4>
+                    <ol className="text-sm text-blue-700 dark:text-blue-400 mt-2 list-decimal list-inside space-y-1">
+                      <li>{t.settings.synologyStep1}</li>
+                      <li>{t.settings.synologyStep2}</li>
+                      <li>{t.settings.synologyStep3}</li>
+                      <li>{t.settings.synologyStep4}</li>
+                    </ol>
+                  </div>
+                </div>
               </div>
-              {trip.storageConfig?.type === "synology" && (
-                <p className="text-sm text-stone-500 dark:text-stone-400">
-                  Synology is already configured. Enter new credentials to
-                  update.
-                </p>
-              )}
+
               <div>
-                <label className={labelClasses}>{t.settings.synologyUrl}</label>
+                <label className={labelClasses}>
+                  {t.settings.synologyShareLink}
+                </label>
                 <input
                   type="url"
-                  value={storage.synologyUrl}
-                  onChange={(e) =>
-                    setStorage({ ...storage, synologyUrl: e.target.value })
-                  }
-                  className={inputClasses}
-                  placeholder="https://your-nas.local:5000"
-                />
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className={labelClasses}>
-                    {t.settings.synologyUsername}
-                  </label>
-                  <input
-                    type="text"
-                    value={storage.synologyUsername}
-                    onChange={(e) =>
-                      setStorage({
-                        ...storage,
-                        synologyUsername: e.target.value,
-                      })
-                    }
-                    className={inputClasses}
-                  />
-                </div>
-                <div>
-                  <label className={labelClasses}>
-                    {t.settings.synologyPassword}
-                  </label>
-                  <input
-                    type="password"
-                    value={storage.synologyPassword}
-                    onChange={(e) =>
-                      setStorage({
-                        ...storage,
-                        synologyPassword: e.target.value,
-                      })
-                    }
-                    className={inputClasses}
-                    placeholder="••••••••"
-                  />
-                </div>
-              </div>
-              <div>
-                <label className={labelClasses}>Folder Path (optional)</label>
-                <input
-                  type="text"
-                  value={storage.synologySharedFolder}
+                  value={storage.synologyShareLink}
                   onChange={(e) =>
                     setStorage({
                       ...storage,
-                      synologySharedFolder: e.target.value,
+                      synologyShareLink: e.target.value,
                     })
                   }
                   className={inputClasses}
-                  placeholder="/home/photos"
+                  placeholder="https://your-nas:5000/sharing/XXXXX"
                 />
                 <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
-                  Full path to the folder where photos will be stored (e.g.,{" "}
-                  <code>/home/photos</code> or <code>/photo</code>). Photos are
-                  uploaded to a trip subfolder inside this path. Leave empty to
-                  auto-detect your home folder.
+                  {t.settings.synologyShareLinkDesc}
+                </p>
+              </div>
+
+              <div>
+                <label className={labelClasses}>
+                  {t.settings.synologyRequestLink}
+                </label>
+                <input
+                  type="url"
+                  value={storage.synologyRequestLink}
+                  onChange={(e) =>
+                    setStorage({
+                      ...storage,
+                      synologyRequestLink: e.target.value,
+                    })
+                  }
+                  className={inputClasses}
+                  placeholder="https://your-nas:5000/sharing/XXXXX"
+                />
+                <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
+                  {t.settings.synologyRequestLinkDesc}
                 </p>
               </div>
             </div>

@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { encryptStorageCredentials } from "@/lib/crypto";
+import { isValidSynologyLink } from "@/lib/synology";
 
 export async function POST(
   request: NextRequest,
@@ -9,16 +9,17 @@ export async function POST(
   try {
     const { tripId } = await params;
     const body = await request.json();
-    const { type, googleAlbumId, synologyUrl, synologyUsername, synologyPassword, synologySharedFolder } =
-      body;
+    const {
+      type,
+      googleAlbumId,
+      synologyShareLink,
+      synologyRequestLink,
+    } = body;
 
-    // Encrypt credentials before storing
-    const config = encryptStorageCredentials({
+    const config = JSON.stringify({
       googleAlbumId: googleAlbumId || "",
-      synologyUrl: synologyUrl || "",
-      synologyUsername: synologyUsername || "",
-      synologyPassword: synologyPassword || "",
-      synologySharedFolder: synologySharedFolder || "",
+      synologyShareLink: synologyShareLink || "",
+      synologyRequestLink: synologyRequestLink || "",
     });
 
     const storageConfig = await prisma.storageConfig.upsert({
@@ -27,7 +28,6 @@ export async function POST(
       create: { tripId, type, config },
     });
 
-    // Return config without sensitive data
     return NextResponse.json({
       id: storageConfig.id,
       type: storageConfig.type,
@@ -56,11 +56,13 @@ export async function GET(
       return NextResponse.json({ configured: false });
     }
 
-    // Return only type, not the encrypted config
+    const credentials = JSON.parse(storageConfig.config);
+
     return NextResponse.json({
       id: storageConfig.id,
       type: storageConfig.type,
       configured: true,
+      credentials,
     });
   } catch (error) {
     console.error("Error fetching storage config:", error);

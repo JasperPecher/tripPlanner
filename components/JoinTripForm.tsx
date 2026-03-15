@@ -2,12 +2,12 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { Loader2, Users } from "lucide-react";
+import { Loader2, Users, UserPlus, ChevronRight } from "lucide-react";
 import { useLocale } from "@/lib/LocaleContext";
 
 interface JoinTripFormProps {
   tripId: string;
-  existingMembers: { id: string; name: string }[];
+  existingMembers: { id: string; name: string; isAdmin: boolean }[];
 }
 
 export function JoinTripForm({ tripId, existingMembers }: JoinTripFormProps) {
@@ -16,6 +16,15 @@ export function JoinTripForm({ tripId, existingMembers }: JoinTripFormProps) {
   const [loading, setLoading] = useState(false);
   const [name, setName] = useState("");
   const [error, setError] = useState("");
+  const [showNewMember, setShowNewMember] = useState(existingMembers.length === 0);
+
+  const selectExistingMember = (member: { id: string; name: string; isAdmin: boolean }) => {
+    localStorage.setItem(
+      `trip_${tripId}_member`,
+      JSON.stringify({ id: member.id, name: member.name, isAdmin: member.isAdmin })
+    );
+    router.push(`/trip/${tripId}`);
+  };
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,39 +68,76 @@ export function JoinTripForm({ tripId, existingMembers }: JoinTripFormProps) {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="space-y-4">
-      <div>
-        <label htmlFor="name" className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
-          {t.join.yourName}
-        </label>
-        <input id="name" type="text" value={name}
-          onChange={(e) => { setName(e.target.value); setError(""); }}
-          className="w-full px-4 py-3 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition text-lg"
-          placeholder={t.join.namePlaceholder} autoFocus />
-        {error && <p className="text-red-500 dark:text-red-400 text-sm mt-1">{error}</p>}
-      </div>
-
-      {existingMembers.length > 0 && (
+    <div className="space-y-4">
+      {existingMembers.length > 0 && !showNewMember && (
         <div>
-          <p className="text-sm text-stone-500 dark:text-stone-400 mb-2 flex items-center gap-1">
-            <Users className="w-4 h-4" />{t.join.alreadyInGroup}
+          <p className="text-sm text-stone-500 dark:text-stone-400 mb-3 flex items-center gap-1">
+            <Users className="w-4 h-4" />
+            {t.join.selectMember}
           </p>
-          <div className="flex flex-wrap gap-2">
+          <div className="space-y-2">
             {existingMembers.map((member) => (
-              <span key={member.id} className="inline-flex items-center gap-1 px-3 py-1 bg-stone-100 dark:bg-stone-700 text-stone-700 dark:text-stone-300 rounded-full text-sm">
-                <span className="w-5 h-5 rounded-full bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 flex items-center justify-center text-xs font-medium">
+              <button
+                key={member.id}
+                onClick={() => selectExistingMember(member)}
+                className="w-full flex items-center gap-3 px-4 py-3 bg-stone-50 dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg hover:bg-orange-50 dark:hover:bg-orange-900/20 hover:border-orange-300 dark:hover:border-orange-700 transition text-left group"
+              >
+                <span className="w-8 h-8 rounded-full bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 flex items-center justify-center text-sm font-medium shrink-0">
                   {member.name.charAt(0).toUpperCase()}
-                </span>{member.name}
-              </span>
+                </span>
+                <span className="flex-1 text-stone-900 dark:text-white font-medium">
+                  {member.name}
+                </span>
+                {member.isAdmin && (
+                  <span className="text-xs bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 px-2 py-0.5 rounded-full">
+                    {t.join.admin}
+                  </span>
+                )}
+                <ChevronRight className="w-4 h-4 text-stone-400 group-hover:text-orange-500 transition" />
+              </button>
             ))}
+          </div>
+          <div className="mt-4 pt-4 border-t border-stone-200 dark:border-stone-700">
+            <button
+              onClick={() => setShowNewMember(true)}
+              className="w-full flex items-center justify-center gap-2 px-4 py-2.5 text-orange-600 dark:text-orange-400 hover:bg-orange-50 dark:hover:bg-orange-900/20 rounded-lg transition text-sm font-medium"
+            >
+              <UserPlus className="w-4 h-4" />
+              {t.join.joinAsNew}
+            </button>
           </div>
         </div>
       )}
 
-      <button type="submit" disabled={loading}
-        className="w-full bg-orange-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-orange-600 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-lg">
-        {loading ? (<><Loader2 className="w-5 h-5 animate-spin" />{t.join.joining}</>) : (t.join.joinButton)}
-      </button>
-    </form>
+      {showNewMember && (
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
+              {t.join.yourName}
+            </label>
+            <input id="name" type="text" value={name}
+              onChange={(e) => { setName(e.target.value); setError(""); }}
+              className="w-full px-4 py-3 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition text-lg"
+              placeholder={t.join.namePlaceholder} autoFocus />
+            {error && <p className="text-red-500 dark:text-red-400 text-sm mt-1">{error}</p>}
+          </div>
+
+          {existingMembers.length > 0 && (
+            <button
+              type="button"
+              onClick={() => { setShowNewMember(false); setError(""); }}
+              className="text-sm text-stone-500 dark:text-stone-400 hover:text-orange-600 dark:hover:text-orange-400 transition"
+            >
+              {t.join.backToMembers}
+            </button>
+          )}
+
+          <button type="submit" disabled={loading}
+            className="w-full bg-orange-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-orange-600 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 text-lg">
+            {loading ? (<><Loader2 className="w-5 h-5 animate-spin" />{t.join.joining}</>) : (t.join.joinButton)}
+          </button>
+        </form>
+      )}
+    </div>
   );
 }
