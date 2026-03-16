@@ -5,7 +5,7 @@ import { Plus, Receipt, ArrowRight, X, Loader2, TrendingUp, Wallet, ExternalLink
 import { formatCurrency, calculateBalances, simplifyDebts } from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
 
-type Member = { id: string; name: string; isAdmin: boolean; joinedAt: string; paypalLink?: string | null };
+type Member = { id: string; name: string; joinedAt: string; paypalLink?: string | null };
 type Expense = {
   id: string; description: string; amount: number; currency: string; createdAt: string;
   paidById: string; paidBy: Member;

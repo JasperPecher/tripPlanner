@@ -7,10 +7,9 @@ import { useLocale } from "@/lib/LocaleContext";
 interface NotesSectionProps {
   tripId: string;
   initialNotes: string;
-  isAdmin: boolean;
 }
 
-export function NotesSection({ tripId, initialNotes, isAdmin }: NotesSectionProps) {
+export function NotesSection({ tripId, initialNotes }: NotesSectionProps) {
   const { t } = useLocale();
   const [notes, setNotes] = useState(initialNotes);
   const [editing, setEditing] = useState(false);
@@ -42,7 +41,7 @@ export function NotesSection({ tripId, initialNotes, isAdmin }: NotesSectionProp
         <h2 className="text-lg font-semibold flex items-center gap-2">
           <StickyNote className="w-5 h-5 text-orange-500" />{t.notes.title}
         </h2>
-        {isAdmin && !editing && (
+        {!editing && (
           <button onClick={() => { setDraft(notes); setEditing(true); }}
             className="text-sm text-orange-600 hover:text-orange-700 dark:text-orange-400">{t.notes.edit}</button>
         )}
@@ -67,7 +66,7 @@ export function NotesSection({ tripId, initialNotes, isAdmin }: NotesSectionProp
       ) : notes ? (
         <div className="prose prose-sm dark:prose-invert max-w-none text-stone-700 dark:text-stone-300 whitespace-pre-wrap">{notes}</div>
       ) : (
-        <p className="text-stone-500 dark:text-stone-400 text-sm">{isAdmin ? t.notes.noNotes : ""}</p>
+        <p className="text-stone-500 dark:text-stone-400 text-sm">{t.notes.noNotes}</p>
       )}
     </div>
   );

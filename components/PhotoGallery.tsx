@@ -21,7 +21,7 @@ type Photo = {
   createdAt: string;
 };
 type StorageConfig = { id: string; type: string; config: string } | null;
-type Member = { id: string; name: string; isAdmin: boolean } | null;
+type Member = { id: string; name: string } | null;
 
 interface PhotoGalleryProps {
   tripId: string;

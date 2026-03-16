@@ -7,7 +7,7 @@ import { useLocale } from "@/lib/LocaleContext";
 
 interface JoinTripFormProps {
   tripId: string;
-  existingMembers: { id: string; name: string; isAdmin: boolean }[];
+  existingMembers: { id: string; name: string }[];
 }
 
 export function JoinTripForm({ tripId, existingMembers }: JoinTripFormProps) {
@@ -18,10 +18,10 @@ export function JoinTripForm({ tripId, existingMembers }: JoinTripFormProps) {
   const [error, setError] = useState("");
   const [showNewMember, setShowNewMember] = useState(existingMembers.length === 0);
 
-  const selectExistingMember = (member: { id: string; name: string; isAdmin: boolean }) => {
+  const selectExistingMember = (member: { id: string; name: string }) => {
     localStorage.setItem(
       `trip_${tripId}_member`,
-      JSON.stringify({ id: member.id, name: member.name, isAdmin: member.isAdmin })
+      JSON.stringify({ id: member.id, name: member.name })
     );
     router.push(`/trip/${tripId}`);
   };
@@ -55,7 +55,7 @@ export function JoinTripForm({ tripId, existingMembers }: JoinTripFormProps) {
 
       if (response.ok) {
         localStorage.setItem(`trip_${tripId}_member`,
-          JSON.stringify({ id: data.member.id, name: trimmedName, isAdmin: false }));
+          JSON.stringify({ id: data.member.id, name: trimmedName }));
         router.push(`/trip/${tripId}`);
       } else {
         setError(data.error || t.common.error);
@@ -88,11 +88,6 @@ export function JoinTripForm({ tripId, existingMembers }: JoinTripFormProps) {
                 <span className="flex-1 text-stone-900 dark:text-white font-medium">
                   {member.name}
                 </span>
-                {member.isAdmin && (
-                  <span className="text-xs bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 px-2 py-0.5 rounded-full">
-                    {t.join.admin}
-                  </span>
-                )}
                 <ChevronRight className="w-4 h-4 text-stone-400 group-hover:text-orange-500 transition" />
               </button>
             ))}

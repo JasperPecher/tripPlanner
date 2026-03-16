@@ -30,7 +30,6 @@ type Booking = {
 interface BookingsSectionProps {
   tripId: string;
   bookings: Booking[];
-  isAdmin: boolean;
 }
 
 const typeIcons: Record<string, React.ElementType> = {
@@ -44,7 +43,6 @@ const typeIcons: Record<string, React.ElementType> = {
 export function BookingsSection({
   tripId,
   bookings: initialBookings,
-  isAdmin,
 }: BookingsSectionProps) {
   const { t } = useLocale();
   const [bookings, setBookings] = useState(initialBookings);
@@ -128,7 +126,6 @@ export function BookingsSection({
           <Ticket className="w-5 h-5 text-orange-500" />
           {t.bookings.title}
         </h2>
-        {isAdmin && (
           <button
             onClick={() => setShowForm(true)}
             className="flex items-center gap-1 text-sm text-orange-600 hover:text-orange-700 dark:text-orange-400"
@@ -136,9 +133,8 @@ export function BookingsSection({
             <Plus className="w-4 h-4" />
             {t.bookings.add}
           </button>
-        )}
       </div>
-      {showForm && isAdmin && (
+      {showForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
           <div className="bg-white dark:bg-stone-900 rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
@@ -370,14 +366,12 @@ export function BookingsSection({
                     </p>
                   )}
                 </div>
-                {isAdmin && (
                   <button
                     onClick={() => handleDelete(booking.id)}
                     className="opacity-0 group-hover:opacity-100 text-stone-400 hover:text-red-500 transition p-1"
                   >
                     <X className="w-4 h-4" />
                   </button>
-                )}
               </div>
             );
           })}

@@ -11,7 +11,7 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
     if (!trip) return NextResponse.json({ error: "Trip not found" }, { status: 404 });
     const existing = await prisma.member.findFirst({ where: { tripId, name: { equals: name.trim(), mode: "insensitive" } } });
     if (existing) return NextResponse.json({ error: "This name is already taken" }, { status: 400 });
-    const member = await prisma.member.create({ data: { name: name.trim(), tripId, isAdmin: false } });
+    const member = await prisma.member.create({ data: { name: name.trim(), tripId } });
     return NextResponse.json({ member });
   } catch (error) {
     console.error("Error joining trip:", error);

@@ -29,7 +29,6 @@ import { UserSettings } from "./UserSettings";
 type Member = {
   id: string;
   name: string;
-  isAdmin: boolean;
   joinedAt: string;
   paypalLink?: string | null;
 };
@@ -202,7 +201,6 @@ export function TripDashboard({
                 {currentMember && (
                   <span className="text-xs text-orange-600 dark:text-orange-400">
                     {currentMember.name}
-                    {currentMember.isAdmin && ` (${t.dashboard.admin})`}
                   </span>
                 )}
               </div>
@@ -272,12 +270,10 @@ export function TripDashboard({
               <BookingsSection
                 tripId={trip.id}
                 bookings={trip.bookings}
-                isAdmin={currentMember?.isAdmin || false}
               />
               <NotesSection
                 tripId={trip.id}
                 initialNotes={trip.notes}
-                isAdmin={currentMember?.isAdmin || false}
               />
             </div>
             <div className="space-y-6">
@@ -298,11 +294,6 @@ export function TripDashboard({
                       <span className="font-medium dark:text-white">
                         {member.name}
                       </span>
-                      {member.isAdmin && (
-                        <span className="text-xs bg-orange-100 dark:bg-orange-900/40 text-orange-700 dark:text-orange-300 px-2 py-0.5 rounded-full">
-                          {t.dashboard.admin}
-                        </span>
-                      )}
                     </li>
                   ))}
                 </ul>

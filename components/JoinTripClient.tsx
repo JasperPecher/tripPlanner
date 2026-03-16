@@ -9,7 +9,7 @@ interface JoinTripClientProps {
   tripId: string;
   tripName: string;
   tripDescription: string | null;
-  existingMembers: { id: string; name: string; isAdmin: boolean }[];
+  existingMembers: { id: string; name: string }[];
 }
 
 export function JoinTripClient({ tripId, tripName, tripDescription, existingMembers }: JoinTripClientProps) {

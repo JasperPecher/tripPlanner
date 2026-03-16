@@ -13,7 +13,12 @@ import {
 } from "lucide-react";
 import { useLocale } from "@/lib/LocaleContext";
 
-type Member = { id: string; name: string; isAdmin: boolean };
+type Member = {
+  id: string;
+  name: string;
+  joinedAt: string;
+  paypalLink?: string | null;
+};
 type StorageConfig = { id: string; type: string; config: string } | null;
 type Trip = {
   id: string;
@@ -39,7 +44,6 @@ export function SettingsPage({
 }: SettingsPageProps) {
   const router = useRouter();
   const { t } = useLocale();
-  const isAdmin = currentMember?.isAdmin || false;
 
   const [tripInfo, setTripInfo] = useState({
     name: trip.name,
@@ -157,21 +161,6 @@ export function SettingsPage({
       setDeleting(false);
     }
   };
-
-  if (!isAdmin) {
-    return (
-      <div className="max-w-2xl">
-        <div className={cardClasses}>
-          <h2 className="text-lg font-semibold mb-4 dark:text-white">
-            {t.settings.title}
-          </h2>
-          <p className="text-stone-600 dark:text-stone-400">
-            {t.settings.adminOnly}
-          </p>
-        </div>
-      </div>
-    );
-  }
 
   return (
     <div className="max-w-2xl space-y-6">
@@ -291,7 +280,6 @@ export function SettingsPage({
                       <li>{t.settings.synologyStep1}</li>
                       <li>{t.settings.synologyStep2}</li>
                       <li>{t.settings.synologyStep3}</li>
-                      <li>{t.settings.synologyStep4}</li>
                     </ol>
                   </div>
                 </div>

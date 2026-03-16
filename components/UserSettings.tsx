@@ -4,7 +4,7 @@ import { useState } from "react";
 import { User, CreditCard, Save, Loader2, ExternalLink } from "lucide-react";
 import { useLocale } from "@/lib/LocaleContext";
 
-type Member = { id: string; name: string; isAdmin: boolean; joinedAt: string; paypalLink?: string | null };
+type Member = { id: string; name: string; joinedAt: string; paypalLink?: string | null };
 
 interface UserSettingsProps {
   tripId: string;
@@ -48,7 +48,7 @@ export function UserSettings({ tripId, currentMember, onMemberUpdated }: UserSet
         onMemberUpdated(updated);
         localStorage.setItem(
           `trip_${tripId}_member`,
-          JSON.stringify({ id: updated.id, name: updated.name, isAdmin: updated.isAdmin })
+          JSON.stringify({ id: updated.id, name: updated.name })
         );
         setMessage(t.userSettings.saved);
       } else {

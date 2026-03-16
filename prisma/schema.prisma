@@ -36,7 +36,6 @@ model Member {
   id         String   @id @default(cuid())
   name       String
   joinedAt   DateTime @default(now())
-  isAdmin    Boolean  @default(false)
   paypalLink String?
 
   tripId String

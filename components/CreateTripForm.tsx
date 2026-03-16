@@ -33,7 +33,7 @@ export function CreateTripForm() {
       if (response.ok) {
         localStorage.setItem(
           `trip_${data.trip.id}_member`,
-          JSON.stringify({ id: data.memberId, name: formData.adminName, isAdmin: true })
+          JSON.stringify({ id: data.memberId, name: formData.adminName })
         );
         router.push(`/trip/${data.trip.id}`);
       } else {
