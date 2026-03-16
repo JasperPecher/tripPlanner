@@ -1,22 +1,26 @@
 generator client {
-  provider = "prisma-client-js"
+  provider               = "prisma-client"
+  output                 = "../generated/prisma"
+  engineType             = "client"
+  moduleFormat           = "esm"
+  generatedFileExtension = "ts"
+  importFileExtension    = "ts"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 model Trip {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   name        String
   description String?
-  shareCode   String   @unique
+  shareCode   String    @unique
   startDate   DateTime?
   endDate     DateTime?
-  notes       String   @default("")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  notes       String    @default("")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   members       Member[]
   expenses      Expense[]
@@ -28,16 +32,17 @@ model Trip {
 }
 
 model Member {
-  id        String   @id @default(cuid())
-  name      String
-  joinedAt  DateTime @default(now())
-  isAdmin   Boolean  @default(false)
+  id         String   @id @default(cuid())
+  name       String
+  joinedAt   DateTime @default(now())
+  isAdmin    Boolean  @default(false)
+  paypalLink String?
 
   tripId String
   trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
 
-  paidExpenses   Expense[]    @relation("PaidBy")
-  splitMembers   SplitMember[]
+  paidExpenses Expense[]     @relation("PaidBy")
+  splitMembers SplitMember[]
 
   @@unique([tripId, name])
   @@map("members")
@@ -62,8 +67,8 @@ model Expense {
 }
 
 model SplitMember {
-  id       String @id @default(cuid())
-  amount   Float
+  id     String @id @default(cuid())
+  amount Float
 
   expenseId String
   expense   Expense @relation(fields: [expenseId], references: [id], onDelete: Cascade)
@@ -75,18 +80,18 @@ model SplitMember {
 }
 
 model Booking {
-  id          String   @id @default(cuid())
+  id          String    @id @default(cuid())
   title       String
   description String?
-  type        String   @default("other")
+  type        String    @default("other")
   reference   String?
   checkIn     DateTime?
   checkOut    DateTime?
   location    String?
   price       Float?
-  currency    String   @default("EUR")
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  currency    String    @default("EUR")
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
 
   tripId String
   trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
@@ -95,13 +100,13 @@ model Booking {
 }
 
 model Photo {
-  id        String   @id @default(cuid())
-  filename  String
-  url       String
-  thumbnail String?
-  caption   String?
+  id         String   @id @default(cuid())
+  filename   String
+  url        String
+  thumbnail  String?
+  caption    String?
   uploadedBy String?
-  createdAt DateTime @default(now())
+  createdAt  DateTime @default(now())
 
   tripId String
   trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
@@ -110,9 +115,9 @@ model Photo {
 }
 
 model StorageConfig {
-  id        String @id @default(cuid())
-  type      String
-  config    String
+  id     String @id @default(cuid())
+  type   String
+  config String
 
   tripId String @unique
   trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
