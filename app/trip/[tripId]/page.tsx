@@ -25,6 +25,9 @@ function serializeTrip(trip: any) {
       createdAt: b.createdAt.toISOString(), updatedAt: b.updatedAt.toISOString(),
     })),
     photos: trip.photos.map((p: any) => ({ ...p, createdAt: p.createdAt.toISOString() })),
+    payments: trip.payments.map((p: any) => ({
+      ...p, createdAt: p.createdAt.toISOString(),
+    })),
   };
 }
 
@@ -38,6 +41,7 @@ export default async function TripPage({ params }: PageProps) {
       expenses: { include: { paidBy: true, splits: { include: { member: true } } }, orderBy: { createdAt: "desc" } },
       bookings: { orderBy: { createdAt: "desc" } },
       photos: { orderBy: { createdAt: "desc" } },
+      payments: { include: { from: true, to: true }, orderBy: { createdAt: "desc" } },
       storageConfig: true,
     },
   });

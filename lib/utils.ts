@@ -6,7 +6,7 @@ export function generateShareCode(): string {
 
 export function formatDate(date: Date | string | null): string {
   if (!date) return "Not set";
-  return new Date(date).toLocaleDateString("en-US", {
+  return new Date(date).toLocaleDateString("de-DE", {
     weekday: "short",
     year: "numeric",
     month: "short",
@@ -14,8 +14,23 @@ export function formatDate(date: Date | string | null): string {
   });
 }
 
-export function formatCurrency(amount: number, currency: string = "EUR"): string {
-  return new Intl.NumberFormat("en-US", {
+export function formatDateTime(date: Date | string | null): string {
+  if (!date) return "Not set";
+  return new Date(date).toLocaleString("de-DE", {
+    weekday: "short",
+    year: "numeric",
+    month: "short",
+    day: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
+}
+
+export function formatCurrency(
+  amount: number,
+  currency: string = "EUR",
+): string {
+  return new Intl.NumberFormat("de-DE", {
     style: "currency",
     currency,
   }).format(amount);
@@ -26,29 +41,41 @@ export function calculateBalances(
     paidById: string;
     amount: number;
     splits: { memberId: string; amount: number }[];
-  }[]
+  }[],
+  payments: { fromId: string; toId: string; amount: number }[] = [],
 ): Map<string, number> {
   const balances = new Map<string, number>();
 
   for (const expense of expenses) {
     balances.set(
       expense.paidById,
-      (balances.get(expense.paidById) || 0) + expense.amount
+      (balances.get(expense.paidById) || 0) + expense.amount,
     );
 
     for (const split of expense.splits) {
       balances.set(
         split.memberId,
-        (balances.get(split.memberId) || 0) - split.amount
+        (balances.get(split.memberId) || 0) - split.amount,
       );
     }
+  }
+
+  for (const payment of payments) {
+    balances.set(
+      payment.fromId,
+      (balances.get(payment.fromId) || 0) + payment.amount,
+    );
+    balances.set(
+      payment.toId,
+      (balances.get(payment.toId) || 0) - payment.amount,
+    );
   }
 
   return balances;
 }
 
 export function simplifyDebts(
-  balances: Map<string, number>
+  balances: Map<string, number>,
 ): { from: string; to: string; amount: number }[] {
   const debts: { from: string; to: string; amount: number }[] = [];
   const debtors: { id: string; amount: number }[] = [];

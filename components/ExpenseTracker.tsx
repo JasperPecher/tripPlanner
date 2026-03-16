@@ -1,24 +1,29 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Plus, Receipt, ArrowRight, X, Loader2, TrendingUp, Wallet } from "lucide-react";
+import { Plus, Receipt, ArrowRight, X, Loader2, TrendingUp, Wallet, ExternalLink, CreditCard, Users, CheckCircle } from "lucide-react";
 import { formatCurrency, calculateBalances, simplifyDebts } from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
 
-type Member = { id: string; name: string; isAdmin: boolean; joinedAt: string };
+type Member = { id: string; name: string; isAdmin: boolean; joinedAt: string; paypalLink?: string | null };
 type Expense = {
   id: string; description: string; amount: number; currency: string; createdAt: string;
   paidById: string; paidBy: Member;
   splits: { id: string; amount: number; memberId: string; member: Member }[];
 };
+type Payment = {
+  id: string; amount: number; createdAt: string;
+  fromId: string; toId: string; from: Member; to: Member;
+};
 
 interface ExpenseTrackerProps {
-  tripId: string; members: Member[]; expenses: Expense[]; currentMember: Member | null;
+  tripId: string; members: Member[]; expenses: Expense[]; payments: Payment[]; currentMember: Member | null;
 }
 
-export function ExpenseTracker({ tripId, members, expenses: initialExpenses, currentMember }: ExpenseTrackerProps) {
+export function ExpenseTracker({ tripId, members, expenses: initialExpenses, payments: initialPayments, currentMember }: ExpenseTrackerProps) {
   const { t } = useLocale();
   const [expenses, setExpenses] = useState(initialExpenses);
+  const [payments, setPayments] = useState(initialPayments);
   const [showAddForm, setShowAddForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -29,12 +34,24 @@ export function ExpenseTracker({ tripId, members, expenses: initialExpenses, cur
     customAmounts: members.reduce((acc, m) => ({ ...acc, [m.id]: "" }), {} as Record<string, string>),
   });
 
-  const balances = useMemo(() => calculateBalances(expenses.map((e) => ({
-    paidById: e.paidById, amount: e.amount,
-    splits: e.splits.map((s) => ({ memberId: s.memberId, amount: s.amount })),
-  }))), [expenses]);
+  const balances = useMemo(() => calculateBalances(
+    expenses.map((e) => ({
+      paidById: e.paidById, amount: e.amount,
+      splits: e.splits.map((s) => ({ memberId: s.memberId, amount: s.amount })),
+    })),
+    payments.map((p) => ({ fromId: p.fromId, toId: p.toId, amount: p.amount }))
+  ), [expenses, payments]);
 
   const debts = useMemo(() => simplifyDebts(balances), [balances]);
+
+  const memberTotals = useMemo(() => {
+    const totals = new Map<string, number>();
+    for (const expense of expenses) {
+      totals.set(expense.paidById, (totals.get(expense.paidById) || 0) + expense.amount);
+    }
+    return totals;
+  }, [expenses]);
+
   const inputClasses = "w-full px-4 py-2 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none";
 
   const handleAddExpense = async (e: React.FormEvent) => {
@@ -75,6 +92,36 @@ export function ExpenseTracker({ tripId, members, expenses: initialExpenses, cur
       const response = await fetch(`/api/trips/${tripId}/expenses/${expenseId}`, { method: "DELETE" });
       if (response.ok) setExpenses(expenses.filter((e) => e.id !== expenseId));
     } catch (error) { alert(t.common.error); }
+  };
+
+  const handlePayDebt = async (debt: { from: string; to: string; amount: number }) => {
+    try {
+      const response = await fetch(`/api/trips/${tripId}/payments`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ fromId: debt.from, toId: debt.to, amount: debt.amount }),
+      });
+      if (response.ok) {
+        const newPayment = await response.json();
+        setPayments([newPayment, ...payments]);
+      }
+    } catch (error) {
+      console.error("Failed to record payment:", error);
+    }
+  };
+
+  const handleDeletePayment = async (paymentId: string) => {
+    if (!confirm(t.expenseSummary.confirmDeletePayment)) return;
+    try {
+      const response = await fetch(`/api/trips/${tripId}/payments?paymentId=${paymentId}`, {
+        method: "DELETE",
+      });
+      if (response.ok) {
+        setPayments(payments.filter((p) => p.id !== paymentId));
+      }
+    } catch (error) {
+      console.error("Failed to delete payment:", error);
+    }
   };
 
   return (
@@ -166,6 +213,49 @@ export function ExpenseTracker({ tripId, members, expenses: initialExpenses, cur
         </div>
       )}
 
+      {expenses.length > 0 && (
+        <div className="bg-white dark:bg-stone-900 rounded-xl p-5 shadow-sm border border-stone-200 dark:border-stone-800">
+          <h3 className="font-semibold text-stone-800 dark:text-stone-200 mb-3 flex items-center gap-2">
+            <Users className="w-5 h-5 text-orange-500" />
+            {t.expenseSummary.title}
+          </h3>
+          <div className="space-y-2">
+            {members.map((member) => {
+              const total = memberTotals.get(member.id) || 0;
+              const balance = balances.get(member.id) || 0;
+              return (
+                <div key={member.id} className="py-2 px-3 bg-stone-50 dark:bg-stone-800 rounded-lg">
+                  <div className="flex items-center gap-3 text-sm">
+                    <div className="w-7 h-7 rounded-full bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 flex items-center justify-center text-xs font-medium shrink-0">
+                      {member.name.charAt(0).toUpperCase()}
+                    </div>
+                    <span className="font-medium text-stone-900 dark:text-white flex-1">{member.name}</span>
+                    <span className="text-stone-500 dark:text-stone-400">
+                      {t.expenseSummary.totalSpent}: <span className="font-medium text-stone-700 dark:text-stone-300">{formatCurrency(total)}</span>
+                    </span>
+                    <span className={`font-semibold ${balance > 0.01 ? "text-green-600 dark:text-green-400" : balance < -0.01 ? "text-red-600 dark:text-red-400" : "text-stone-400"}`}>
+                      {balance > 0.01 ? "+" : ""}{formatCurrency(balance)}
+                    </span>
+                  </div>
+                  {member.paypalLink && (
+                    <a
+                      href={member.paypalLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-1 flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 hover:underline"
+                    >
+                      <CreditCard className="w-3 h-3" />
+                      PayPal: {member.paypalLink.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                      <ExternalLink className="w-3 h-3 opacity-70" />
+                    </a>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
       {debts.length > 0 && (
         <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-5">
           <h3 className="font-semibold text-amber-800 dark:text-amber-400 mb-3 flex items-center gap-2">
@@ -176,14 +266,62 @@ export function ExpenseTracker({ tripId, members, expenses: initialExpenses, cur
               const from = members.find((m) => m.id === debt.from);
               const to = members.find((m) => m.id === debt.to);
               return (
-                <div key={idx} className="flex items-center gap-2 text-sm bg-white dark:bg-stone-800 rounded-lg px-3 py-2">
-                  <span className="font-medium text-amber-900 dark:text-amber-300">{from?.name}</span>
-                  <ArrowRight className="w-4 h-4 text-amber-600 dark:text-amber-500" />
-                  <span className="font-medium text-amber-900 dark:text-amber-300">{to?.name}</span>
-                  <span className="ml-auto font-semibold text-amber-700 dark:text-amber-400">{formatCurrency(debt.amount)}</span>
+                <div key={idx} className="bg-white dark:bg-stone-800 rounded-lg px-3 py-2.5">
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="font-medium text-amber-900 dark:text-amber-300">{from?.name}</span>
+                    <ArrowRight className="w-4 h-4 text-amber-600 dark:text-amber-500" />
+                    <span className="font-medium text-amber-900 dark:text-amber-300">{to?.name}</span>
+                    <span className="ml-auto font-semibold text-amber-700 dark:text-amber-400">{formatCurrency(debt.amount)}</span>
+                  </div>
+                  <div className="mt-1.5 flex items-center gap-3">
+                    {to?.paypalLink && (
+                      <a
+                        href={`${to.paypalLink.replace(/\/$/, "")}/${debt.amount}`}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 hover:underline"
+                      >
+                        <CreditCard className="w-3 h-3" />
+                        {t.expenseSummary.payVia} PayPal ({to.name})
+                        <ExternalLink className="w-3 h-3 opacity-70" />
+                      </a>
+                    )}
+                    <button
+                      onClick={() => handlePayDebt(debt)}
+                      className="flex items-center gap-1.5 text-xs text-green-600 dark:text-green-400 hover:underline"
+                    >
+                      <CheckCircle className="w-3 h-3" />
+                      {t.expenseSummary.markAsPaid}
+                    </button>
+                  </div>
                 </div>
               );
             })}
+          </div>
+        </div>
+      )}
+
+      {payments.length > 0 && (
+        <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-5">
+          <h3 className="font-semibold text-green-800 dark:text-green-400 mb-3 flex items-center gap-2">
+            <CheckCircle className="w-5 h-5" />{t.expenseSummary.paymentHistory}
+          </h3>
+          <div className="space-y-2">
+            {payments.map((payment) => (
+              <div key={payment.id} className="flex items-center gap-2 text-sm bg-white dark:bg-stone-800 rounded-lg px-3 py-2 group">
+                <span className="font-medium text-green-900 dark:text-green-300">{payment.from.name}</span>
+                <ArrowRight className="w-3 h-3 text-green-600 dark:text-green-500" />
+                <span className="font-medium text-green-900 dark:text-green-300">{payment.to.name}</span>
+                <span className="ml-auto font-semibold text-green-700 dark:text-green-400">{formatCurrency(payment.amount)}</span>
+                <span className="text-xs text-stone-400">{new Date(payment.createdAt).toLocaleDateString()}</span>
+                <button
+                  onClick={() => handleDeletePayment(payment.id)}
+                  className="opacity-0 group-hover:opacity-100 text-stone-400 hover:text-red-500 transition p-1"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ))}
           </div>
         </div>
       )}

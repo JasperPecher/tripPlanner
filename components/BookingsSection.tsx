@@ -12,7 +12,7 @@ import {
   MapPin,
   Calendar,
 } from "lucide-react";
-import { formatDate, formatCurrency } from "@/lib/utils";
+import { formatDateTime, formatCurrency } from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
 
 type Booking = {
@@ -346,7 +346,16 @@ export function BookingsSection({
                     {booking.checkIn && (
                       <span className="flex items-center gap-1">
                         <Calendar className="w-3 h-3" />
-                        {formatDate(booking.checkIn)}
+                        {formatDateTime(booking.checkIn)}
+                        {booking.checkOut && (
+                          <> &rarr; {formatDateTime(booking.checkOut)}</>
+                        )}
+                      </span>
+                    )}
+                    {!booking.checkIn && booking.checkOut && (
+                      <span className="flex items-center gap-1">
+                        <Calendar className="w-3 h-3" />
+                        {formatDateTime(booking.checkOut)}
                       </span>
                     )}
                     {booking.price && (
