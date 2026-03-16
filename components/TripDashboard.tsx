@@ -166,12 +166,6 @@ export function TripDashboard({
         <div className="max-w-6xl mx-auto px-4 pb-0 py-3 sm:py-4">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0 flex-1">
-              <Link
-                href="/"
-                className="text-xs sm:text-sm text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200"
-              >
-                &larr; {t.dashboard.backToTrips}
-              </Link>
               <h1 className="text-lg sm:text-2xl font-bold text-stone-900 dark:text-white mt-0.5 truncate">
                 {trip.name}
               </h1>
@@ -224,7 +218,9 @@ export function TripDashboard({
                 ) : (
                   <>
                     <Share2 className="w-4 h-4" />
-                    <span className="hidden sm:inline">{t.dashboard.shareLink}</span>
+                    <span className="hidden sm:inline">
+                      {t.dashboard.shareLink}
+                    </span>
                   </>
                 )}
               </button>
