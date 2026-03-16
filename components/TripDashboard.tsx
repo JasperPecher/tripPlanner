@@ -14,6 +14,7 @@ import {
   Sun,
   Moon,
   Globe,
+  User,
 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
@@ -23,8 +24,15 @@ import { PhotoGallery } from "./PhotoGallery";
 import { NotesSection } from "./NotesSection";
 import { BookingsSection } from "./BookingsSection";
 import { SettingsPage } from "./SettingsPage";
+import { UserSettings } from "./UserSettings";
 
-type Member = { id: string; name: string; isAdmin: boolean; joinedAt: string };
+type Member = {
+  id: string;
+  name: string;
+  isAdmin: boolean;
+  joinedAt: string;
+  paypalLink?: string | null;
+};
 type Expense = {
   id: string;
   description: string;
@@ -56,6 +64,15 @@ type Photo = {
   uploadedBy: string | null;
   createdAt: string;
 };
+type Payment = {
+  id: string;
+  amount: number;
+  createdAt: string;
+  fromId: string;
+  toId: string;
+  from: Member;
+  to: Member;
+};
 type StorageConfig = { id: string; type: string; config: string } | null;
 type Trip = {
   id: string;
@@ -71,6 +88,7 @@ type Trip = {
   expenses: Expense[];
   bookings: Booking[];
   photos: Photo[];
+  payments: Payment[];
   storageConfig: StorageConfig;
 };
 
@@ -78,7 +96,7 @@ interface TripDashboardProps {
   trip: Trip;
   shareUrl: string;
 }
-type Tab = "overview" | "expenses" | "photos" | "settings";
+type Tab = "overview" | "expenses" | "photos" | "user" | "settings";
 
 export function TripDashboard({
   trip: initialTrip,
@@ -106,6 +124,14 @@ export function TripDashboard({
     setTimeout(() => setCopied(false), 2000);
   };
 
+  const handleMemberUpdated = (updated: Member) => {
+    setCurrentMember(updated);
+    setTrip({
+      ...trip,
+      members: trip.members.map((m) => (m.id === updated.id ? updated : m)),
+    });
+  };
+
   const tabs = [
     {
       id: "overview" as Tab,
@@ -123,6 +149,11 @@ export function TripDashboard({
       icon: <Camera className="w-4 h-4" />,
     },
     {
+      id: "user" as Tab,
+      label: t.dashboard.tabs.user,
+      icon: <User className="w-4 h-4" />,
+    },
+    {
       id: "settings" as Tab,
       label: t.dashboard.tabs.settings,
       icon: <Settings className="w-4 h-4" />,
@@ -135,12 +166,6 @@ export function TripDashboard({
         <div className="max-w-6xl mx-auto px-4 pb-0 py-4">
           <div className="flex items-center justify-between">
             <div>
-              <Link
-                href="/"
-                className="text-sm text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200"
-              >
-                &larr; {t.dashboard.backToTrips}
-              </Link>
               <h1 className="text-2xl font-bold text-stone-900 dark:text-white mt-1">
                 {trip.name}
               </h1>
@@ -314,6 +339,7 @@ export function TripDashboard({
             tripId={trip.id}
             members={trip.members}
             expenses={trip.expenses}
+            payments={trip.payments}
             currentMember={currentMember}
           />
         )}
@@ -323,6 +349,13 @@ export function TripDashboard({
             photos={trip.photos}
             storageConfig={trip.storageConfig}
             currentMember={currentMember}
+          />
+        )}
+        {activeTab === "user" && currentMember && (
+          <UserSettings
+            tripId={trip.id}
+            currentMember={currentMember}
+            onMemberUpdated={handleMemberUpdated}
           />
         )}
         {activeTab === "settings" && (
