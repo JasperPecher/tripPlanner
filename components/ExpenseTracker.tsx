@@ -225,17 +225,19 @@ export function ExpenseTracker({ tripId, members, expenses: initialExpenses, pay
               const balance = balances.get(member.id) || 0;
               return (
                 <div key={member.id} className="py-2 px-3 bg-stone-50 dark:bg-stone-800 rounded-lg">
-                  <div className="flex items-center gap-3 text-sm">
+                  <div className="flex items-center gap-2 sm:gap-3 text-sm">
                     <div className="w-7 h-7 rounded-full bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 flex items-center justify-center text-xs font-medium shrink-0">
                       {member.name.charAt(0).toUpperCase()}
                     </div>
-                    <span className="font-medium text-stone-900 dark:text-white flex-1">{member.name}</span>
-                    <span className="text-stone-500 dark:text-stone-400">
-                      {t.expenseSummary.totalSpent}: <span className="font-medium text-stone-700 dark:text-stone-300">{formatCurrency(total)}</span>
-                    </span>
-                    <span className={`font-semibold ${balance > 0.01 ? "text-green-600 dark:text-green-400" : balance < -0.01 ? "text-red-600 dark:text-red-400" : "text-stone-400"}`}>
-                      {balance > 0.01 ? "+" : ""}{formatCurrency(balance)}
-                    </span>
+                    <span className="font-medium text-stone-900 dark:text-white truncate">{member.name}</span>
+                    <div className="ml-auto flex items-center gap-2 sm:gap-4 shrink-0">
+                      <span className="text-stone-500 dark:text-stone-400 hidden sm:inline">
+                        {t.expenseSummary.totalSpent}: <span className="font-medium text-stone-700 dark:text-stone-300">{formatCurrency(total)}</span>
+                      </span>
+                      <span className={`font-semibold ${balance > 0.01 ? "text-green-600 dark:text-green-400" : balance < -0.01 ? "text-red-600 dark:text-red-400" : "text-stone-400"}`}>
+                        {balance > 0.01 ? "+" : ""}{formatCurrency(balance)}
+                      </span>
+                    </div>
                   </div>
                   {member.paypalLink && (
                     <a
@@ -267,13 +269,13 @@ export function ExpenseTracker({ tripId, members, expenses: initialExpenses, pay
               const to = members.find((m) => m.id === debt.to);
               return (
                 <div key={idx} className="bg-white dark:bg-stone-800 rounded-lg px-3 py-2.5">
-                  <div className="flex items-center gap-2 text-sm">
+                  <div className="flex items-center gap-2 text-sm flex-wrap">
                     <span className="font-medium text-amber-900 dark:text-amber-300">{from?.name}</span>
-                    <ArrowRight className="w-4 h-4 text-amber-600 dark:text-amber-500" />
+                    <ArrowRight className="w-4 h-4 text-amber-600 dark:text-amber-500 shrink-0" />
                     <span className="font-medium text-amber-900 dark:text-amber-300">{to?.name}</span>
                     <span className="ml-auto font-semibold text-amber-700 dark:text-amber-400">{formatCurrency(debt.amount)}</span>
                   </div>
-                  <div className="mt-1.5 flex items-center gap-3">
+                  <div className="mt-1.5 flex items-center gap-3 flex-wrap">
                     {to?.paypalLink && (
                       <a
                         href={`${to.paypalLink.replace(/\/$/, "")}/${debt.amount}`}

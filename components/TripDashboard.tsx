@@ -163,27 +163,30 @@ export function TripDashboard({
   return (
     <div className="min-h-screen bg-stone-100 dark:bg-stone-950">
       <div className="bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800">
-        <div className="max-w-6xl mx-auto px-4 pb-0 py-4">
-          <div className="flex items-center justify-between">
-            <div>
-              <h1 className="text-2xl font-bold text-stone-900 dark:text-white mt-1">
+        <div className="max-w-6xl mx-auto px-4 pb-0 py-3 sm:py-4">
+          <div className="flex items-start justify-between gap-2">
+            <div className="min-w-0 flex-1">
+              <Link
+                href="/"
+                className="text-xs sm:text-sm text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200"
+              >
+                &larr; {t.dashboard.backToTrips}
+              </Link>
+              <h1 className="text-lg sm:text-2xl font-bold text-stone-900 dark:text-white mt-0.5 truncate">
                 {trip.name}
               </h1>
               {trip.description && (
-                <p className="text-stone-600 dark:text-stone-400 mt-1">
+                <p className="text-sm text-stone-600 dark:text-stone-400 mt-0.5 line-clamp-2 hidden sm:block">
                   {trip.description}
                 </p>
               )}
             </div>
-            <div className="flex items-center gap-3">
+            <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
               <button
                 onClick={() => setLocale(locale === "de" ? "en" : "de")}
-                className="flex items-center gap-1 px-2 py-1.5 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition"
+                className="p-1.5 sm:px-2 sm:py-1.5 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition"
               >
                 <Globe className="w-4 h-4" />
-                <span className="text-sm font-medium">
-                  {locale === "de" ? "EN" : "DE"}
-                </span>
               </button>
               <button
                 onClick={toggleTheme}
@@ -195,7 +198,7 @@ export function TripDashboard({
                   <Moon className="w-5 h-5" />
                 )}
               </button>
-              <div className="text-right mr-4">
+              <div className="text-right hidden sm:block">
                 <div className="flex items-center gap-1 text-sm text-stone-600 dark:text-stone-400">
                   <Users className="w-4 h-4" />
                   <span>
@@ -211,28 +214,28 @@ export function TripDashboard({
               </div>
               <button
                 onClick={handleCopyLink}
-                className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition text-sm font-medium"
+                className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition text-sm font-medium"
               >
                 {copied ? (
                   <>
                     <Check className="w-4 h-4" />
-                    {t.common.copied}
+                    <span className="hidden sm:inline">{t.common.copied}</span>
                   </>
                 ) : (
                   <>
                     <Share2 className="w-4 h-4" />
-                    {t.dashboard.shareLink}
+                    <span className="hidden sm:inline">{t.dashboard.shareLink}</span>
                   </>
                 )}
               </button>
             </div>
           </div>
-          <div className="flex gap-1 mt-4 -mb-px">
+          <div className="flex gap-0.5 sm:gap-1 mt-3 -mb-px overflow-x-auto scrollbar-hide">
             {tabs.map((tab) => (
               <button
                 key={tab.id}
                 onClick={() => setActiveTab(tab.id)}
-                className={`flex items-center gap-2 px-4 py-2.5 text-sm font-medium rounded-t-lg transition ${activeTab === tab.id ? "bg-stone-100 dark:bg-stone-950 text-orange-600 dark:text-orange-400 border border-b-0 border-stone-200 dark:border-stone-700" : "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800"}`}
+                className={`flex items-center gap-1.5 px-3 sm:px-4 py-2 sm:py-2.5 text-xs sm:text-sm font-medium rounded-t-lg transition whitespace-nowrap ${activeTab === tab.id ? "bg-stone-100 dark:bg-stone-950 text-orange-600 dark:text-orange-400 border border-b-0 border-stone-200 dark:border-stone-700" : "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800"}`}
               >
                 {tab.icon}
                 {tab.label}
