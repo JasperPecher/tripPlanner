@@ -17,7 +17,7 @@ export const translations = {
     },
     home: {
       title: "Reiseplaner",
-      subtitle: "Plane gemeinsam mit Freunden. Teile Ausgaben und Momente.",
+      subtitle: "Hier entsteht (vielleicht) noch eine schöne Landingpage",
       feature1Title: "Freunde einladen",
       feature1Desc:
         "Teile einen Link mit deinen Reisebegleitern. Jeder mit dem Link kann der Gruppe beitreten.",
@@ -257,8 +257,7 @@ export const translations = {
     },
     home: {
       title: "Trip Planner",
-      subtitle:
-        "Plan trips together with friends. Split expenses and share moments.",
+      subtitle: "This will (maybe) be a beautiful landing page",
       feature1Title: "Invite Friends",
       feature1Desc:
         "Share a link with your travel buddies. Anyone with the link can join your trip group.",

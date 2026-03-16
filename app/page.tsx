@@ -20,8 +20,8 @@ export default function Home() {
   return (
     <div className="min-h-screen">
       <div className="bg-linear-to-br from-orange-500 to-amber-600 dark:from-orange-800 dark:to-stone-900 text-white">
-        <div className="max-w-6xl mx-auto px-4 pb-0 py-16 sm:py-24">
-          <div className="flex justify-end gap-2 mb-6">
+        <div className="max-w-6xl mx-auto px-4 py-2">
+          <div className="flex justify-end gap-2">
             <button
               onClick={() => setLocale(locale === "de" ? "en" : "de")}
               className="flex items-center gap-1.5 px-3 py-1.5 bg-white/20 hover:bg-white/30 rounded-lg text-sm transition"
@@ -51,8 +51,13 @@ export default function Home() {
           </div>
         </div>
       </div>
-
-      <div className="max-w-6xl mx-auto px-4 py-12">
+      <div className="bg-white dark:bg-stone-900 rounded-2xl shadow-lg p-8 max-w-xl mx-auto border border-stone-200 dark:border-stone-800 mt-5">
+        <h2 className="text-2xl font-bold text-stone-900 dark:text-white mb-6 text-center">
+          {t.home.createTitle}
+        </h2>
+        <CreateTripForm />
+      </div>
+      <div className="max-w-6xl mx-auto px-4 py-5">
         <div className="grid md:grid-cols-3 gap-8 mb-16">
           <div className="bg-white dark:bg-stone-900 rounded-xl p-6 shadow-sm border border-stone-200 dark:border-stone-800">
             <Users className="w-10 h-10 text-orange-500 mb-4" />
@@ -81,13 +86,6 @@ export default function Home() {
               {t.home.feature3Desc}
             </p>
           </div>
-        </div>
-
-        <div className="bg-white dark:bg-stone-900 rounded-2xl shadow-lg p-8 max-w-xl mx-auto border border-stone-200 dark:border-stone-800">
-          <h2 className="text-2xl font-bold text-stone-900 dark:text-white mb-6 text-center">
-            {t.home.createTitle}
-          </h2>
-          <CreateTripForm />
         </div>
       </div>
     </div>
