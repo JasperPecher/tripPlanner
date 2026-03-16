@@ -187,8 +187,6 @@ export const translations = {
       synologyStep2:
         'Klicke mit der rechten Maustaste auf einen Ordner -> "Freigabelink erstellen"',
       synologyStep3:
-        'Aktiviere "Schreibgeschützt" -> Kopiere den Link (fuer die Galerie)',
-      synologyStep4:
         'Erstelle einen zweiten Link mit "Dateianforderung" -> Kopiere den Link (fuer Uploads)',
       synologyShareLink: "Freigabelink (Galerie)",
       synologyShareLinkDesc:
@@ -237,7 +235,8 @@ export const translations = {
       payAndRecord: "Bezahlen & eintragen",
       markAsPaid: "Als bezahlt markieren",
       paymentHistory: "Zahlungen",
-      confirmDeletePayment: "Zahlung wirklich löschen? Der Schuldenstand wird wiederhergestellt.",
+      confirmDeletePayment:
+        "Zahlung wirklich löschen? Der Schuldenstand wird wiederhergestellt.",
     },
   },
   en: {
@@ -422,8 +421,7 @@ export const translations = {
       synologyHowTo: "How to set up Synology:",
       synologyStep1: "Open File Station on your Synology NAS",
       synologyStep2: 'Right-click a folder -> "Create sharing link"',
-      synologyStep3: 'Enable "Read-only" -> Copy the link (for the gallery)',
-      synologyStep4:
+      synologyStep3:
         'Create a second link with "Create file request" -> Copy the link (for uploads)',
       synologyShareLink: "Sharing Link (Gallery)",
       synologyShareLinkDesc:
