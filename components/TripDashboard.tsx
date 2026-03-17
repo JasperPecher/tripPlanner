@@ -174,12 +174,13 @@ export function TripDashboard({
                 </p>
               )}
             </div>
-            <div className="flex items-center gap-1.5 sm:gap-3 shrink-0">
+            <div className="flex items-center gap-1.5  shrink-0">
               <button
                 onClick={() => setLocale(locale === "de" ? "en" : "de")}
-                className="p-1.5 sm:px-2 sm:py-1.5 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition"
+                className="flex items-center gap-1.5 p-1.5 px-3 py-1.5text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200  hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg text-sm transition"
               >
                 <Globe className="w-4 h-4" />
+                {locale === "de" ? "EN" : "DE"}
               </button>
               <button
                 onClick={toggleTheme}
@@ -192,7 +193,7 @@ export function TripDashboard({
                 )}
               </button>
               <div className="text-right hidden sm:block">
-                <div className="flex items-center gap-1 text-sm text-stone-600 dark:text-stone-400">
+                <div className="flex items-center gap-1 px-2 text-sm text-stone-600 dark:text-stone-400">
                   <Users className="w-4 h-4" />
                   <span>
                     {trip.members.length} {t.dashboard.members}
@@ -267,14 +268,8 @@ export function TripDashboard({
                   </div>
                 </div>
               </div>
-              <BookingsSection
-                tripId={trip.id}
-                bookings={trip.bookings}
-              />
-              <NotesSection
-                tripId={trip.id}
-                initialNotes={trip.notes}
-              />
+              <BookingsSection tripId={trip.id} bookings={trip.bookings} />
+              <NotesSection tripId={trip.id} initialNotes={trip.notes} />
             </div>
             <div className="space-y-6">
               <div className="bg-white dark:bg-stone-900 rounded-xl p-6 shadow-sm border border-stone-200 dark:border-stone-800">
