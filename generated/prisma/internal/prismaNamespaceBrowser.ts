@@ -58,7 +58,8 @@ export const ModelName = {
   Booking: 'Booking',
   Photo: 'Photo',
   StorageConfig: 'StorageConfig',
-  Payment: 'Payment'
+  Payment: 'Payment',
+  DateVote: 'DateVote'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -179,6 +180,17 @@ export const PaymentScalarFieldEnum = {
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const DateVoteScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  createdAt: 'createdAt',
+  tripId: 'tripId',
+  memberId: 'memberId'
+} as const
+
+export type DateVoteScalarFieldEnum = (typeof DateVoteScalarFieldEnum)[keyof typeof DateVoteScalarFieldEnum]
 
 
 export const SortOrder = {

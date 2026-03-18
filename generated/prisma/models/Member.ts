@@ -187,6 +187,7 @@ export type MemberWhereInput = {
   splitMembers?: Prisma.SplitMemberListRelationFilter
   paymentsFrom?: Prisma.PaymentListRelationFilter
   paymentsTo?: Prisma.PaymentListRelationFilter
+  dateVotes?: Prisma.DateVoteListRelationFilter
 }
 
 export type MemberOrderByWithRelationInput = {
@@ -200,6 +201,7 @@ export type MemberOrderByWithRelationInput = {
   splitMembers?: Prisma.SplitMemberOrderByRelationAggregateInput
   paymentsFrom?: Prisma.PaymentOrderByRelationAggregateInput
   paymentsTo?: Prisma.PaymentOrderByRelationAggregateInput
+  dateVotes?: Prisma.DateVoteOrderByRelationAggregateInput
 }
 
 export type MemberWhereUniqueInput = Prisma.AtLeast<{
@@ -217,6 +219,7 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   splitMembers?: Prisma.SplitMemberListRelationFilter
   paymentsFrom?: Prisma.PaymentListRelationFilter
   paymentsTo?: Prisma.PaymentListRelationFilter
+  dateVotes?: Prisma.DateVoteListRelationFilter
 }, "id" | "tripId_name">
 
 export type MemberOrderByWithAggregationInput = {
@@ -251,6 +254,7 @@ export type MemberCreateInput = {
   splitMembers?: Prisma.SplitMemberCreateNestedManyWithoutMemberInput
   paymentsFrom?: Prisma.PaymentCreateNestedManyWithoutFromInput
   paymentsTo?: Prisma.PaymentCreateNestedManyWithoutToInput
+  dateVotes?: Prisma.DateVoteCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateInput = {
@@ -263,6 +267,7 @@ export type MemberUncheckedCreateInput = {
   splitMembers?: Prisma.SplitMemberUncheckedCreateNestedManyWithoutMemberInput
   paymentsFrom?: Prisma.PaymentUncheckedCreateNestedManyWithoutFromInput
   paymentsTo?: Prisma.PaymentUncheckedCreateNestedManyWithoutToInput
+  dateVotes?: Prisma.DateVoteUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUpdateInput = {
@@ -275,6 +280,7 @@ export type MemberUpdateInput = {
   splitMembers?: Prisma.SplitMemberUpdateManyWithoutMemberNestedInput
   paymentsFrom?: Prisma.PaymentUpdateManyWithoutFromNestedInput
   paymentsTo?: Prisma.PaymentUpdateManyWithoutToNestedInput
+  dateVotes?: Prisma.DateVoteUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateInput = {
@@ -287,6 +293,7 @@ export type MemberUncheckedUpdateInput = {
   splitMembers?: Prisma.SplitMemberUncheckedUpdateManyWithoutMemberNestedInput
   paymentsFrom?: Prisma.PaymentUncheckedUpdateManyWithoutFromNestedInput
   paymentsTo?: Prisma.PaymentUncheckedUpdateManyWithoutToNestedInput
+  dateVotes?: Prisma.DateVoteUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberCreateManyInput = {
@@ -454,6 +461,20 @@ export type MemberUpdateOneRequiredWithoutPaymentsToNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutPaymentsToInput, Prisma.MemberUpdateWithoutPaymentsToInput>, Prisma.MemberUncheckedUpdateWithoutPaymentsToInput>
 }
 
+export type MemberCreateNestedOneWithoutDateVotesInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutDateVotesInput, Prisma.MemberUncheckedCreateWithoutDateVotesInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutDateVotesInput
+  connect?: Prisma.MemberWhereUniqueInput
+}
+
+export type MemberUpdateOneRequiredWithoutDateVotesNestedInput = {
+  create?: Prisma.XOR<Prisma.MemberCreateWithoutDateVotesInput, Prisma.MemberUncheckedCreateWithoutDateVotesInput>
+  connectOrCreate?: Prisma.MemberCreateOrConnectWithoutDateVotesInput
+  upsert?: Prisma.MemberUpsertWithoutDateVotesInput
+  connect?: Prisma.MemberWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MemberUpdateToOneWithWhereWithoutDateVotesInput, Prisma.MemberUpdateWithoutDateVotesInput>, Prisma.MemberUncheckedUpdateWithoutDateVotesInput>
+}
+
 export type MemberCreateWithoutTripInput = {
   id?: string
   name: string
@@ -463,6 +484,7 @@ export type MemberCreateWithoutTripInput = {
   splitMembers?: Prisma.SplitMemberCreateNestedManyWithoutMemberInput
   paymentsFrom?: Prisma.PaymentCreateNestedManyWithoutFromInput
   paymentsTo?: Prisma.PaymentCreateNestedManyWithoutToInput
+  dateVotes?: Prisma.DateVoteCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateWithoutTripInput = {
@@ -474,6 +496,7 @@ export type MemberUncheckedCreateWithoutTripInput = {
   splitMembers?: Prisma.SplitMemberUncheckedCreateNestedManyWithoutMemberInput
   paymentsFrom?: Prisma.PaymentUncheckedCreateNestedManyWithoutFromInput
   paymentsTo?: Prisma.PaymentUncheckedCreateNestedManyWithoutToInput
+  dateVotes?: Prisma.DateVoteUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberCreateOrConnectWithoutTripInput = {
@@ -522,6 +545,7 @@ export type MemberCreateWithoutPaidExpensesInput = {
   splitMembers?: Prisma.SplitMemberCreateNestedManyWithoutMemberInput
   paymentsFrom?: Prisma.PaymentCreateNestedManyWithoutFromInput
   paymentsTo?: Prisma.PaymentCreateNestedManyWithoutToInput
+  dateVotes?: Prisma.DateVoteCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateWithoutPaidExpensesInput = {
@@ -533,6 +557,7 @@ export type MemberUncheckedCreateWithoutPaidExpensesInput = {
   splitMembers?: Prisma.SplitMemberUncheckedCreateNestedManyWithoutMemberInput
   paymentsFrom?: Prisma.PaymentUncheckedCreateNestedManyWithoutFromInput
   paymentsTo?: Prisma.PaymentUncheckedCreateNestedManyWithoutToInput
+  dateVotes?: Prisma.DateVoteUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberCreateOrConnectWithoutPaidExpensesInput = {
@@ -560,6 +585,7 @@ export type MemberUpdateWithoutPaidExpensesInput = {
   splitMembers?: Prisma.SplitMemberUpdateManyWithoutMemberNestedInput
   paymentsFrom?: Prisma.PaymentUpdateManyWithoutFromNestedInput
   paymentsTo?: Prisma.PaymentUpdateManyWithoutToNestedInput
+  dateVotes?: Prisma.DateVoteUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutPaidExpensesInput = {
@@ -571,6 +597,7 @@ export type MemberUncheckedUpdateWithoutPaidExpensesInput = {
   splitMembers?: Prisma.SplitMemberUncheckedUpdateManyWithoutMemberNestedInput
   paymentsFrom?: Prisma.PaymentUncheckedUpdateManyWithoutFromNestedInput
   paymentsTo?: Prisma.PaymentUncheckedUpdateManyWithoutToNestedInput
+  dateVotes?: Prisma.DateVoteUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberCreateWithoutSplitMembersInput = {
@@ -582,6 +609,7 @@ export type MemberCreateWithoutSplitMembersInput = {
   paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByInput
   paymentsFrom?: Prisma.PaymentCreateNestedManyWithoutFromInput
   paymentsTo?: Prisma.PaymentCreateNestedManyWithoutToInput
+  dateVotes?: Prisma.DateVoteCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateWithoutSplitMembersInput = {
@@ -593,6 +621,7 @@ export type MemberUncheckedCreateWithoutSplitMembersInput = {
   paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByInput
   paymentsFrom?: Prisma.PaymentUncheckedCreateNestedManyWithoutFromInput
   paymentsTo?: Prisma.PaymentUncheckedCreateNestedManyWithoutToInput
+  dateVotes?: Prisma.DateVoteUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberCreateOrConnectWithoutSplitMembersInput = {
@@ -620,6 +649,7 @@ export type MemberUpdateWithoutSplitMembersInput = {
   paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByNestedInput
   paymentsFrom?: Prisma.PaymentUpdateManyWithoutFromNestedInput
   paymentsTo?: Prisma.PaymentUpdateManyWithoutToNestedInput
+  dateVotes?: Prisma.DateVoteUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutSplitMembersInput = {
@@ -631,6 +661,7 @@ export type MemberUncheckedUpdateWithoutSplitMembersInput = {
   paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByNestedInput
   paymentsFrom?: Prisma.PaymentUncheckedUpdateManyWithoutFromNestedInput
   paymentsTo?: Prisma.PaymentUncheckedUpdateManyWithoutToNestedInput
+  dateVotes?: Prisma.DateVoteUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberCreateWithoutPaymentsFromInput = {
@@ -642,6 +673,7 @@ export type MemberCreateWithoutPaymentsFromInput = {
   paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByInput
   splitMembers?: Prisma.SplitMemberCreateNestedManyWithoutMemberInput
   paymentsTo?: Prisma.PaymentCreateNestedManyWithoutToInput
+  dateVotes?: Prisma.DateVoteCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateWithoutPaymentsFromInput = {
@@ -653,6 +685,7 @@ export type MemberUncheckedCreateWithoutPaymentsFromInput = {
   paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByInput
   splitMembers?: Prisma.SplitMemberUncheckedCreateNestedManyWithoutMemberInput
   paymentsTo?: Prisma.PaymentUncheckedCreateNestedManyWithoutToInput
+  dateVotes?: Prisma.DateVoteUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberCreateOrConnectWithoutPaymentsFromInput = {
@@ -669,6 +702,7 @@ export type MemberCreateWithoutPaymentsToInput = {
   paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByInput
   splitMembers?: Prisma.SplitMemberCreateNestedManyWithoutMemberInput
   paymentsFrom?: Prisma.PaymentCreateNestedManyWithoutFromInput
+  dateVotes?: Prisma.DateVoteCreateNestedManyWithoutMemberInput
 }
 
 export type MemberUncheckedCreateWithoutPaymentsToInput = {
@@ -680,6 +714,7 @@ export type MemberUncheckedCreateWithoutPaymentsToInput = {
   paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByInput
   splitMembers?: Prisma.SplitMemberUncheckedCreateNestedManyWithoutMemberInput
   paymentsFrom?: Prisma.PaymentUncheckedCreateNestedManyWithoutFromInput
+  dateVotes?: Prisma.DateVoteUncheckedCreateNestedManyWithoutMemberInput
 }
 
 export type MemberCreateOrConnectWithoutPaymentsToInput = {
@@ -707,6 +742,7 @@ export type MemberUpdateWithoutPaymentsFromInput = {
   paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByNestedInput
   splitMembers?: Prisma.SplitMemberUpdateManyWithoutMemberNestedInput
   paymentsTo?: Prisma.PaymentUpdateManyWithoutToNestedInput
+  dateVotes?: Prisma.DateVoteUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutPaymentsFromInput = {
@@ -718,6 +754,7 @@ export type MemberUncheckedUpdateWithoutPaymentsFromInput = {
   paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByNestedInput
   splitMembers?: Prisma.SplitMemberUncheckedUpdateManyWithoutMemberNestedInput
   paymentsTo?: Prisma.PaymentUncheckedUpdateManyWithoutToNestedInput
+  dateVotes?: Prisma.DateVoteUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUpsertWithoutPaymentsToInput = {
@@ -740,6 +777,7 @@ export type MemberUpdateWithoutPaymentsToInput = {
   paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByNestedInput
   splitMembers?: Prisma.SplitMemberUpdateManyWithoutMemberNestedInput
   paymentsFrom?: Prisma.PaymentUpdateManyWithoutFromNestedInput
+  dateVotes?: Prisma.DateVoteUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutPaymentsToInput = {
@@ -751,6 +789,71 @@ export type MemberUncheckedUpdateWithoutPaymentsToInput = {
   paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByNestedInput
   splitMembers?: Prisma.SplitMemberUncheckedUpdateManyWithoutMemberNestedInput
   paymentsFrom?: Prisma.PaymentUncheckedUpdateManyWithoutFromNestedInput
+  dateVotes?: Prisma.DateVoteUncheckedUpdateManyWithoutMemberNestedInput
+}
+
+export type MemberCreateWithoutDateVotesInput = {
+  id?: string
+  name: string
+  joinedAt?: Date | string
+  paypalLink?: string | null
+  trip: Prisma.TripCreateNestedOneWithoutMembersInput
+  paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByInput
+  splitMembers?: Prisma.SplitMemberCreateNestedManyWithoutMemberInput
+  paymentsFrom?: Prisma.PaymentCreateNestedManyWithoutFromInput
+  paymentsTo?: Prisma.PaymentCreateNestedManyWithoutToInput
+}
+
+export type MemberUncheckedCreateWithoutDateVotesInput = {
+  id?: string
+  name: string
+  joinedAt?: Date | string
+  paypalLink?: string | null
+  tripId: string
+  paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByInput
+  splitMembers?: Prisma.SplitMemberUncheckedCreateNestedManyWithoutMemberInput
+  paymentsFrom?: Prisma.PaymentUncheckedCreateNestedManyWithoutFromInput
+  paymentsTo?: Prisma.PaymentUncheckedCreateNestedManyWithoutToInput
+}
+
+export type MemberCreateOrConnectWithoutDateVotesInput = {
+  where: Prisma.MemberWhereUniqueInput
+  create: Prisma.XOR<Prisma.MemberCreateWithoutDateVotesInput, Prisma.MemberUncheckedCreateWithoutDateVotesInput>
+}
+
+export type MemberUpsertWithoutDateVotesInput = {
+  update: Prisma.XOR<Prisma.MemberUpdateWithoutDateVotesInput, Prisma.MemberUncheckedUpdateWithoutDateVotesInput>
+  create: Prisma.XOR<Prisma.MemberCreateWithoutDateVotesInput, Prisma.MemberUncheckedCreateWithoutDateVotesInput>
+  where?: Prisma.MemberWhereInput
+}
+
+export type MemberUpdateToOneWithWhereWithoutDateVotesInput = {
+  where?: Prisma.MemberWhereInput
+  data: Prisma.XOR<Prisma.MemberUpdateWithoutDateVotesInput, Prisma.MemberUncheckedUpdateWithoutDateVotesInput>
+}
+
+export type MemberUpdateWithoutDateVotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  trip?: Prisma.TripUpdateOneRequiredWithoutMembersNestedInput
+  paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByNestedInput
+  splitMembers?: Prisma.SplitMemberUpdateManyWithoutMemberNestedInput
+  paymentsFrom?: Prisma.PaymentUpdateManyWithoutFromNestedInput
+  paymentsTo?: Prisma.PaymentUpdateManyWithoutToNestedInput
+}
+
+export type MemberUncheckedUpdateWithoutDateVotesInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  tripId?: Prisma.StringFieldUpdateOperationsInput | string
+  paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByNestedInput
+  splitMembers?: Prisma.SplitMemberUncheckedUpdateManyWithoutMemberNestedInput
+  paymentsFrom?: Prisma.PaymentUncheckedUpdateManyWithoutFromNestedInput
+  paymentsTo?: Prisma.PaymentUncheckedUpdateManyWithoutToNestedInput
 }
 
 export type MemberCreateManyTripInput = {
@@ -769,6 +872,7 @@ export type MemberUpdateWithoutTripInput = {
   splitMembers?: Prisma.SplitMemberUpdateManyWithoutMemberNestedInput
   paymentsFrom?: Prisma.PaymentUpdateManyWithoutFromNestedInput
   paymentsTo?: Prisma.PaymentUpdateManyWithoutToNestedInput
+  dateVotes?: Prisma.DateVoteUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateWithoutTripInput = {
@@ -780,6 +884,7 @@ export type MemberUncheckedUpdateWithoutTripInput = {
   splitMembers?: Prisma.SplitMemberUncheckedUpdateManyWithoutMemberNestedInput
   paymentsFrom?: Prisma.PaymentUncheckedUpdateManyWithoutFromNestedInput
   paymentsTo?: Prisma.PaymentUncheckedUpdateManyWithoutToNestedInput
+  dateVotes?: Prisma.DateVoteUncheckedUpdateManyWithoutMemberNestedInput
 }
 
 export type MemberUncheckedUpdateManyWithoutTripInput = {
@@ -799,6 +904,7 @@ export type MemberCountOutputType = {
   splitMembers: number
   paymentsFrom: number
   paymentsTo: number
+  dateVotes: number
 }
 
 export type MemberCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -806,6 +912,7 @@ export type MemberCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions
   splitMembers?: boolean | MemberCountOutputTypeCountSplitMembersArgs
   paymentsFrom?: boolean | MemberCountOutputTypeCountPaymentsFromArgs
   paymentsTo?: boolean | MemberCountOutputTypeCountPaymentsToArgs
+  dateVotes?: boolean | MemberCountOutputTypeCountDateVotesArgs
 }
 
 /**
@@ -846,6 +953,13 @@ export type MemberCountOutputTypeCountPaymentsToArgs<ExtArgs extends runtime.Typ
   where?: Prisma.PaymentWhereInput
 }
 
+/**
+ * MemberCountOutputType without action
+ */
+export type MemberCountOutputTypeCountDateVotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.DateVoteWhereInput
+}
+
 
 export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -858,6 +972,7 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   splitMembers?: boolean | Prisma.Member$splitMembersArgs<ExtArgs>
   paymentsFrom?: boolean | Prisma.Member$paymentsFromArgs<ExtArgs>
   paymentsTo?: boolean | Prisma.Member$paymentsToArgs<ExtArgs>
+  dateVotes?: boolean | Prisma.Member$dateVotesArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["member"]>
 
@@ -894,6 +1009,7 @@ export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   splitMembers?: boolean | Prisma.Member$splitMembersArgs<ExtArgs>
   paymentsFrom?: boolean | Prisma.Member$paymentsFromArgs<ExtArgs>
   paymentsTo?: boolean | Prisma.Member$paymentsToArgs<ExtArgs>
+  dateVotes?: boolean | Prisma.Member$dateVotesArgs<ExtArgs>
   _count?: boolean | Prisma.MemberCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MemberIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -911,6 +1027,7 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     splitMembers: Prisma.$SplitMemberPayload<ExtArgs>[]
     paymentsFrom: Prisma.$PaymentPayload<ExtArgs>[]
     paymentsTo: Prisma.$PaymentPayload<ExtArgs>[]
+    dateVotes: Prisma.$DateVotePayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1317,6 +1434,7 @@ export interface Prisma__MemberClient<T, Null = never, ExtArgs extends runtime.T
   splitMembers<T extends Prisma.Member$splitMembersArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$splitMembersArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$SplitMemberPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   paymentsFrom<T extends Prisma.Member$paymentsFromArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$paymentsFromArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   paymentsTo<T extends Prisma.Member$paymentsToArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$paymentsToArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PaymentPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  dateVotes<T extends Prisma.Member$dateVotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Member$dateVotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DateVotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1845,6 +1963,30 @@ export type Member$paymentsToArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.PaymentScalarFieldEnum | Prisma.PaymentScalarFieldEnum[]
+}
+
+/**
+ * Member.dateVotes
+ */
+export type Member$dateVotesArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the DateVote
+   */
+  select?: Prisma.DateVoteSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the DateVote
+   */
+  omit?: Prisma.DateVoteOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.DateVoteInclude<ExtArgs> | null
+  where?: Prisma.DateVoteWhereInput
+  orderBy?: Prisma.DateVoteOrderByWithRelationInput | Prisma.DateVoteOrderByWithRelationInput[]
+  cursor?: Prisma.DateVoteWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.DateVoteScalarFieldEnum | Prisma.DateVoteScalarFieldEnum[]
 }
 
 /**

@@ -391,7 +391,8 @@ export const ModelName = {
   Booking: 'Booking',
   Photo: 'Photo',
   StorageConfig: 'StorageConfig',
-  Payment: 'Payment'
+  Payment: 'Payment',
+  DateVote: 'DateVote'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -407,7 +408,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "trip" | "member" | "expense" | "splitMember" | "booking" | "photo" | "storageConfig" | "payment"
+    modelProps: "trip" | "member" | "expense" | "splitMember" | "booking" | "photo" | "storageConfig" | "payment" | "dateVote"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1003,6 +1004,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    DateVote: {
+      payload: Prisma.$DateVotePayload<ExtArgs>
+      fields: Prisma.DateVoteFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.DateVoteFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DateVotePayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.DateVoteFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DateVotePayload>
+        }
+        findFirst: {
+          args: Prisma.DateVoteFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DateVotePayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.DateVoteFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DateVotePayload>
+        }
+        findMany: {
+          args: Prisma.DateVoteFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DateVotePayload>[]
+        }
+        create: {
+          args: Prisma.DateVoteCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DateVotePayload>
+        }
+        createMany: {
+          args: Prisma.DateVoteCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.DateVoteCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DateVotePayload>[]
+        }
+        delete: {
+          args: Prisma.DateVoteDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DateVotePayload>
+        }
+        update: {
+          args: Prisma.DateVoteUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DateVotePayload>
+        }
+        deleteMany: {
+          args: Prisma.DateVoteDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.DateVoteUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.DateVoteUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DateVotePayload>[]
+        }
+        upsert: {
+          args: Prisma.DateVoteUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$DateVotePayload>
+        }
+        aggregate: {
+          args: Prisma.DateVoteAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateDateVote>
+        }
+        groupBy: {
+          args: Prisma.DateVoteGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DateVoteGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.DateVoteCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.DateVoteCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1144,6 +1219,17 @@ export const PaymentScalarFieldEnum = {
 } as const
 
 export type PaymentScalarFieldEnum = (typeof PaymentScalarFieldEnum)[keyof typeof PaymentScalarFieldEnum]
+
+
+export const DateVoteScalarFieldEnum = {
+  id: 'id',
+  date: 'date',
+  createdAt: 'createdAt',
+  tripId: 'tripId',
+  memberId: 'memberId'
+} as const
+
+export type DateVoteScalarFieldEnum = (typeof DateVoteScalarFieldEnum)[keyof typeof DateVoteScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1334,6 +1420,7 @@ export type GlobalOmitConfig = {
   photo?: Prisma.PhotoOmit
   storageConfig?: Prisma.StorageConfigOmit
   payment?: Prisma.PaymentOmit
+  dateVote?: Prisma.DateVoteOmit
 }
 
 /* Types for Logging */

@@ -226,6 +226,16 @@ export const translations = {
       save: "Profil speichern",
       saved: "Profil gespeichert!",
     },
+    dateVoting: {
+      title: "Termine abstimmen",
+      description:
+        "Klicke auf Tage, die für dich passen. Du siehst, welche Daten für die anderen am besten funktionieren.",
+      noVotes: "Noch keine Stimmen. Klicke auf Tage, um abzustimmen!",
+      votesCount: "Stimmen",
+      allAvailable: "Alle verfügbar!",
+      previousMonth: "Vorheriger Monat",
+      nextMonth: "Nächster Monat",
+    },
     expenseSummary: {
       title: "Zusammenfassung",
       totalSpent: "Ausgegeben",
@@ -459,6 +469,16 @@ export const translations = {
       testPaypal: "Test PayPal Link",
       save: "Save Profile",
       saved: "Profile saved!",
+    },
+    dateVoting: {
+      title: "Vote on Dates",
+      description:
+        "Click on days that work for you. See which dates work best for everyone.",
+      noVotes: "No votes yet. Click on days to vote!",
+      votesCount: "votes",
+      allAvailable: "All available!",
+      previousMonth: "Previous month",
+      nextMonth: "Next month",
     },
     expenseSummary: {
       title: "Summary",
