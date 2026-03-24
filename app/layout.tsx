@@ -4,7 +4,7 @@ import { Providers } from "@/components/Providers";
 import { SWRegister } from "@/components/SWRegister";
 
 export const metadata: Metadata = {
-  title: "Reiseplaner - Gemeinsam Reisen planen",
+  title: "Reiseplaner",
   description: "Plane gemeinsam mit Freunden Reisen, teile Ausgaben und Fotos",
   manifest: "/manifest.json",
   appleWebApp: {
