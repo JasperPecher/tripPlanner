@@ -57,7 +57,7 @@ export default function Home() {
         </h2>
         <CreateTripForm />
       </div>
-      <div className="max-w-6xl mx-auto px-4 py-5">
+      {/* <div className="max-w-6xl mx-auto px-4 py-5">
         <div className="grid md:grid-cols-3 gap-8 mb-16">
           <div className="bg-white dark:bg-stone-900 rounded-xl p-6 shadow-sm border border-stone-200 dark:border-stone-800">
             <Users className="w-10 h-10 text-orange-500 mb-4" />
@@ -87,7 +87,7 @@ export default function Home() {
             </p>
           </div>
         </div>
-      </div>
+      </div> */}
     </div>
   );
 }
