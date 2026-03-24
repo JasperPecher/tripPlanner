@@ -162,7 +162,7 @@ export function TripDashboard({
   return (
     <div className="min-h-screen bg-stone-100 dark:bg-stone-950">
       <div className="bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800">
-        <div className="max-w-6xl mx-auto px-4 pb-0 py-3 sm:py-4">
+        <div className="max-w-6xl mx-auto px-4 pb-0 py-3 ">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0 flex-1">
               <h1 className="text-lg sm:text-2xl font-bold text-stone-900 dark:text-white mt-0.5 truncate">
