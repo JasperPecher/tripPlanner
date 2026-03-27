@@ -114,3 +114,9 @@ Die Anwendung nutzt folgende Hauptentitäten:
 - **Booking** – Buchungen (Unterkünfte, Transport, etc.)
 - **Photo** – Fotos zur Reise
 - **Payment** – Ausgleichszahlungen zwischen Teilnehmern
+
+## ToDo:
+
+- implement loading animation on creating
+- localization issue with time and dates in booking section
+- load photos source faster
