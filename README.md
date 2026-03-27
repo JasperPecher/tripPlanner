@@ -120,3 +120,4 @@ Die Anwendung nutzt folgende Hauptentitäten:
 - implement loading animation on creating
 - localization issue with time and dates in booking section
 - load photos source faster
+- mobile navbar
