@@ -75,8 +75,9 @@ export const translations = {
       title: "Buchungen & Reservierungen",
       noBookings: "Noch keine Buchungen.",
       types: {
-        flight: "Flug",
         hotel: "Hotel",
+        flight: "Flug",
+        train: "Zug",
         car: "Mietwagen",
         activity: "Aktivität",
         other: "Sonstiges",
@@ -312,8 +313,9 @@ export const translations = {
       add: "Add",
       noBookings: "No bookings yet.",
       types: {
-        flight: "Flight",
         hotel: "Hotel",
+        flight: "Flight",
+        train: "Train",
         car: "Car Rental",
         activity: "Activity",
         other: "Other",
