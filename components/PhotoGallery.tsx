@@ -47,6 +47,7 @@ export function PhotoGallery({
   const [uploading, setUploading] = useState(false);
   const [selectedPhoto, setSelectedPhoto] = useState<Photo | null>(null);
   const [links, setLinks] = useState<ExternalLinks | null>(null);
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     if (!storageConfig) return;
@@ -60,9 +61,16 @@ export function PhotoGallery({
           synologyShareLink: data.credentials.synologyShareLink || "",
           synologyRequestLink: data.credentials.synologyRequestLink || "",
         });
+        setLoading(false);
       })
       .catch(() => {});
   }, [tripId, storageConfig]);
+
+  const hasLinks =
+    links &&
+    (links.googlePhotosLink ||
+      links.synologyShareLink ||
+      links.synologyRequestLink);
 
   const handleUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
@@ -91,12 +99,6 @@ export function PhotoGallery({
     }
   };
 
-  const hasLinks =
-    links &&
-    (links.googlePhotosLink ||
-      links.synologyShareLink ||
-      links.synologyRequestLink);
-
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -104,7 +106,7 @@ export function PhotoGallery({
           <Camera className="w-6 h-6 text-orange-500" />
           {t.photos.title}
         </h2>
-        {!hasLinks ? (
+        {/* {!hasLinks ? (
           <label className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 text-sm font-medium cursor-pointer">
             {uploading ? (
               <>
@@ -128,124 +130,131 @@ export function PhotoGallery({
           </label>
         ) : (
           ""
-        )}
+        )} */}
       </div>
-
-      {hasLinks ? (
-        <div className="flex flex-wrap gap-3">
-          {links.synologyRequestLink && (
-            <a
-              href={links.synologyRequestLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm font-medium transition"
-            >
-              <Upload className="w-4 h-4" />
-              {t.photos.uploadToSynology}
-              <ExternalLink className="w-3 h-3 opacity-70" />
-            </a>
-          )}
-          {links.synologyShareLink && (
-            <a
-              href={links.synologyShareLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-stone-700 border border-stone-200 dark:border-stone-600 text-stone-700 dark:text-stone-200 rounded-lg hover:bg-stone-50 dark:hover:bg-stone-600 text-sm font-medium transition"
-            >
-              {t.photos.viewOnSynology}
-              <ExternalLink className="w-3 h-3 opacity-70" />
-            </a>
-          )}
-          {links.googlePhotosLink && (
-            <a
-              href={links.googlePhotosLink}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-stone-700 border border-stone-200 dark:border-stone-600 text-stone-700 dark:text-stone-200 rounded-lg hover:bg-stone-50 dark:hover:bg-stone-600 text-sm font-medium transition"
-            >
-              {t.photos.viewOnGoogle}
-              <ExternalLink className="w-3 h-3 opacity-70" />
-            </a>
-          )}
+      {loading ? (
+        <div className="h-100 content-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mt-auto"></div>
         </div>
       ) : (
         <div>
-          {selectedPhoto && (
-            <div
-              className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
-              onClick={() => setSelectedPhoto(null)}
-            >
-              <button
-                onClick={() => setSelectedPhoto(null)}
-                className="absolute top-4 right-4 text-white hover:text-stone-300"
-              >
-                <X className="w-8 h-8" />
-              </button>
-              <div
-                className="max-w-5xl max-h-full"
-                onClick={(e) => e.stopPropagation()}
-              >
-                <img
-                  src={selectedPhoto.url}
-                  alt={selectedPhoto.caption || selectedPhoto.filename}
-                  className="max-w-full max-h-[85vh] object-contain rounded-lg"
-                />
-                {selectedPhoto.caption && (
-                  <p className="text-white text-center mt-3">
-                    {selectedPhoto.caption}
-                  </p>
-                )}
-                {selectedPhoto.uploadedBy && (
-                  <p className="text-stone-400 text-center text-sm mt-1">
-                    {t.photos.uploadedBy} {selectedPhoto.uploadedBy}
-                  </p>
-                )}
-              </div>
-            </div>
-          )}
-          {photos.length === 0 ? (
-            <div className="bg-white dark:bg-stone-900 rounded-xl p-12 shadow-sm border border-stone-200 dark:border-stone-800 text-center">
-              <ImageIcon className="w-16 h-16 mx-auto mb-4 text-stone-300 dark:text-stone-600" />
-              <h3 className="text-lg font-medium text-stone-700 dark:text-stone-300 mb-2">
-                {t.photos.noPhotos}
-              </h3>
-              <p className="text-stone-500 dark:text-stone-400 mb-4">
-                {t.photos.noPhotosDesc}
-              </p>
-              <label className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 text-sm font-medium cursor-pointer">
-                <Upload className="w-4 h-4" />
-                {t.photos.uploadFirst}
-                <input
-                  type="file"
-                  multiple
-                  accept="image/*"
-                  onChange={handleUpload}
-                  className="hidden"
-                  disabled={uploading}
-                />
-              </label>
+          {hasLinks ? (
+            <div className="flex flex-wrap gap-3">
+              {links.synologyRequestLink && (
+                <a
+                  href={links.synologyRequestLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-2.5 bg-blue-500 text-white rounded-lg hover:bg-blue-600 text-sm font-medium transition"
+                >
+                  <Upload className="w-4 h-4" />
+                  {t.photos.uploadToSynology}
+                  <ExternalLink className="w-3 h-3 opacity-70" />
+                </a>
+              )}
+              {links.synologyShareLink && (
+                <a
+                  href={links.synologyShareLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-stone-700 border border-stone-200 dark:border-stone-600 text-stone-700 dark:text-stone-200 rounded-lg hover:bg-stone-50 dark:hover:bg-stone-600 text-sm font-medium transition"
+                >
+                  {t.photos.viewOnSynology}
+                  <ExternalLink className="w-3 h-3 opacity-70" />
+                </a>
+              )}
+              {links.googlePhotosLink && (
+                <a
+                  href={links.googlePhotosLink}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center gap-2 px-4 py-2.5 bg-white dark:bg-stone-700 border border-stone-200 dark:border-stone-600 text-stone-700 dark:text-stone-200 rounded-lg hover:bg-stone-50 dark:hover:bg-stone-600 text-sm font-medium transition"
+                >
+                  {t.photos.viewOnGoogle}
+                  <ExternalLink className="w-3 h-3 opacity-70" />
+                </a>
+              )}
             </div>
           ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
-              {photos.map((photo) => (
-                <button
-                  key={photo.id}
-                  onClick={() => setSelectedPhoto(photo)}
-                  className="relative aspect-square rounded-lg overflow-hidden bg-stone-100 dark:bg-stone-800 hover:opacity-90 transition group"
+            <div>
+              {selectedPhoto && (
+                <div
+                  className="fixed inset-0 bg-black/90 flex items-center justify-center z-50 p-4"
+                  onClick={() => setSelectedPhoto(null)}
                 >
-                  <img
-                    src={photo.thumbnail || photo.url}
-                    alt={photo.caption || photo.filename}
-                    className="w-full h-full object-cover"
-                  />
-                  <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition" />
-                  {photo.uploadedBy && (
-                    <span className="absolute bottom-2 left-2 text-xs text-white bg-black/50 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition">
-                      {photo.uploadedBy}
-                    </span>
-                  )}
-                </button>
-              ))}
+                  <button
+                    onClick={() => setSelectedPhoto(null)}
+                    className="absolute top-4 right-4 text-white hover:text-stone-300"
+                  >
+                    <X className="w-8 h-8" />
+                  </button>
+                  <div
+                    className="max-w-5xl max-h-full"
+                    onClick={(e) => e.stopPropagation()}
+                  >
+                    <img
+                      src={selectedPhoto.url}
+                      alt={selectedPhoto.caption || selectedPhoto.filename}
+                      className="max-w-full max-h-[85vh] object-contain rounded-lg"
+                    />
+                    {selectedPhoto.caption && (
+                      <p className="text-white text-center mt-3">
+                        {selectedPhoto.caption}
+                      </p>
+                    )}
+                    {selectedPhoto.uploadedBy && (
+                      <p className="text-stone-400 text-center text-sm mt-1">
+                        {t.photos.uploadedBy} {selectedPhoto.uploadedBy}
+                      </p>
+                    )}
+                  </div>
+                </div>
+              )}
+              {photos.length === 0 ? (
+                <div className="bg-white dark:bg-stone-900 rounded-xl p-12 shadow-sm border border-stone-200 dark:border-stone-800 text-center">
+                  <ImageIcon className="w-16 h-16 mx-auto mb-4 text-stone-300 dark:text-stone-600" />
+                  <h3 className="text-lg font-medium text-stone-700 dark:text-stone-300 mb-2">
+                    {t.photos.noPhotos}
+                  </h3>
+                  <p className="text-stone-500 dark:text-stone-400 mb-4">
+                    {t.photos.noPhotosDesc}
+                  </p>
+                  <label className="inline-flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 text-sm font-medium cursor-pointer">
+                    <Upload className="w-4 h-4" />
+                    {t.photos.uploadFirst}
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={handleUpload}
+                      className="hidden"
+                      disabled={uploading}
+                    />
+                  </label>
+                </div>
+              ) : (
+                <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-3">
+                  {photos.map((photo) => (
+                    <button
+                      key={photo.id}
+                      onClick={() => setSelectedPhoto(photo)}
+                      className="relative aspect-square rounded-lg overflow-hidden bg-stone-100 dark:bg-stone-800 hover:opacity-90 transition group"
+                    >
+                      <img
+                        src={photo.thumbnail || photo.url}
+                        alt={photo.caption || photo.filename}
+                        className="w-full h-full object-cover"
+                      />
+                      <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition" />
+                      {photo.uploadedBy && (
+                        <span className="absolute bottom-2 left-2 text-xs text-white bg-black/50 px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition">
+                          {photo.uploadedBy}
+                        </span>
+                      )}
+                    </button>
+                  ))}
+                </div>
+              )}
             </div>
           )}
         </div>
