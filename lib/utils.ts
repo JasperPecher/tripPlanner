@@ -113,3 +113,8 @@ export function simplifyDebts(
 
   return debts;
 }
+
+export function normalizeInputDate(s?: string): string {
+  if (!s) return "";
+  return s.replace(/\.\d+Z?$/, "").slice(0, 16);
+}
