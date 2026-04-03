@@ -114,7 +114,14 @@ export function simplifyDebts(
   return debts;
 }
 
-export function normalizeInputDate(s?: string): string {
-  if (!s) return "";
-  return s.replace(/\.\d+Z?$/, "").slice(0, 16);
+export function toLocalInput(d?: Date | string | null): string {
+  if (!d) return "";
+  const date = typeof d === "string" ? new Date(d) : d;
+  const tzOffsetMs = date.getTimezoneOffset() * 60000;
+  return new Date(date.getTime() - tzOffsetMs).toISOString().slice(0, 16);
+}
+
+export function fromInputToDate(value: string): Date {
+  // value is "YYYY-MM-DDTHH:MM" in user's local time
+  return new Date(value);
 }

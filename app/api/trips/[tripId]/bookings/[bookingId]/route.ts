@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
+import { fromInputToDate } from "@/lib/utils";
 
 export async function DELETE(
   request: NextRequest,
@@ -47,7 +48,7 @@ export async function PATCH(
         type: type || "other",
         reference: reference || null,
         checkIn: checkIn ? new Date(checkIn) : null,
-        checkOut: checkOut ? new Date(checkOut) : null,
+        checkOut: checkOut ? fromInputToDate(checkOut) : null,
         location: location || null,
         price: price ? parseFloat(price) : null,
         currency: currency || "EUR",

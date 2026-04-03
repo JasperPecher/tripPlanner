@@ -13,11 +13,7 @@ import {
   Calendar,
   Pen,
 } from "lucide-react";
-import {
-  formatDateTime,
-  formatCurrency,
-  normalizeInputDate,
-} from "@/lib/utils";
+import { formatDateTime, formatCurrency, toLocalInput } from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
 
 type Booking = {
@@ -265,7 +261,7 @@ export function BookingsSection({
                   </label>
                   <input
                     type="datetime-local"
-                    value={normalizeInputDate(formData.checkIn)}
+                    value={toLocalInput(formData.checkIn)}
                     onChange={(e) =>
                       setFormData({ ...formData, checkIn: e.target.value })
                     }
@@ -278,7 +274,7 @@ export function BookingsSection({
                   </label>
                   <input
                     type="datetime-local"
-                    value={normalizeInputDate(formData.checkOut)}
+                    value={toLocalInput(formData.checkOut)}
                     onChange={(e) =>
                       setFormData({ ...formData, checkOut: e.target.value })
                     }
