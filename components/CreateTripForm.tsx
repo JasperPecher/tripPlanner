@@ -156,9 +156,9 @@ export function CreateTripForm() {
           <button
             type="submit"
             disabled={loading}
-            className="w-full bg-orange-500 text-white py-3 px-4 rounded-lg font-medium hover:bg-orange-600 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+            className="w-full bg-orange-500 text-white py-3 px-4 mt-4 rounded-lg font-medium hover:bg-orange-600 transition disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
           >
-            t.home.createButton
+            {t.home.createButton}
           </button>
         </div>
       )}
