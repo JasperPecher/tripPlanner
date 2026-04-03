@@ -73,7 +73,6 @@ export const translations = {
     },
     bookings: {
       title: "Buchungen & Reservierungen",
-      add: "Hinzufügen",
       noBookings: "Noch keine Buchungen.",
       types: {
         flight: "Flug",

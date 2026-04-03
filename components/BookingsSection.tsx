@@ -11,6 +11,7 @@ import {
   Loader2,
   MapPin,
   Calendar,
+  Pen,
 } from "lucide-react";
 import { formatDateTime, formatCurrency } from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
@@ -49,6 +50,7 @@ export function BookingsSection({
   const [showForm, setShowForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
+    id: "new",
     title: "",
     description: "",
     type: "flight",
@@ -71,7 +73,7 @@ export function BookingsSection({
   const inputClasses =
     "w-full px-4 py-2 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none";
 
-  const handleAddBooking = async (e: React.FormEvent) => {
+  const handleAddBooking = async (e: React.SyntheticEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -88,6 +90,48 @@ export function BookingsSection({
         setBookings([newBooking, ...bookings]);
         setShowForm(false);
         setFormData({
+          id: "new",
+          title: "",
+          description: "",
+          type: "flight",
+          reference: "",
+          checkIn: "",
+          checkOut: "",
+          location: "",
+          price: "",
+          currency: "EUR",
+        });
+      }
+    } catch (error) {
+      alert(t.common.error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleUpdateBooking = async (e: React.SyntheticEvent) => {
+    e.preventDefault();
+    setLoading(true);
+    try {
+      const response = await fetch(
+        `/api/trips/${tripId}/bookings/${formData.id}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            ...formData,
+            price: formData.price ? parseFloat(formData.price) : null,
+          }),
+        },
+      );
+      if (response.ok) {
+        const updatedBooking = await response.json();
+        setBookings((prev) =>
+          prev.map((b) => (b.id === updatedBooking.id ? updatedBooking : b)),
+        );
+        setShowForm(false);
+        setFormData({
+          id: "new",
           title: "",
           description: "",
           type: "flight",
@@ -126,13 +170,13 @@ export function BookingsSection({
           <Ticket className="w-5 h-5 text-orange-500" />
           {t.bookings.title}
         </h2>
-          <button
-            onClick={() => setShowForm(true)}
-            className="flex items-center gap-1 text-sm text-orange-600 hover:text-orange-700 dark:text-orange-400"
-          >
-            <Plus className="w-4 h-4" />
-            {t.bookings.add}
-          </button>
+        <button
+          onClick={() => setShowForm(true)}
+          className="flex items-center gap-1 text-sm text-orange-600 hover:text-orange-700 dark:text-orange-400"
+        >
+          <Plus className="w-4 h-4" />
+          {t.common.add}
+        </button>
       </div>
       {showForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
@@ -148,7 +192,7 @@ export function BookingsSection({
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <form onSubmit={handleAddBooking} className="space-y-4">
+            <div className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
                   {t.bookings.form.type}
@@ -287,21 +331,40 @@ export function BookingsSection({
                   placeholder={t.bookings.form.descriptionPlaceholder}
                 />
               </div>
-              <button
-                type="submit"
-                disabled={loading}
-                className="w-full bg-orange-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-orange-600 disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    {t.common.loading}
-                  </>
-                ) : (
-                  t.bookings.form.addButton
-                )}
-              </button>
-            </form>
+              {formData.id !== "new" ? (
+                <button
+                  type="submit"
+                  disabled={loading}
+                  onClick={handleUpdateBooking}
+                  className="w-full bg-orange-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-orange-600 disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      {t.common.loading}
+                    </>
+                  ) : (
+                    t.common.save
+                  )}
+                </button>
+              ) : (
+                <button
+                  type="submit"
+                  disabled={loading}
+                  onClick={handleAddBooking}
+                  className="w-full bg-orange-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-orange-600 disabled:opacity-50 flex items-center justify-center gap-2"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      {t.common.loading}
+                    </>
+                  ) : (
+                    t.bookings.form.addButton
+                  )}
+                </button>
+              )}
+            </div>
           </div>
         </div>
       )}
@@ -366,12 +429,34 @@ export function BookingsSection({
                     </p>
                   )}
                 </div>
+                <div className="flex gap-1">
+                  <button
+                    onClick={() => {
+                      (setShowForm(true),
+                        setFormData({
+                          id: booking.id,
+                          title: booking.title,
+                          description: booking.description || "",
+                          type: booking.type,
+                          reference: booking.reference || "",
+                          checkIn: booking.checkIn || "",
+                          checkOut: booking.checkOut || "",
+                          location: booking.location || "",
+                          price: String(booking.price) || "",
+                          currency: booking.currency,
+                        }));
+                    }}
+                    className="text-stone-400 hover:text-red-500 transition p-1"
+                  >
+                    <Pen className="w-4 h-4" />
+                  </button>
                   <button
                     onClick={() => handleDelete(booking.id)}
-                    className="opacity-0 group-hover:opacity-100 text-stone-400 hover:text-red-500 transition p-1"
+                    className="text-stone-400 hover:text-red-500 transition p-1"
                   >
                     <X className="w-4 h-4" />
                   </button>
+                </div>
               </div>
             );
           })}
