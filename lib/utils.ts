@@ -120,8 +120,3 @@ export function toLocalInput(d?: Date | string | null): string {
   const tzOffsetMs = date.getTimezoneOffset() * 60000;
   return new Date(date.getTime() - tzOffsetMs).toISOString().slice(0, 16);
 }
-
-export function fromInputToDate(value: string): Date {
-  // value is "YYYY-MM-DDTHH:MM" in user's local time
-  return new Date(value);
-}
