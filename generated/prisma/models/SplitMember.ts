@@ -185,7 +185,7 @@ export type SplitMemberGroupByOutputType = {
   _max: SplitMemberMaxAggregateOutputType | null
 }
 
-type GetSplitMemberGroupByPayload<T extends SplitMemberGroupByArgs> = Prisma.PrismaPromise<
+export type GetSplitMemberGroupByPayload<T extends SplitMemberGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<SplitMemberGroupByOutputType, T['by']> &
       {

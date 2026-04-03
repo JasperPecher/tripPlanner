@@ -261,7 +261,7 @@ export function BookingsSection({
                   </label>
                   <input
                     type="datetime-local"
-                    value={toLocalInput(formatDateTime(formData.checkIn))}
+                    value={toLocalInput(formData.checkIn)}
                     onChange={(e) =>
                       setFormData({ ...formData, checkIn: e.target.value })
                     }
@@ -274,7 +274,7 @@ export function BookingsSection({
                   </label>
                   <input
                     type="datetime-local"
-                    value={toLocalInput(formatDateTime(formData.checkOut))}
+                    value={toLocalInput(formData.checkOut)}
                     onChange={(e) =>
                       setFormData({ ...formData, checkOut: e.target.value })
                     }

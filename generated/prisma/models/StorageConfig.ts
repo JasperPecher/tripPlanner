@@ -151,7 +151,7 @@ export type StorageConfigGroupByOutputType = {
   _max: StorageConfigMaxAggregateOutputType | null
 }
 
-type GetStorageConfigGroupByPayload<T extends StorageConfigGroupByArgs> = Prisma.PrismaPromise<
+export type GetStorageConfigGroupByPayload<T extends StorageConfigGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<StorageConfigGroupByOutputType, T['by']> &
       {

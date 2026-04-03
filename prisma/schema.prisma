@@ -41,10 +41,10 @@ model Member {
   tripId String
   trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
 
-  paidExpenses  Expense[]     @relation("PaidBy")
-  splitMembers  SplitMember[]
-  paymentsFrom  Payment[]     @relation("PaymentFrom")
-  paymentsTo    Payment[]     @relation("PaymentTo")
+  paidExpenses Expense[]     @relation("PaidBy")
+  splitMembers SplitMember[]
+  paymentsFrom Payment[]     @relation("PaymentFrom")
+  paymentsTo   Payment[]     @relation("PaymentTo")
 
   @@unique([tripId, name])
   @@map("members")
@@ -82,18 +82,18 @@ model SplitMember {
 }
 
 model Booking {
-  id          String    @id @default(cuid())
+  id          String   @id @default(cuid())
   title       String
   description String?
-  type        String    @default("other")
+  type        String   @default("other")
   reference   String?
-  checkIn     DateTime?
-  checkOut    DateTime?
+  checkIn     String?
+  checkOut    String?
   location    String?
   price       Float?
-  currency    String    @default("EUR")
-  createdAt   DateTime  @default(now())
-  updatedAt   DateTime  @updatedAt
+  currency    String   @default("EUR")
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
 
   tripId String
   trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)

@@ -40,8 +40,8 @@ export type BookingMinAggregateOutputType = {
   description: string | null
   type: string | null
   reference: string | null
-  checkIn: Date | null
-  checkOut: Date | null
+  checkIn: string | null
+  checkOut: string | null
   location: string | null
   price: number | null
   currency: string | null
@@ -56,8 +56,8 @@ export type BookingMaxAggregateOutputType = {
   description: string | null
   type: string | null
   reference: string | null
-  checkIn: Date | null
-  checkOut: Date | null
+  checkIn: string | null
+  checkOut: string | null
   location: string | null
   price: number | null
   currency: string | null
@@ -233,8 +233,8 @@ export type BookingGroupByOutputType = {
   description: string | null
   type: string
   reference: string | null
-  checkIn: Date | null
-  checkOut: Date | null
+  checkIn: string | null
+  checkOut: string | null
   location: string | null
   price: number | null
   currency: string
@@ -248,7 +248,7 @@ export type BookingGroupByOutputType = {
   _max: BookingMaxAggregateOutputType | null
 }
 
-type GetBookingGroupByPayload<T extends BookingGroupByArgs> = Prisma.PrismaPromise<
+export type GetBookingGroupByPayload<T extends BookingGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<BookingGroupByOutputType, T['by']> &
       {
@@ -272,8 +272,8 @@ export type BookingWhereInput = {
   description?: Prisma.StringNullableFilter<"Booking"> | string | null
   type?: Prisma.StringFilter<"Booking"> | string
   reference?: Prisma.StringNullableFilter<"Booking"> | string | null
-  checkIn?: Prisma.DateTimeNullableFilter<"Booking"> | Date | string | null
-  checkOut?: Prisma.DateTimeNullableFilter<"Booking"> | Date | string | null
+  checkIn?: Prisma.StringNullableFilter<"Booking"> | string | null
+  checkOut?: Prisma.StringNullableFilter<"Booking"> | string | null
   location?: Prisma.StringNullableFilter<"Booking"> | string | null
   price?: Prisma.FloatNullableFilter<"Booking"> | number | null
   currency?: Prisma.StringFilter<"Booking"> | string
@@ -309,8 +309,8 @@ export type BookingWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringNullableFilter<"Booking"> | string | null
   type?: Prisma.StringFilter<"Booking"> | string
   reference?: Prisma.StringNullableFilter<"Booking"> | string | null
-  checkIn?: Prisma.DateTimeNullableFilter<"Booking"> | Date | string | null
-  checkOut?: Prisma.DateTimeNullableFilter<"Booking"> | Date | string | null
+  checkIn?: Prisma.StringNullableFilter<"Booking"> | string | null
+  checkOut?: Prisma.StringNullableFilter<"Booking"> | string | null
   location?: Prisma.StringNullableFilter<"Booking"> | string | null
   price?: Prisma.FloatNullableFilter<"Booking"> | number | null
   currency?: Prisma.StringFilter<"Booking"> | string
@@ -350,8 +350,8 @@ export type BookingScalarWhereWithAggregatesInput = {
   description?: Prisma.StringNullableWithAggregatesFilter<"Booking"> | string | null
   type?: Prisma.StringWithAggregatesFilter<"Booking"> | string
   reference?: Prisma.StringNullableWithAggregatesFilter<"Booking"> | string | null
-  checkIn?: Prisma.DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
-  checkOut?: Prisma.DateTimeNullableWithAggregatesFilter<"Booking"> | Date | string | null
+  checkIn?: Prisma.StringNullableWithAggregatesFilter<"Booking"> | string | null
+  checkOut?: Prisma.StringNullableWithAggregatesFilter<"Booking"> | string | null
   location?: Prisma.StringNullableWithAggregatesFilter<"Booking"> | string | null
   price?: Prisma.FloatNullableWithAggregatesFilter<"Booking"> | number | null
   currency?: Prisma.StringWithAggregatesFilter<"Booking"> | string
@@ -366,8 +366,8 @@ export type BookingCreateInput = {
   description?: string | null
   type?: string
   reference?: string | null
-  checkIn?: Date | string | null
-  checkOut?: Date | string | null
+  checkIn?: string | null
+  checkOut?: string | null
   location?: string | null
   price?: number | null
   currency?: string
@@ -382,8 +382,8 @@ export type BookingUncheckedCreateInput = {
   description?: string | null
   type?: string
   reference?: string | null
-  checkIn?: Date | string | null
-  checkOut?: Date | string | null
+  checkIn?: string | null
+  checkOut?: string | null
   location?: string | null
   price?: number | null
   currency?: string
@@ -398,8 +398,8 @@ export type BookingUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  checkIn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  checkOut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkIn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkOut?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -414,8 +414,8 @@ export type BookingUncheckedUpdateInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  checkIn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  checkOut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkIn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkOut?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -430,8 +430,8 @@ export type BookingCreateManyInput = {
   description?: string | null
   type?: string
   reference?: string | null
-  checkIn?: Date | string | null
-  checkOut?: Date | string | null
+  checkIn?: string | null
+  checkOut?: string | null
   location?: string | null
   price?: number | null
   currency?: string
@@ -446,8 +446,8 @@ export type BookingUpdateManyMutationInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  checkIn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  checkOut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkIn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkOut?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -461,8 +461,8 @@ export type BookingUncheckedUpdateManyInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  checkIn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  checkOut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkIn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkOut?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -593,8 +593,8 @@ export type BookingCreateWithoutTripInput = {
   description?: string | null
   type?: string
   reference?: string | null
-  checkIn?: Date | string | null
-  checkOut?: Date | string | null
+  checkIn?: string | null
+  checkOut?: string | null
   location?: string | null
   price?: number | null
   currency?: string
@@ -608,8 +608,8 @@ export type BookingUncheckedCreateWithoutTripInput = {
   description?: string | null
   type?: string
   reference?: string | null
-  checkIn?: Date | string | null
-  checkOut?: Date | string | null
+  checkIn?: string | null
+  checkOut?: string | null
   location?: string | null
   price?: number | null
   currency?: string
@@ -652,8 +652,8 @@ export type BookingScalarWhereInput = {
   description?: Prisma.StringNullableFilter<"Booking"> | string | null
   type?: Prisma.StringFilter<"Booking"> | string
   reference?: Prisma.StringNullableFilter<"Booking"> | string | null
-  checkIn?: Prisma.DateTimeNullableFilter<"Booking"> | Date | string | null
-  checkOut?: Prisma.DateTimeNullableFilter<"Booking"> | Date | string | null
+  checkIn?: Prisma.StringNullableFilter<"Booking"> | string | null
+  checkOut?: Prisma.StringNullableFilter<"Booking"> | string | null
   location?: Prisma.StringNullableFilter<"Booking"> | string | null
   price?: Prisma.FloatNullableFilter<"Booking"> | number | null
   currency?: Prisma.StringFilter<"Booking"> | string
@@ -668,8 +668,8 @@ export type BookingCreateManyTripInput = {
   description?: string | null
   type?: string
   reference?: string | null
-  checkIn?: Date | string | null
-  checkOut?: Date | string | null
+  checkIn?: string | null
+  checkOut?: string | null
   location?: string | null
   price?: number | null
   currency?: string
@@ -683,8 +683,8 @@ export type BookingUpdateWithoutTripInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  checkIn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  checkOut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkIn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkOut?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -698,8 +698,8 @@ export type BookingUncheckedUpdateWithoutTripInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  checkIn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  checkOut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkIn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkOut?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -713,8 +713,8 @@ export type BookingUncheckedUpdateManyWithoutTripInput = {
   description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   type?: Prisma.StringFieldUpdateOperationsInput | string
   reference?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  checkIn?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
-  checkOut?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  checkIn?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  checkOut?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   currency?: Prisma.StringFieldUpdateOperationsInput | string
@@ -813,8 +813,8 @@ export type $BookingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     description: string | null
     type: string
     reference: string | null
-    checkIn: Date | null
-    checkOut: Date | null
+    checkIn: string | null
+    checkOut: string | null
     location: string | null
     price: number | null
     currency: string
@@ -1250,8 +1250,8 @@ export interface BookingFieldRefs {
   readonly description: Prisma.FieldRef<"Booking", 'String'>
   readonly type: Prisma.FieldRef<"Booking", 'String'>
   readonly reference: Prisma.FieldRef<"Booking", 'String'>
-  readonly checkIn: Prisma.FieldRef<"Booking", 'DateTime'>
-  readonly checkOut: Prisma.FieldRef<"Booking", 'DateTime'>
+  readonly checkIn: Prisma.FieldRef<"Booking", 'String'>
+  readonly checkOut: Prisma.FieldRef<"Booking", 'String'>
   readonly location: Prisma.FieldRef<"Booking", 'String'>
   readonly price: Prisma.FieldRef<"Booking", 'Float'>
   readonly currency: Prisma.FieldRef<"Booking", 'String'>
