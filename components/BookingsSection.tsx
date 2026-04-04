@@ -74,7 +74,7 @@ export function BookingsSection({
   ];
 
   const inputClasses =
-    "w-full max-w-full px-2 md:px-4 py-2 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-xs md:text-base tracking-tighter text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none";
+    "w-full px-2 md:px-4 py-2 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-xs md:text-base tracking-tighter text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none";
 
   const handleAddBooking = async (e: React.SyntheticEvent) => {
     e.preventDefault();
@@ -257,7 +257,7 @@ export function BookingsSection({
                   placeholder={t.bookings.form.locationPlaceholder}
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-2 gap-4 w-full">
                 <div>
                   <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
                     {t.bookings.form.checkIn}
