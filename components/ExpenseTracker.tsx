@@ -1,105 +1,218 @@
 "use client";
 
 import { useState, useMemo } from "react";
-import { Plus, Receipt, ArrowRight, X, Loader2, TrendingUp, Wallet, ExternalLink, CreditCard, Users, CheckCircle } from "lucide-react";
+import {
+  Plus,
+  Receipt,
+  ArrowRight,
+  X,
+  Loader2,
+  TrendingUp,
+  Wallet,
+  ExternalLink,
+  CreditCard,
+  Users,
+  CheckCircle,
+} from "lucide-react";
 import { formatCurrency, calculateBalances, simplifyDebts } from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
 
-type Member = { id: string; name: string; joinedAt: string; paypalLink?: string | null };
+type Member = {
+  id: string;
+  name: string;
+  joinedAt: string;
+  paypalLink?: string | null;
+};
 type Expense = {
-  id: string; description: string; amount: number; currency: string; createdAt: string;
-  paidById: string; paidBy: Member;
+  id: string;
+  description: string;
+  amount: number;
+  currency: string;
+  createdAt: string;
+  paidById: string;
+  paidBy: Member;
   splits: { id: string; amount: number; memberId: string; member: Member }[];
 };
 type Payment = {
-  id: string; amount: number; createdAt: string;
-  fromId: string; toId: string; from: Member; to: Member;
+  id: string;
+  amount: number;
+  createdAt: string;
+  fromId: string;
+  toId: string;
+  from: Member;
+  to: Member;
 };
 
 interface ExpenseTrackerProps {
-  tripId: string; members: Member[]; expenses: Expense[]; payments: Payment[]; currentMember: Member | null;
+  tripId: string;
+  members: Member[];
+  expenses: Expense[];
+  payments: Payment[];
+  currentMember: Member | null;
 }
 
-export function ExpenseTracker({ tripId, members, expenses: initialExpenses, payments: initialPayments, currentMember }: ExpenseTrackerProps) {
+export function ExpenseTracker({
+  tripId,
+  members,
+  expenses: initialExpenses,
+  payments: initialPayments,
+  currentMember,
+}: ExpenseTrackerProps) {
   const { t } = useLocale();
   const [expenses, setExpenses] = useState(initialExpenses);
   const [payments, setPayments] = useState(initialPayments);
   const [showAddForm, setShowAddForm] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
-    description: "", amount: "",
+    description: "",
+    amount: "",
     paidById: currentMember?.id || members[0]?.id || "",
     splitType: "equal" as "equal" | "custom",
-    splits: members.reduce((acc, m) => ({ ...acc, [m.id]: true }), {} as Record<string, boolean>),
-    customAmounts: members.reduce((acc, m) => ({ ...acc, [m.id]: "" }), {} as Record<string, string>),
+    splits: members.reduce(
+      (acc, m) => ({ ...acc, [m.id]: true }),
+      {} as Record<string, boolean>,
+    ),
+    customAmounts: members.reduce(
+      (acc, m) => ({ ...acc, [m.id]: "" }),
+      {} as Record<string, string>,
+    ),
   });
 
-  const balances = useMemo(() => calculateBalances(
-    expenses.map((e) => ({
-      paidById: e.paidById, amount: e.amount,
-      splits: e.splits.map((s) => ({ memberId: s.memberId, amount: s.amount })),
-    })),
-    payments.map((p) => ({ fromId: p.fromId, toId: p.toId, amount: p.amount }))
-  ), [expenses, payments]);
+  const balances = useMemo(
+    () =>
+      calculateBalances(
+        expenses.map((e) => ({
+          paidById: e.paidById,
+          amount: e.amount,
+          splits: e.splits.map((s) => ({
+            memberId: s.memberId,
+            amount: s.amount,
+          })),
+        })),
+        payments.map((p) => ({
+          fromId: p.fromId,
+          toId: p.toId,
+          amount: p.amount,
+        })),
+      ),
+    [expenses, payments],
+  );
 
   const debts = useMemo(() => simplifyDebts(balances), [balances]);
 
   const memberTotals = useMemo(() => {
     const totals = new Map<string, number>();
     for (const expense of expenses) {
-      totals.set(expense.paidById, (totals.get(expense.paidById) || 0) + expense.amount);
+      totals.set(
+        expense.paidById,
+        (totals.get(expense.paidById) || 0) + expense.amount,
+      );
     }
     return totals;
   }, [expenses]);
 
-  const inputClasses = "w-full px-4 py-2 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none";
+  const inputClasses =
+    "w-full px-4 py-2 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none";
 
   const handleAddExpense = async (e: React.FormEvent) => {
-    e.preventDefault(); setLoading(true);
+    e.preventDefault();
+    setLoading(true);
     try {
       const amount = parseFloat(formData.amount);
-      if (isNaN(amount) || amount <= 0) { alert(t.common.error); return; }
+      if (isNaN(amount) || amount <= 0) {
+        alert(t.common.error);
+        return;
+      }
       const selectedMembers = members.filter((m) => formData.splits[m.id]);
-      if (selectedMembers.length === 0) { alert(t.common.error); return; }
+      if (selectedMembers.length === 0) {
+        alert(t.common.error);
+        return;
+      }
       let splits: { memberId: string; amount: number }[];
       if (formData.splitType === "equal") {
         const splitAmount = amount / selectedMembers.length;
-        splits = selectedMembers.map((m) => ({ memberId: m.id, amount: Math.round(splitAmount * 100) / 100 }));
+        splits = selectedMembers.map((m) => ({
+          memberId: m.id,
+          amount: Math.round(splitAmount * 100) / 100,
+        }));
       } else {
-        splits = selectedMembers.map((m) => ({ memberId: m.id, amount: parseFloat(formData.customAmounts[m.id]) || 0 }));
+        splits = selectedMembers.map((m) => ({
+          memberId: m.id,
+          amount: parseFloat(formData.customAmounts[m.id]) || 0,
+        }));
         const totalCustom = splits.reduce((sum, s) => sum + s.amount, 0);
-        if (Math.abs(totalCustom - amount) > 0.01) { alert(t.common.error); setLoading(false); return; }
+        if (Math.abs(totalCustom - amount) > 0.01) {
+          alert(t.common.error);
+          setLoading(false);
+          return;
+        }
       }
       const response = await fetch(`/api/trips/${tripId}/expenses`, {
-        method: "POST", headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ description: formData.description, amount, paidById: formData.paidById, splits }),
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          description: formData.description,
+          amount,
+          paidById: formData.paidById,
+          splits,
+        }),
       });
       if (response.ok) {
         const newExpense = await response.json();
-        setExpenses([newExpense, ...expenses]); setShowAddForm(false);
-        setFormData({ description: "", amount: "", paidById: currentMember?.id || members[0]?.id || "",
+        setExpenses([newExpense, ...expenses]);
+        setShowAddForm(false);
+        setFormData({
+          description: "",
+          amount: "",
+          paidById: currentMember?.id || members[0]?.id || "",
           splitType: "equal",
-          splits: members.reduce((acc, m) => ({ ...acc, [m.id]: true }), {} as Record<string, boolean>),
-          customAmounts: members.reduce((acc, m) => ({ ...acc, [m.id]: "" }), {} as Record<string, string>),
+          splits: members.reduce(
+            (acc, m) => ({ ...acc, [m.id]: true }),
+            {} as Record<string, boolean>,
+          ),
+          customAmounts: members.reduce(
+            (acc, m) => ({ ...acc, [m.id]: "" }),
+            {} as Record<string, string>,
+          ),
         });
-      } else { const data = await response.json(); alert(data.error || t.common.error); }
-    } catch (error) { alert(t.common.error); } finally { setLoading(false); }
+      } else {
+        const data = await response.json();
+        alert(data.error || t.common.error);
+      }
+    } catch (error) {
+      alert(t.common.error);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleDeleteExpense = async (expenseId: string) => {
     if (!confirm("Ausgabe löschen?")) return;
     try {
-      const response = await fetch(`/api/trips/${tripId}/expenses/${expenseId}`, { method: "DELETE" });
+      const response = await fetch(
+        `/api/trips/${tripId}/expenses/${expenseId}`,
+        { method: "DELETE" },
+      );
       if (response.ok) setExpenses(expenses.filter((e) => e.id !== expenseId));
-    } catch (error) { alert(t.common.error); }
+    } catch (error) {
+      alert(t.common.error);
+    }
   };
 
-  const handlePayDebt = async (debt: { from: string; to: string; amount: number }) => {
+  const handlePayDebt = async (debt: {
+    from: string;
+    to: string;
+    amount: number;
+  }) => {
     try {
       const response = await fetch(`/api/trips/${tripId}/payments`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ fromId: debt.from, toId: debt.to, amount: debt.amount }),
+        body: JSON.stringify({
+          fromId: debt.from,
+          toId: debt.to,
+          amount: debt.amount,
+        }),
       });
       if (response.ok) {
         const newPayment = await response.json();
@@ -113,9 +226,12 @@ export function ExpenseTracker({ tripId, members, expenses: initialExpenses, pay
   const handleDeletePayment = async (paymentId: string) => {
     if (!confirm(t.expenseSummary.confirmDeletePayment)) return;
     try {
-      const response = await fetch(`/api/trips/${tripId}/payments?paymentId=${paymentId}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `/api/trips/${tripId}/payments?paymentId=${paymentId}`,
+        {
+          method: "DELETE",
+        },
+      );
       if (response.ok) {
         setPayments(payments.filter((p) => p.id !== paymentId));
       }
@@ -128,85 +244,195 @@ export function ExpenseTracker({ tripId, members, expenses: initialExpenses, pay
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <h2 className="text-xl font-semibold flex items-center gap-2">
-          <Receipt className="w-6 h-6 text-orange-500" />{t.expenses.title}
+          <Receipt className="w-6 h-6 text-orange-500" />
+          {t.expenses.title}
         </h2>
-        <button onClick={() => setShowAddForm(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 text-sm font-medium">
-          <Plus className="w-4 h-4" />{t.expenses.addExpense}
+        <button
+          onClick={() => setShowAddForm(true)}
+          className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 text-sm font-medium"
+        >
+          <Plus className="w-4 h-4" />
+          {t.expenses.addExpense}
         </button>
       </div>
 
       {showAddForm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-70 p-4">
           <div className="bg-white dark:bg-stone-900 rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-semibold dark:text-white">{t.expenses.form.addTitle}</h3>
-              <button onClick={() => setShowAddForm(false)} className="text-stone-400 hover:text-stone-600 dark:hover:text-stone-200">
+              <h3 className="text-lg font-semibold dark:text-white">
+                {t.expenses.form.addTitle}
+              </h3>
+              <button
+                onClick={() => setShowAddForm(false)}
+                className="text-stone-400 hover:text-stone-600 dark:hover:text-stone-200"
+              >
                 <X className="w-5 h-5" />
               </button>
             </div>
             <form onSubmit={handleAddExpense} className="space-y-4">
               <div>
-                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">{t.expenses.form.description}</label>
-                <input type="text" required value={formData.description}
-                  onChange={(e) => setFormData({ ...formData, description: e.target.value })}
-                  className={inputClasses} placeholder={t.expenses.form.descriptionPlaceholder} />
+                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
+                  {t.expenses.form.description}
+                </label>
+                <input
+                  type="text"
+                  required
+                  value={formData.description}
+                  onChange={(e) =>
+                    setFormData({ ...formData, description: e.target.value })
+                  }
+                  className={inputClasses}
+                  placeholder={t.expenses.form.descriptionPlaceholder}
+                />
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">{t.expenses.form.amount}</label>
-                  <input type="number" step="0.01" min="0" required value={formData.amount}
-                    onChange={(e) => setFormData({ ...formData, amount: e.target.value })}
-                    className={inputClasses} placeholder="0.00" />
+                  <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
+                    {t.expenses.form.amount}
+                  </label>
+                  <input
+                    type="number"
+                    step="0.01"
+                    min="0"
+                    required
+                    value={formData.amount}
+                    onChange={(e) =>
+                      setFormData({ ...formData, amount: e.target.value })
+                    }
+                    className={inputClasses}
+                    placeholder="0.00"
+                  />
                 </div>
                 <div>
-                  <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">{t.expenses.form.paidBy}</label>
-                  <select value={formData.paidById} onChange={(e) => setFormData({ ...formData, paidById: e.target.value })} className={inputClasses}>
-                    {members.map((m) => <option key={m.id} value={m.id}>{m.name}</option>)}
+                  <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
+                    {t.expenses.form.paidBy}
+                  </label>
+                  <select
+                    value={formData.paidById}
+                    onChange={(e) =>
+                      setFormData({ ...formData, paidById: e.target.value })
+                    }
+                    className={inputClasses}
+                  >
+                    {members.map((m) => (
+                      <option key={m.id} value={m.id}>
+                        {m.name}
+                      </option>
+                    ))}
                   </select>
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-2">{t.expenses.form.splitType}</label>
+                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-2">
+                  {t.expenses.form.splitType}
+                </label>
                 <div className="flex gap-4">
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="splitType" checked={formData.splitType === "equal"}
-                      onChange={() => setFormData({ ...formData, splitType: "equal" })} className="text-orange-500 focus:ring-orange-500" />
-                    <span className="text-sm dark:text-stone-300">{t.expenses.form.equalSplit}</span>
+                    <input
+                      type="radio"
+                      name="splitType"
+                      checked={formData.splitType === "equal"}
+                      onChange={() =>
+                        setFormData({ ...formData, splitType: "equal" })
+                      }
+                      className="text-orange-500 focus:ring-orange-500"
+                    />
+                    <span className="text-sm dark:text-stone-300">
+                      {t.expenses.form.equalSplit}
+                    </span>
                   </label>
                   <label className="flex items-center gap-2 cursor-pointer">
-                    <input type="radio" name="splitType" checked={formData.splitType === "custom"}
-                      onChange={() => setFormData({ ...formData, splitType: "custom" })} className="text-orange-500 focus:ring-orange-500" />
-                    <span className="text-sm dark:text-stone-300">{t.expenses.form.customAmounts}</span>
+                    <input
+                      type="radio"
+                      name="splitType"
+                      checked={formData.splitType === "custom"}
+                      onChange={() =>
+                        setFormData({ ...formData, splitType: "custom" })
+                      }
+                      className="text-orange-500 focus:ring-orange-500"
+                    />
+                    <span className="text-sm dark:text-stone-300">
+                      {t.expenses.form.customAmounts}
+                    </span>
                   </label>
                 </div>
               </div>
               <div>
-                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-2">{t.expenses.form.splitBetween}</label>
+                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-2">
+                  {t.expenses.form.splitBetween}
+                </label>
                 <div className="space-y-2">
                   {members.map((member) => (
-                    <div key={member.id} className="flex items-center gap-3 py-2 px-3 bg-stone-50 dark:bg-stone-800 rounded-lg">
-                      <input type="checkbox" checked={formData.splits[member.id]}
-                        onChange={(e) => setFormData({ ...formData, splits: { ...formData.splits, [member.id]: e.target.checked } })}
-                        className="text-orange-500 focus:ring-orange-500 rounded" />
-                      <span className="flex-1 text-sm font-medium dark:text-white">{member.name}</span>
-                      {formData.splitType === "custom" && formData.splits[member.id] && (
-                        <input type="number" step="0.01" min="0" value={formData.customAmounts[member.id]}
-                          onChange={(e) => setFormData({ ...formData, customAmounts: { ...formData.customAmounts, [member.id]: e.target.value } })}
-                          className="w-24 px-2 py-1 border border-stone-300 dark:border-stone-600 rounded text-sm bg-white dark:bg-stone-700 text-stone-900 dark:text-white" placeholder="0.00" />
-                      )}
-                      {formData.splitType === "equal" && formData.splits[member.id] && formData.amount && (
-                        <span className="text-sm text-stone-500 dark:text-stone-400">
-                          {formatCurrency(parseFloat(formData.amount) / members.filter((m) => formData.splits[m.id]).length)}
-                        </span>
-                      )}
+                    <div
+                      key={member.id}
+                      className="flex items-center gap-3 py-2 px-3 bg-stone-50 dark:bg-stone-800 rounded-lg"
+                    >
+                      <input
+                        type="checkbox"
+                        checked={formData.splits[member.id]}
+                        onChange={(e) =>
+                          setFormData({
+                            ...formData,
+                            splits: {
+                              ...formData.splits,
+                              [member.id]: e.target.checked,
+                            },
+                          })
+                        }
+                        className="text-orange-500 focus:ring-orange-500 rounded"
+                      />
+                      <span className="flex-1 text-sm font-medium dark:text-white">
+                        {member.name}
+                      </span>
+                      {formData.splitType === "custom" &&
+                        formData.splits[member.id] && (
+                          <input
+                            type="number"
+                            step="0.01"
+                            min="0"
+                            value={formData.customAmounts[member.id]}
+                            onChange={(e) =>
+                              setFormData({
+                                ...formData,
+                                customAmounts: {
+                                  ...formData.customAmounts,
+                                  [member.id]: e.target.value,
+                                },
+                              })
+                            }
+                            className="w-24 px-2 py-1 border border-stone-300 dark:border-stone-600 rounded text-sm bg-white dark:bg-stone-700 text-stone-900 dark:text-white"
+                            placeholder="0.00"
+                          />
+                        )}
+                      {formData.splitType === "equal" &&
+                        formData.splits[member.id] &&
+                        formData.amount && (
+                          <span className="text-sm text-stone-500 dark:text-stone-400">
+                            {formatCurrency(
+                              parseFloat(formData.amount) /
+                                members.filter((m) => formData.splits[m.id])
+                                  .length,
+                            )}
+                          </span>
+                        )}
                     </div>
                   ))}
                 </div>
               </div>
-              <button type="submit" disabled={loading}
-                className="w-full bg-orange-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-orange-600 disabled:opacity-50 flex items-center justify-center gap-2">
-                {loading ? <><Loader2 className="w-5 h-5 animate-spin" />{t.common.loading}</> : t.expenses.form.addButton}
+              <button
+                type="submit"
+                disabled={loading}
+                className="w-full bg-orange-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-orange-600 disabled:opacity-50 flex items-center justify-center gap-2"
+              >
+                {loading ? (
+                  <>
+                    <Loader2 className="w-5 h-5 animate-spin" />
+                    {t.common.loading}
+                  </>
+                ) : (
+                  t.expenses.form.addButton
+                )}
               </button>
             </form>
           </div>
@@ -224,18 +450,29 @@ export function ExpenseTracker({ tripId, members, expenses: initialExpenses, pay
               const total = memberTotals.get(member.id) || 0;
               const balance = balances.get(member.id) || 0;
               return (
-                <div key={member.id} className="py-2 px-3 bg-stone-50 dark:bg-stone-800 rounded-lg">
+                <div
+                  key={member.id}
+                  className="py-2 px-3 bg-stone-50 dark:bg-stone-800 rounded-lg"
+                >
                   <div className="flex items-center gap-2 sm:gap-3 text-sm">
                     <div className="w-7 h-7 rounded-full bg-orange-100 dark:bg-orange-900/40 text-orange-600 dark:text-orange-400 flex items-center justify-center text-xs font-medium shrink-0">
                       {member.name.charAt(0).toUpperCase()}
                     </div>
-                    <span className="font-medium text-stone-900 dark:text-white truncate">{member.name}</span>
+                    <span className="font-medium text-stone-900 dark:text-white truncate">
+                      {member.name}
+                    </span>
                     <div className="ml-auto flex items-center gap-2 sm:gap-4 shrink-0">
                       <span className="text-stone-500 dark:text-stone-400 hidden sm:inline">
-                        {t.expenseSummary.totalSpent}: <span className="font-medium text-stone-700 dark:text-stone-300">{formatCurrency(total)}</span>
+                        {t.expenseSummary.totalSpent}:{" "}
+                        <span className="font-medium text-stone-700 dark:text-stone-300">
+                          {formatCurrency(total)}
+                        </span>
                       </span>
-                      <span className={`font-semibold ${balance > 0.01 ? "text-green-600 dark:text-green-400" : balance < -0.01 ? "text-red-600 dark:text-red-400" : "text-stone-400"}`}>
-                        {balance > 0.01 ? "+" : ""}{formatCurrency(balance)}
+                      <span
+                        className={`font-semibold ${balance > 0.01 ? "text-green-600 dark:text-green-400" : balance < -0.01 ? "text-red-600 dark:text-red-400" : "text-stone-400"}`}
+                      >
+                        {balance > 0.01 ? "+" : ""}
+                        {formatCurrency(balance)}
                       </span>
                     </div>
                   </div>
@@ -247,7 +484,10 @@ export function ExpenseTracker({ tripId, members, expenses: initialExpenses, pay
                       className="mt-1 flex items-center gap-1.5 text-xs text-blue-600 dark:text-blue-400 hover:underline"
                     >
                       <CreditCard className="w-3 h-3" />
-                      PayPal: {member.paypalLink.replace(/^https?:\/\//, "").replace(/\/$/, "")}
+                      PayPal:{" "}
+                      {member.paypalLink
+                        .replace(/^https?:\/\//, "")
+                        .replace(/\/$/, "")}
                       <ExternalLink className="w-3 h-3 opacity-70" />
                     </a>
                   )}
@@ -261,19 +501,29 @@ export function ExpenseTracker({ tripId, members, expenses: initialExpenses, pay
       {debts.length > 0 && (
         <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-5">
           <h3 className="font-semibold text-amber-800 dark:text-amber-400 mb-3 flex items-center gap-2">
-            <TrendingUp className="w-5 h-5" />{t.expenses.whoOwes}
+            <TrendingUp className="w-5 h-5" />
+            {t.expenses.whoOwes}
           </h3>
           <div className="space-y-2">
             {debts.map((debt, idx) => {
               const from = members.find((m) => m.id === debt.from);
               const to = members.find((m) => m.id === debt.to);
               return (
-                <div key={idx} className="bg-white dark:bg-stone-800 rounded-lg px-3 py-2.5">
+                <div
+                  key={idx}
+                  className="bg-white dark:bg-stone-800 rounded-lg px-3 py-2.5"
+                >
                   <div className="flex items-center gap-2 text-sm flex-wrap">
-                    <span className="font-medium text-amber-900 dark:text-amber-300">{from?.name}</span>
+                    <span className="font-medium text-amber-900 dark:text-amber-300">
+                      {from?.name}
+                    </span>
                     <ArrowRight className="w-4 h-4 text-amber-600 dark:text-amber-500 shrink-0" />
-                    <span className="font-medium text-amber-900 dark:text-amber-300">{to?.name}</span>
-                    <span className="ml-auto font-semibold text-amber-700 dark:text-amber-400">{formatCurrency(debt.amount)}</span>
+                    <span className="font-medium text-amber-900 dark:text-amber-300">
+                      {to?.name}
+                    </span>
+                    <span className="ml-auto font-semibold text-amber-700 dark:text-amber-400">
+                      {formatCurrency(debt.amount)}
+                    </span>
                   </div>
                   <div className="mt-1.5 flex items-center gap-3 flex-wrap">
                     {to?.paypalLink && (
@@ -306,16 +556,28 @@ export function ExpenseTracker({ tripId, members, expenses: initialExpenses, pay
       {payments.length > 0 && (
         <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-xl p-5">
           <h3 className="font-semibold text-green-800 dark:text-green-400 mb-3 flex items-center gap-2">
-            <CheckCircle className="w-5 h-5" />{t.expenseSummary.paymentHistory}
+            <CheckCircle className="w-5 h-5" />
+            {t.expenseSummary.paymentHistory}
           </h3>
           <div className="space-y-2">
             {payments.map((payment) => (
-              <div key={payment.id} className="flex items-center gap-2 text-sm bg-white dark:bg-stone-800 rounded-lg px-3 py-2 group">
-                <span className="font-medium text-green-900 dark:text-green-300">{payment.from.name}</span>
+              <div
+                key={payment.id}
+                className="flex items-center gap-2 text-sm bg-white dark:bg-stone-800 rounded-lg px-3 py-2 group"
+              >
+                <span className="font-medium text-green-900 dark:text-green-300">
+                  {payment.from.name}
+                </span>
                 <ArrowRight className="w-3 h-3 text-green-600 dark:text-green-500" />
-                <span className="font-medium text-green-900 dark:text-green-300">{payment.to.name}</span>
-                <span className="ml-auto font-semibold text-green-700 dark:text-green-400">{formatCurrency(payment.amount)}</span>
-                <span className="text-xs text-stone-400">{new Date(payment.createdAt).toLocaleDateString()}</span>
+                <span className="font-medium text-green-900 dark:text-green-300">
+                  {payment.to.name}
+                </span>
+                <span className="ml-auto font-semibold text-green-700 dark:text-green-400">
+                  {formatCurrency(payment.amount)}
+                </span>
+                <span className="text-xs text-stone-400">
+                  {new Date(payment.createdAt).toLocaleDateString()}
+                </span>
                 <button
                   onClick={() => handleDeletePayment(payment.id)}
                   className="opacity-0 group-hover:opacity-100 text-stone-400 hover:text-red-500 transition p-1"
@@ -337,19 +599,34 @@ export function ExpenseTracker({ tripId, members, expenses: initialExpenses, pay
         ) : (
           <div className="divide-y divide-stone-200 dark:divide-stone-800">
             {expenses.map((expense) => (
-              <div key={expense.id} className="p-4 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition">
+              <div
+                key={expense.id}
+                className="p-4 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition"
+              >
                 <div className="flex items-start justify-between">
                   <div className="flex-1">
                     <div className="flex items-center gap-2">
-                      <h4 className="font-medium text-stone-900 dark:text-white">{expense.description}</h4>
-                      <span className="text-lg font-semibold text-stone-900 dark:text-white">{formatCurrency(expense.amount, expense.currency)}</span>
+                      <h4 className="font-medium text-stone-900 dark:text-white">
+                        {expense.description}
+                      </h4>
+                      <span className="text-lg font-semibold text-stone-900 dark:text-white">
+                        {formatCurrency(expense.amount, expense.currency)}
+                      </span>
                     </div>
                     <p className="text-sm text-stone-500 dark:text-stone-400 mt-1">
-                      {t.expenses.paidBy} <span className="font-medium">{expense.paidBy.name}</span> &middot; {t.expenses.splitBetween} {expense.splits.map((s) => s.member.name).join(", ")}
+                      {t.expenses.paidBy}{" "}
+                      <span className="font-medium">{expense.paidBy.name}</span>{" "}
+                      &middot; {t.expenses.splitBetween}{" "}
+                      {expense.splits.map((s) => s.member.name).join(", ")}
                     </p>
-                    <p className="text-xs text-stone-400 dark:text-stone-500 mt-1">{new Date(expense.createdAt).toLocaleDateString()}</p>
+                    <p className="text-xs text-stone-400 dark:text-stone-500 mt-1">
+                      {new Date(expense.createdAt).toLocaleDateString()}
+                    </p>
                   </div>
-                  <button onClick={() => handleDeleteExpense(expense.id)} className="text-stone-400 hover:text-red-500 transition p-1">
+                  <button
+                    onClick={() => handleDeleteExpense(expense.id)}
+                    className="text-stone-400 hover:text-red-500 transition p-1"
+                  >
                     <X className="w-4 h-4" />
                   </button>
                 </div>

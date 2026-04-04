@@ -167,7 +167,7 @@ export function BookingsSection({
   };
 
   return (
-    <div className="bg-white dark:bg-stone-900 rounded-xl p-6 shadow-sm border border-stone-200 dark:border-stone-800">
+    <div className="bg-white dark:bg-stone-900 rounded-xl p-2 md:p-6 shadow-sm border border-stone-200 dark:border-stone-800">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold flex items-center gap-2">
           <Ticket className="w-5 h-5 text-orange-500" />
@@ -182,7 +182,7 @@ export function BookingsSection({
         </button>
       </div>
       {showForm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50 p-4">
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-70 p-4">
           <div className="bg-white dark:bg-stone-900 rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold dark:text-white">
@@ -315,8 +315,6 @@ export function BookingsSection({
                   >
                     <option value="EUR">EUR</option>
                     <option value="USD">USD</option>
-                    <option value="Spielgeld">Spielgeld</option>
-                    <option value="Monopoly $">Monopoly $</option>
                   </select>
                 </div>
               </div>
@@ -427,7 +425,7 @@ export function BookingsSection({
                     )}
                   </div>
                   {booking.description && (
-                    <p className="text-sm text-stone-500 dark:text-stone-400 mt-1">
+                    <p className="text-sm text-stone-500 dark:text-stone-400 mt-1 whitespace-pre-wrap break-all">
                       {booking.description}
                     </p>
                   )}

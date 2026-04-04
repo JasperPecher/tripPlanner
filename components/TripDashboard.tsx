@@ -308,8 +308,21 @@ export function TripDashboard({
         >
           <nav className="p-4">
             <ul className="space-y-4">
+              <div>
+                <div className="flex items-center gap-1 px-2 text-sm text-stone-600 dark:text-stone-400">
+                  <Users className="w-4 h-4" />
+                  <span>
+                    {trip.members.length} {t.dashboard.members}
+                  </span>
+                </div>
+                {currentMember && (
+                  <span className="text-xs text-orange-600 dark:text-orange-400 ml-2">
+                    {currentMember.name}
+                  </span>
+                )}
+              </div>
               {tabs.map((tab) => (
-                <li>
+                <li key={tab.id}>
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
