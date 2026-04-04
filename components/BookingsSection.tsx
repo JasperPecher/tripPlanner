@@ -257,7 +257,7 @@ export function BookingsSection({
                   placeholder={t.bookings.form.locationPlaceholder}
                 />
               </div>
-              <div className="grid grid-cols-2 gap-4 w-full">
+              <div className="grid grid-cols-2 gap-4 w-1/2">
                 <div>
                   <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
                     {t.bookings.form.checkIn}
