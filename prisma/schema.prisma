@@ -28,6 +28,7 @@ model Trip {
   photos        Photo[]
   payments      Payment[]
   storageConfig StorageConfig?
+  dateVotes     DateVote[]
 
   @@map("trips")
 }
@@ -41,10 +42,11 @@ model Member {
   tripId String
   trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
 
-  paidExpenses Expense[]     @relation("PaidBy")
-  splitMembers SplitMember[]
-  paymentsFrom Payment[]     @relation("PaymentFrom")
-  paymentsTo   Payment[]     @relation("PaymentTo")
+  paidExpenses  Expense[]     @relation("PaidBy")
+  splitMembers  SplitMember[]
+  paymentsFrom  Payment[]     @relation("PaymentFrom")
+  paymentsTo    Payment[]     @relation("PaymentTo")
+  dateVotes     DateVote[]
 
   @@unique([tripId, name])
   @@map("members")
@@ -142,4 +144,19 @@ model Payment {
   to   Member @relation("PaymentTo", fields: [toId], references: [id])
 
   @@map("payments")
+}
+
+model DateVote {
+  id        String   @id @default(cuid())
+  date      DateTime
+  createdAt DateTime @default(now())
+
+  tripId String
+  trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  memberId String
+  member   Member @relation(fields: [memberId], references: [id], onDelete: Cascade)
+
+  @@unique([tripId, memberId, date])
+  @@map("date_votes")
 }

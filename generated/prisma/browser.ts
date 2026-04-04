@@ -57,3 +57,8 @@ export type StorageConfig = Prisma.StorageConfigModel
  * 
  */
 export type Payment = Prisma.PaymentModel
+/**
+ * Model DateVote
+ * 
+ */
+export type DateVote = Prisma.DateVoteModel

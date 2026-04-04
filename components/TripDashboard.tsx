@@ -23,6 +23,7 @@ import { ExpenseTracker } from "./ExpenseTracker";
 import { PhotoGallery } from "./PhotoGallery";
 import { NotesSection } from "./NotesSection";
 import { BookingsSection } from "./BookingsSection";
+import { DateVoteCalendar } from "./DateVoteCalendar";
 import { SettingsPage } from "./SettingsPage";
 import { UserSettings } from "./UserSettings";
 
@@ -268,6 +269,11 @@ export function TripDashboard({
                   </div>
                 </div>
               </div>
+              <DateVoteCalendar
+                tripId={trip.id}
+                members={trip.members}
+                currentMember={currentMember}
+              />
               <BookingsSection tripId={trip.id} bookings={trip.bookings} />
               <NotesSection tripId={trip.id} initialNotes={trip.notes} />
             </div>
