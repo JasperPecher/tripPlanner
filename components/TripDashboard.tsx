@@ -200,9 +200,9 @@ export function TripDashboard({
                 className="p-1.5 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition"
               >
                 {theme === "dark" ? (
-                  <Sun className="w-5 h-5" />
-                ) : (
                   <Moon className="w-5 h-5" />
+                ) : (
+                  <Sun className="w-5 h-5" />
                 )}
               </button>
               <div className="text-right hidden sm:block">
@@ -324,12 +324,12 @@ export function TripDashboard({
                 >
                   {theme === "dark" ? (
                     <span className="flex gap-1 text-sm items-center">
-                      <Sun className="w-4 h-4" /> Light Mode
+                      <Moon className="w-4 h-4" />
+                      Dark Mode
                     </span>
                   ) : (
                     <span className="flex gap-1 text-sm items-center">
-                      <Moon className="w-4 h-4" />
-                      Dark Mode
+                      <Sun className="w-4 h-4" /> Light Mode
                     </span>
                   )}
                 </button>
