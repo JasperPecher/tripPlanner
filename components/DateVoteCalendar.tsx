@@ -237,11 +237,13 @@ export function DateVoteCalendar({
               >
                 <span>{day}</span>
                 {count > 0 && (
-                  <span className="text-[10px] leading-none opacity-80">
+                  <span className="text-[10px] leading-none opacity-80 truncate w-full px-1">
                     {count}
                     <ul className="mt-2">
                       {names.map((n) => (
-                        <li key={n}>{n}</li>
+                        <li className="truncate w-full" key={n}>
+                          {n}
+                        </li>
                       ))}
                     </ul>
                   </span>
