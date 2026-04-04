@@ -190,7 +190,7 @@ export function TripDashboard({
             <div className="flex items-center gap-1.5  shrink-0">
               <button
                 onClick={() => setLocale(locale === "de" ? "en" : "de")}
-                className="flex items-center gap-1.5 p-1.5 px-3 py-1.5text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200  hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg text-sm transition"
+                className="flex items-center gap-1.5 p-1.5 px-3 py-1.5 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200  hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg text-sm transition"
               >
                 <Globe className="w-4 h-4" />
                 {locale === "de" ? "EN" : "DE"}
@@ -258,7 +258,7 @@ export function TripDashboard({
         </h1>
         <button
           aria-label={isOpenMenu ? "Close menu" : "Open menu"}
-          className="flex items-center justify-center bg-black w-20 h-20 top-2 right-4 ml-auto z-60"
+          className="flex items-center justify-center bg-stone-100 dark:bg-stone-950 w-20 h-20 top-2 right-4 ml-auto z-60"
           onClick={() => setIsOpenMenu((s) => !s)}
         >
           <div className="relative flex flex-col justify-between w-2/5 h-2/5">
@@ -267,7 +267,7 @@ export function TripDashboard({
                 isOpenMenu ? "rotate-45 top-1/2 -translate-y-1/2" : "top-0"
               }`}
             >
-              <span className="absolute left-0 bg-white w-full h-full" />
+              <span className="absolute left-0 bg-black dark:bg-white w-full h-full" />
             </div>
 
             <div
@@ -275,7 +275,7 @@ export function TripDashboard({
                 isOpenMenu ? "translate-x-1/2 opacity-0" : ""
               }`}
             >
-              <span className="absolute left-0 bg-white w-full h-full" />
+              <span className="absolute left-0 bg-black dark:bg-white w-full h-full" />
             </div>
 
             <div
@@ -283,7 +283,7 @@ export function TripDashboard({
                 isOpenMenu ? "-rotate-45 -top-1/2 translate-y-1/2" : "bottom-0"
               }`}
             >
-              <span className="absolute left-0 bg-white w-full h-full" />
+              <span className="absolute left-0 bg-black dark:bg-white w-full h-full" />
             </div>
           </div>
         </button>
@@ -292,9 +292,9 @@ export function TripDashboard({
         <div
           aria-hidden={!isOpenMenu}
           onClick={() => setIsOpenMenu(false)}
-          className={`fixed inset-0 bg-black/50 transition-opacity duration-300 ${
+          className={`fixed inset-0 bg-white dark:bg-black transition-opacity duration-300 ${
             isOpenMenu
-              ? "opacity-100 pointer-events-auto"
+              ? "opacity-50 pointer-events-auto"
               : "opacity-0 pointer-events-none"
           }`}
         />
@@ -302,12 +302,51 @@ export function TripDashboard({
         {/* Sidebar */}
         <aside
           aria-hidden={!isOpenMenu}
-          className={`fixed top-0 right-0 h-full w-72 max-w-[80%] bg-black shadow-xl transform transition-transform duration-300 z-50 ${
+          className={`fixed top-0 right-0 h-full w-72 bg-black shadow-xl transform transition-transform duration-300 z-50 ${
             isOpenMenu ? "translate-x-0" : "translate-x-full"
           }`}
         >
-          <nav className="p-4">
+          <nav className="p-4 bg-stone-100 dark:bg-stone-950 h-screen">
             <ul className="space-y-4">
+              <div className="flex items-center gap-1.5 shrink-0">
+                <button
+                  onClick={() => setLocale(locale === "de" ? "en" : "de")}
+                  className="p-1.5 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition"
+                >
+                  <span className="flex gap-1 text-sm items-center">
+                    <Globe className="w-4 h-4" />
+                    <div>{locale === "de" ? "DE" : "EN"}</div>
+                  </span>
+                </button>
+                <button
+                  onClick={toggleTheme}
+                  className="p-1.5 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition"
+                >
+                  {theme === "dark" ? (
+                    <span className="flex gap-1 text-sm items-center">
+                      <Sun className="w-4 h-4" /> Light Mode
+                    </span>
+                  ) : (
+                    <span className="flex gap-1 text-sm items-center">
+                      <Moon className="w-4 h-4" />
+                      Dark Mode
+                    </span>
+                  )}
+                </button>
+                <div className="text-right hidden sm:block">
+                  <div className="flex items-center gap-1 px-2 text-sm text-stone-600 dark:text-stone-400">
+                    <Users className="w-4 h-4" />
+                    <span>
+                      {trip.members.length} {t.dashboard.members}
+                    </span>
+                  </div>
+                  {currentMember && (
+                    <span className="text-xs text-orange-600 dark:text-orange-400">
+                      {currentMember.name}
+                    </span>
+                  )}
+                </div>
+              </div>
               <div>
                 <div className="flex items-center gap-1 px-2 text-sm text-stone-600 dark:text-stone-400">
                   <Users className="w-4 h-4" />
@@ -326,7 +365,7 @@ export function TripDashboard({
                   <button
                     key={tab.id}
                     onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-1.5 px-4 py-2 text-md ${activeTab === tab.id ? "bg-stone-100 dark:bg-stone-950 text-orange-600 dark:text-orange-400" : "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800"}`}
+                    className={`flex items-center gap-1.5 py-2 text-md ${activeTab === tab.id ? "bg-stone-100 dark:bg-stone-950 text-orange-600 dark:text-orange-400" : "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800"}`}
                   >
                     {tab.icon}
                     {tab.label}

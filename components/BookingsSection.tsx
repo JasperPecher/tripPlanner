@@ -175,7 +175,7 @@ export function BookingsSection({
         </h2>
         <button
           onClick={() => setShowForm(true)}
-          className="flex items-center gap-1 text-sm text-orange-600 hover:text-orange-700 dark:text-orange-400"
+          className="flex items-center gap-0 md:gap-1 text-sm text-orange-600 hover:text-orange-700 dark:text-orange-400"
         >
           <Plus className="w-4 h-4" />
           {t.common.add}
