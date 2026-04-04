@@ -114,6 +114,7 @@ export function TripDashboard({
   const [currentMember, setCurrentMember] = useState<Member | null>(null);
   const { t, locale, setLocale } = useLocale();
   const { theme, toggleTheme } = useTheme();
+  const [isOpenMenu, setIsOpenMenu] = useState(false);
 
   useEffect(() => {
     const stored = localStorage.getItem(`trip_${trip.id}_member`);
@@ -173,7 +174,7 @@ export function TripDashboard({
 
   return (
     <div className="min-h-screen bg-stone-100 dark:bg-stone-950">
-      <div className="bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800">
+      <div className="bg-white dark:bg-stone-900 border-b border-stone-200 dark:border-stone-800 hidden md:block">
         <div className="max-w-6xl mx-auto px-4 pb-0 py-3 ">
           <div className="flex items-start justify-between gap-2">
             <div className="min-w-0 flex-1">
@@ -251,8 +252,80 @@ export function TripDashboard({
           </div>
         </div>
       </div>
+      <div className="flex md:hidden w-full">
+        <h1 className="text-2xl sm:text-2xl font-bold text-stone-900 dark:text-white my-auto mx-4 truncate">
+          {trip.name}
+        </h1>
+        <button
+          aria-label={isOpenMenu ? "Close menu" : "Open menu"}
+          className="flex items-center justify-center bg-black w-20 h-20 top-2 right-4 ml-auto z-60"
+          onClick={() => setIsOpenMenu((s) => !s)}
+        >
+          <div className="relative flex flex-col justify-between w-2/5 h-2/5">
+            <div
+              className={`relative w-full h-[5%] transition-all duration-500 ${
+                isOpenMenu ? "rotate-45 top-1/2 -translate-y-1/2" : "top-0"
+              }`}
+            >
+              <span className="absolute left-0 bg-white w-full h-full" />
+            </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-6">
+            <div
+              className={`relative w-full h-[5%] transition-all duration-300 ${
+                isOpenMenu ? "translate-x-1/2 opacity-0" : ""
+              }`}
+            >
+              <span className="absolute left-0 bg-white w-full h-full" />
+            </div>
+
+            <div
+              className={`relative w-full h-[5%] transition-all duration-500 ${
+                isOpenMenu ? "-rotate-45 -top-1/2 translate-y-1/2" : "bottom-0"
+              }`}
+            >
+              <span className="absolute left-0 bg-white w-full h-full" />
+            </div>
+          </div>
+        </button>
+
+        {/* Backdrop */}
+        <div
+          aria-hidden={!isOpenMenu}
+          onClick={() => setIsOpenMenu(false)}
+          className={`fixed inset-0 bg-black/50 transition-opacity duration-300 ${
+            isOpenMenu
+              ? "opacity-100 pointer-events-auto"
+              : "opacity-0 pointer-events-none"
+          }`}
+        />
+
+        {/* Sidebar */}
+        <aside
+          aria-hidden={!isOpenMenu}
+          className={`fixed top-0 right-0 h-full w-72 max-w-[80%] bg-black shadow-xl transform transition-transform duration-300 z-50 ${
+            isOpenMenu ? "translate-x-0" : "translate-x-full"
+          }`}
+        >
+          <nav className="p-4">
+            <ul className="space-y-4">
+              {tabs.map((tab) => (
+                <li>
+                  <button
+                    key={tab.id}
+                    onClick={() => setActiveTab(tab.id)}
+                    className={`flex items-center gap-1.5 px-4 py-2 text-md ${activeTab === tab.id ? "bg-stone-100 dark:bg-stone-950 text-orange-600 dark:text-orange-400" : "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800"}`}
+                  >
+                    {tab.icon}
+                    {tab.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </nav>
+        </aside>
+      </div>
+
+      <div className="max-w-6xl mx-auto px-4 py-0 md:py-6">
         {activeTab === "overview" && (
           <div className="grid lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
