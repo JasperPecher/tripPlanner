@@ -25,6 +25,7 @@ import { NotesSection } from "./NotesSection";
 import { BookingsSection } from "./BookingsSection";
 import { SettingsPage } from "./SettingsPage";
 import { UserSettings } from "./UserSettings";
+import { DateVoteCalendar } from "./DateVoteCalendar";
 
 type Member = {
   id: string;
@@ -95,7 +96,13 @@ interface TripDashboardProps {
   trip: Trip;
   shareUrl: string;
 }
-type Tab = "overview" | "expenses" | "photos" | "user" | "settings";
+type Tab =
+  | "overview"
+  | "expenses"
+  | "photos"
+  | "calendar"
+  | "user"
+  | "settings";
 
 export function TripDashboard({
   trip: initialTrip,
@@ -146,6 +153,11 @@ export function TripDashboard({
       id: "photos" as Tab,
       label: t.dashboard.tabs.photos,
       icon: <Camera className="w-4 h-4" />,
+    },
+    {
+      id: "calendar" as Tab,
+      label: t.dashboard.tabs.calendarVoting,
+      icon: <Calendar className="w-4 h-4" />,
     },
     {
       id: "user" as Tab,
@@ -268,6 +280,7 @@ export function TripDashboard({
                   </div>
                 </div>
               </div>
+
               <BookingsSection tripId={trip.id} bookings={trip.bookings} />
               <NotesSection tripId={trip.id} initialNotes={trip.notes} />
             </div>
@@ -333,6 +346,13 @@ export function TripDashboard({
             tripId={trip.id}
             photos={trip.photos}
             storageConfig={trip.storageConfig}
+            currentMember={currentMember}
+          />
+        )}
+        {activeTab === "calendar" && (
+          <DateVoteCalendar
+            tripId={trip.id}
+            members={trip.members}
             currentMember={currentMember}
           />
         )}
