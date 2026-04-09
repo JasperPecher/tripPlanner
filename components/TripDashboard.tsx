@@ -193,7 +193,7 @@ export function TripDashboard({
                 className="flex items-center gap-1.5 p-1.5 px-3 py-1.5 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200  hover:bg-stone-100 dark:hover:bg-stone-800 rounded-lg text-sm transition"
               >
                 <Globe className="w-4 h-4" />
-                {locale === "de" ? "EN" : "DE"}
+                {locale === "de" ? "DE" : "EN"}
               </button>
               <button
                 onClick={toggleTheme}
