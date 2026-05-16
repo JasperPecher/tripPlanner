@@ -67,3 +67,8 @@ export type DateVote = Prisma.DateVoteModel
  * 
  */
 export type PackingItem = Prisma.PackingItemModel
+/**
+ * Model RoutePoint
+ * 
+ */
+export type RoutePoint = Prisma.RoutePointModel

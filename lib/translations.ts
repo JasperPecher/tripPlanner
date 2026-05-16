@@ -55,6 +55,7 @@ export const translations = {
         user: "Profil",
         settings: "Einstellungen",
         packingList: "Packliste",
+        map: "Karte",
       },
     },
     overview: {
@@ -259,6 +260,14 @@ export const translations = {
       noItems: "Noch keine Artikel.",
       unassigned: "Nicht zugewiesen",
     },
+    map: {
+      title: "Route Map",
+      clickToToggle: "Klicke auf die Karte oder auf das Eingabefeldum einen Stop hinzuzufügen",
+      noItems: "Noch keine Stops hinzugefügt.",
+      addStop: "Stop hinzufügen",
+      locationName: "Ortsname",
+      deleteConfirm: "Bist du sicher?",
+    },
   },
   en: {
     common: {
@@ -315,6 +324,7 @@ export const translations = {
         user: "Profile",
         settings: "Settings",
         packingList: "Packing List",
+        map: "Map",
       },
     },
     overview: {
@@ -513,6 +523,14 @@ export const translations = {
       add: "Add",
       noItems: "No items yet.",
       unassigned: "Unassigned",
+    },
+    map: {
+      title: "Route Map",
+      clickToToggle: "Click on map or the input field to add a stop",
+      noItems: "No stops added yet.",
+      addStop: "Add Stop Here",
+      locationName: "Location name",
+      deleteConfirm: "Are you sure?",
     },
   },
 };

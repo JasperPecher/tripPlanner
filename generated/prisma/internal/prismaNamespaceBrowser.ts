@@ -60,7 +60,8 @@ export const ModelName = {
   StorageConfig: 'StorageConfig',
   Payment: 'Payment',
   DateVote: 'DateVote',
-  PackingItem: 'PackingItem'
+  PackingItem: 'PackingItem',
+  RoutePoint: 'RoutePoint'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -92,7 +93,8 @@ export const TripScalarFieldEnum = {
   hasExpenses: 'hasExpenses',
   hasPhotos: 'hasPhotos',
   hasDateVoting: 'hasDateVoting',
-  hasPackingList: 'hasPackingList'
+  hasPackingList: 'hasPackingList',
+  hasMap: 'hasMap'
 } as const
 
 export type TripScalarFieldEnum = (typeof TripScalarFieldEnum)[keyof typeof TripScalarFieldEnum]
@@ -210,6 +212,21 @@ export const PackingItemScalarFieldEnum = {
 } as const
 
 export type PackingItemScalarFieldEnum = (typeof PackingItemScalarFieldEnum)[keyof typeof PackingItemScalarFieldEnum]
+
+
+export const RoutePointScalarFieldEnum = {
+  id: 'id',
+  location: 'location',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  date: 'date',
+  order: 'order',
+  tripId: 'tripId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RoutePointScalarFieldEnum = (typeof RoutePointScalarFieldEnum)[keyof typeof RoutePointScalarFieldEnum]
 
 
 export const SortOrder = {

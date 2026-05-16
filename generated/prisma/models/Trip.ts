@@ -38,6 +38,7 @@ export type TripMinAggregateOutputType = {
   hasPhotos: boolean | null
   hasDateVoting: boolean | null
   hasPackingList: boolean | null
+  hasMap: boolean | null
 }
 
 export type TripMaxAggregateOutputType = {
@@ -54,6 +55,7 @@ export type TripMaxAggregateOutputType = {
   hasPhotos: boolean | null
   hasDateVoting: boolean | null
   hasPackingList: boolean | null
+  hasMap: boolean | null
 }
 
 export type TripCountAggregateOutputType = {
@@ -70,6 +72,7 @@ export type TripCountAggregateOutputType = {
   hasPhotos: number
   hasDateVoting: number
   hasPackingList: number
+  hasMap: number
   _all: number
 }
 
@@ -88,6 +91,7 @@ export type TripMinAggregateInputType = {
   hasPhotos?: true
   hasDateVoting?: true
   hasPackingList?: true
+  hasMap?: true
 }
 
 export type TripMaxAggregateInputType = {
@@ -104,6 +108,7 @@ export type TripMaxAggregateInputType = {
   hasPhotos?: true
   hasDateVoting?: true
   hasPackingList?: true
+  hasMap?: true
 }
 
 export type TripCountAggregateInputType = {
@@ -120,6 +125,7 @@ export type TripCountAggregateInputType = {
   hasPhotos?: true
   hasDateVoting?: true
   hasPackingList?: true
+  hasMap?: true
   _all?: true
 }
 
@@ -209,6 +215,7 @@ export type TripGroupByOutputType = {
   hasPhotos: boolean
   hasDateVoting: boolean
   hasPackingList: boolean
+  hasMap: boolean
   _count: TripCountAggregateOutputType | null
   _min: TripMinAggregateOutputType | null
   _max: TripMaxAggregateOutputType | null
@@ -246,6 +253,7 @@ export type TripWhereInput = {
   hasPhotos?: Prisma.BoolFilter<"Trip"> | boolean
   hasDateVoting?: Prisma.BoolFilter<"Trip"> | boolean
   hasPackingList?: Prisma.BoolFilter<"Trip"> | boolean
+  hasMap?: Prisma.BoolFilter<"Trip"> | boolean
   members?: Prisma.MemberListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
   bookings?: Prisma.BookingListRelationFilter
@@ -254,6 +262,7 @@ export type TripWhereInput = {
   storageConfig?: Prisma.XOR<Prisma.StorageConfigNullableScalarRelationFilter, Prisma.StorageConfigWhereInput> | null
   dateVotes?: Prisma.DateVoteListRelationFilter
   packingItems?: Prisma.PackingItemListRelationFilter
+  routePoints?: Prisma.RoutePointListRelationFilter
 }
 
 export type TripOrderByWithRelationInput = {
@@ -270,6 +279,7 @@ export type TripOrderByWithRelationInput = {
   hasPhotos?: Prisma.SortOrder
   hasDateVoting?: Prisma.SortOrder
   hasPackingList?: Prisma.SortOrder
+  hasMap?: Prisma.SortOrder
   members?: Prisma.MemberOrderByRelationAggregateInput
   expenses?: Prisma.ExpenseOrderByRelationAggregateInput
   bookings?: Prisma.BookingOrderByRelationAggregateInput
@@ -278,6 +288,7 @@ export type TripOrderByWithRelationInput = {
   storageConfig?: Prisma.StorageConfigOrderByWithRelationInput
   dateVotes?: Prisma.DateVoteOrderByRelationAggregateInput
   packingItems?: Prisma.PackingItemOrderByRelationAggregateInput
+  routePoints?: Prisma.RoutePointOrderByRelationAggregateInput
 }
 
 export type TripWhereUniqueInput = Prisma.AtLeast<{
@@ -297,6 +308,7 @@ export type TripWhereUniqueInput = Prisma.AtLeast<{
   hasPhotos?: Prisma.BoolFilter<"Trip"> | boolean
   hasDateVoting?: Prisma.BoolFilter<"Trip"> | boolean
   hasPackingList?: Prisma.BoolFilter<"Trip"> | boolean
+  hasMap?: Prisma.BoolFilter<"Trip"> | boolean
   members?: Prisma.MemberListRelationFilter
   expenses?: Prisma.ExpenseListRelationFilter
   bookings?: Prisma.BookingListRelationFilter
@@ -305,6 +317,7 @@ export type TripWhereUniqueInput = Prisma.AtLeast<{
   storageConfig?: Prisma.XOR<Prisma.StorageConfigNullableScalarRelationFilter, Prisma.StorageConfigWhereInput> | null
   dateVotes?: Prisma.DateVoteListRelationFilter
   packingItems?: Prisma.PackingItemListRelationFilter
+  routePoints?: Prisma.RoutePointListRelationFilter
 }, "id" | "shareCode">
 
 export type TripOrderByWithAggregationInput = {
@@ -321,6 +334,7 @@ export type TripOrderByWithAggregationInput = {
   hasPhotos?: Prisma.SortOrder
   hasDateVoting?: Prisma.SortOrder
   hasPackingList?: Prisma.SortOrder
+  hasMap?: Prisma.SortOrder
   _count?: Prisma.TripCountOrderByAggregateInput
   _max?: Prisma.TripMaxOrderByAggregateInput
   _min?: Prisma.TripMinOrderByAggregateInput
@@ -343,6 +357,7 @@ export type TripScalarWhereWithAggregatesInput = {
   hasPhotos?: Prisma.BoolWithAggregatesFilter<"Trip"> | boolean
   hasDateVoting?: Prisma.BoolWithAggregatesFilter<"Trip"> | boolean
   hasPackingList?: Prisma.BoolWithAggregatesFilter<"Trip"> | boolean
+  hasMap?: Prisma.BoolWithAggregatesFilter<"Trip"> | boolean
 }
 
 export type TripCreateInput = {
@@ -359,6 +374,7 @@ export type TripCreateInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   members?: Prisma.MemberCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   bookings?: Prisma.BookingCreateNestedManyWithoutTripInput
@@ -367,6 +383,7 @@ export type TripCreateInput = {
   storageConfig?: Prisma.StorageConfigCreateNestedOneWithoutTripInput
   dateVotes?: Prisma.DateVoteCreateNestedManyWithoutTripInput
   packingItems?: Prisma.PackingItemCreateNestedManyWithoutTripInput
+  routePoints?: Prisma.RoutePointCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateInput = {
@@ -383,6 +400,7 @@ export type TripUncheckedCreateInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutTripInput
@@ -391,6 +409,7 @@ export type TripUncheckedCreateInput = {
   storageConfig?: Prisma.StorageConfigUncheckedCreateNestedOneWithoutTripInput
   dateVotes?: Prisma.DateVoteUncheckedCreateNestedManyWithoutTripInput
   packingItems?: Prisma.PackingItemUncheckedCreateNestedManyWithoutTripInput
+  routePoints?: Prisma.RoutePointUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripUpdateInput = {
@@ -407,6 +426,7 @@ export type TripUpdateInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.MemberUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutTripNestedInput
@@ -415,6 +435,7 @@ export type TripUpdateInput = {
   storageConfig?: Prisma.StorageConfigUpdateOneWithoutTripNestedInput
   dateVotes?: Prisma.DateVoteUpdateManyWithoutTripNestedInput
   packingItems?: Prisma.PackingItemUpdateManyWithoutTripNestedInput
+  routePoints?: Prisma.RoutePointUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateInput = {
@@ -431,6 +452,7 @@ export type TripUncheckedUpdateInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.MemberUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutTripNestedInput
@@ -439,6 +461,7 @@ export type TripUncheckedUpdateInput = {
   storageConfig?: Prisma.StorageConfigUncheckedUpdateOneWithoutTripNestedInput
   dateVotes?: Prisma.DateVoteUncheckedUpdateManyWithoutTripNestedInput
   packingItems?: Prisma.PackingItemUncheckedUpdateManyWithoutTripNestedInput
+  routePoints?: Prisma.RoutePointUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateManyInput = {
@@ -455,6 +478,7 @@ export type TripCreateManyInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
 }
 
 export type TripUpdateManyMutationInput = {
@@ -471,6 +495,7 @@ export type TripUpdateManyMutationInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type TripUncheckedUpdateManyInput = {
@@ -487,6 +512,7 @@ export type TripUncheckedUpdateManyInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
 }
 
 export type TripCountOrderByAggregateInput = {
@@ -503,6 +529,7 @@ export type TripCountOrderByAggregateInput = {
   hasPhotos?: Prisma.SortOrder
   hasDateVoting?: Prisma.SortOrder
   hasPackingList?: Prisma.SortOrder
+  hasMap?: Prisma.SortOrder
 }
 
 export type TripMaxOrderByAggregateInput = {
@@ -519,6 +546,7 @@ export type TripMaxOrderByAggregateInput = {
   hasPhotos?: Prisma.SortOrder
   hasDateVoting?: Prisma.SortOrder
   hasPackingList?: Prisma.SortOrder
+  hasMap?: Prisma.SortOrder
 }
 
 export type TripMinOrderByAggregateInput = {
@@ -535,6 +563,7 @@ export type TripMinOrderByAggregateInput = {
   hasPhotos?: Prisma.SortOrder
   hasDateVoting?: Prisma.SortOrder
   hasPackingList?: Prisma.SortOrder
+  hasMap?: Prisma.SortOrder
 }
 
 export type TripScalarRelationFilter = {
@@ -674,6 +703,20 @@ export type TripUpdateOneRequiredWithoutPackingItemsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutPackingItemsInput, Prisma.TripUpdateWithoutPackingItemsInput>, Prisma.TripUncheckedUpdateWithoutPackingItemsInput>
 }
 
+export type TripCreateNestedOneWithoutRoutePointsInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutRoutePointsInput, Prisma.TripUncheckedCreateWithoutRoutePointsInput>
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutRoutePointsInput
+  connect?: Prisma.TripWhereUniqueInput
+}
+
+export type TripUpdateOneRequiredWithoutRoutePointsNestedInput = {
+  create?: Prisma.XOR<Prisma.TripCreateWithoutRoutePointsInput, Prisma.TripUncheckedCreateWithoutRoutePointsInput>
+  connectOrCreate?: Prisma.TripCreateOrConnectWithoutRoutePointsInput
+  upsert?: Prisma.TripUpsertWithoutRoutePointsInput
+  connect?: Prisma.TripWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.TripUpdateToOneWithWhereWithoutRoutePointsInput, Prisma.TripUpdateWithoutRoutePointsInput>, Prisma.TripUncheckedUpdateWithoutRoutePointsInput>
+}
+
 export type TripCreateWithoutMembersInput = {
   id?: string
   name: string
@@ -688,6 +731,7 @@ export type TripCreateWithoutMembersInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   bookings?: Prisma.BookingCreateNestedManyWithoutTripInput
   photos?: Prisma.PhotoCreateNestedManyWithoutTripInput
@@ -695,6 +739,7 @@ export type TripCreateWithoutMembersInput = {
   storageConfig?: Prisma.StorageConfigCreateNestedOneWithoutTripInput
   dateVotes?: Prisma.DateVoteCreateNestedManyWithoutTripInput
   packingItems?: Prisma.PackingItemCreateNestedManyWithoutTripInput
+  routePoints?: Prisma.RoutePointCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutMembersInput = {
@@ -711,6 +756,7 @@ export type TripUncheckedCreateWithoutMembersInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutTripInput
   photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutTripInput
@@ -718,6 +764,7 @@ export type TripUncheckedCreateWithoutMembersInput = {
   storageConfig?: Prisma.StorageConfigUncheckedCreateNestedOneWithoutTripInput
   dateVotes?: Prisma.DateVoteUncheckedCreateNestedManyWithoutTripInput
   packingItems?: Prisma.PackingItemUncheckedCreateNestedManyWithoutTripInput
+  routePoints?: Prisma.RoutePointUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutMembersInput = {
@@ -750,6 +797,7 @@ export type TripUpdateWithoutMembersInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutTripNestedInput
   photos?: Prisma.PhotoUpdateManyWithoutTripNestedInput
@@ -757,6 +805,7 @@ export type TripUpdateWithoutMembersInput = {
   storageConfig?: Prisma.StorageConfigUpdateOneWithoutTripNestedInput
   dateVotes?: Prisma.DateVoteUpdateManyWithoutTripNestedInput
   packingItems?: Prisma.PackingItemUpdateManyWithoutTripNestedInput
+  routePoints?: Prisma.RoutePointUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutMembersInput = {
@@ -773,6 +822,7 @@ export type TripUncheckedUpdateWithoutMembersInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutTripNestedInput
   photos?: Prisma.PhotoUncheckedUpdateManyWithoutTripNestedInput
@@ -780,6 +830,7 @@ export type TripUncheckedUpdateWithoutMembersInput = {
   storageConfig?: Prisma.StorageConfigUncheckedUpdateOneWithoutTripNestedInput
   dateVotes?: Prisma.DateVoteUncheckedUpdateManyWithoutTripNestedInput
   packingItems?: Prisma.PackingItemUncheckedUpdateManyWithoutTripNestedInput
+  routePoints?: Prisma.RoutePointUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutExpensesInput = {
@@ -796,6 +847,7 @@ export type TripCreateWithoutExpensesInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   members?: Prisma.MemberCreateNestedManyWithoutTripInput
   bookings?: Prisma.BookingCreateNestedManyWithoutTripInput
   photos?: Prisma.PhotoCreateNestedManyWithoutTripInput
@@ -803,6 +855,7 @@ export type TripCreateWithoutExpensesInput = {
   storageConfig?: Prisma.StorageConfigCreateNestedOneWithoutTripInput
   dateVotes?: Prisma.DateVoteCreateNestedManyWithoutTripInput
   packingItems?: Prisma.PackingItemCreateNestedManyWithoutTripInput
+  routePoints?: Prisma.RoutePointCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutExpensesInput = {
@@ -819,6 +872,7 @@ export type TripUncheckedCreateWithoutExpensesInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutTripInput
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutTripInput
   photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutTripInput
@@ -826,6 +880,7 @@ export type TripUncheckedCreateWithoutExpensesInput = {
   storageConfig?: Prisma.StorageConfigUncheckedCreateNestedOneWithoutTripInput
   dateVotes?: Prisma.DateVoteUncheckedCreateNestedManyWithoutTripInput
   packingItems?: Prisma.PackingItemUncheckedCreateNestedManyWithoutTripInput
+  routePoints?: Prisma.RoutePointUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutExpensesInput = {
@@ -858,6 +913,7 @@ export type TripUpdateWithoutExpensesInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.MemberUpdateManyWithoutTripNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutTripNestedInput
   photos?: Prisma.PhotoUpdateManyWithoutTripNestedInput
@@ -865,6 +921,7 @@ export type TripUpdateWithoutExpensesInput = {
   storageConfig?: Prisma.StorageConfigUpdateOneWithoutTripNestedInput
   dateVotes?: Prisma.DateVoteUpdateManyWithoutTripNestedInput
   packingItems?: Prisma.PackingItemUpdateManyWithoutTripNestedInput
+  routePoints?: Prisma.RoutePointUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutExpensesInput = {
@@ -881,6 +938,7 @@ export type TripUncheckedUpdateWithoutExpensesInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.MemberUncheckedUpdateManyWithoutTripNestedInput
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutTripNestedInput
   photos?: Prisma.PhotoUncheckedUpdateManyWithoutTripNestedInput
@@ -888,6 +946,7 @@ export type TripUncheckedUpdateWithoutExpensesInput = {
   storageConfig?: Prisma.StorageConfigUncheckedUpdateOneWithoutTripNestedInput
   dateVotes?: Prisma.DateVoteUncheckedUpdateManyWithoutTripNestedInput
   packingItems?: Prisma.PackingItemUncheckedUpdateManyWithoutTripNestedInput
+  routePoints?: Prisma.RoutePointUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutBookingsInput = {
@@ -904,6 +963,7 @@ export type TripCreateWithoutBookingsInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   members?: Prisma.MemberCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   photos?: Prisma.PhotoCreateNestedManyWithoutTripInput
@@ -911,6 +971,7 @@ export type TripCreateWithoutBookingsInput = {
   storageConfig?: Prisma.StorageConfigCreateNestedOneWithoutTripInput
   dateVotes?: Prisma.DateVoteCreateNestedManyWithoutTripInput
   packingItems?: Prisma.PackingItemCreateNestedManyWithoutTripInput
+  routePoints?: Prisma.RoutePointCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutBookingsInput = {
@@ -927,6 +988,7 @@ export type TripUncheckedCreateWithoutBookingsInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutTripInput
@@ -934,6 +996,7 @@ export type TripUncheckedCreateWithoutBookingsInput = {
   storageConfig?: Prisma.StorageConfigUncheckedCreateNestedOneWithoutTripInput
   dateVotes?: Prisma.DateVoteUncheckedCreateNestedManyWithoutTripInput
   packingItems?: Prisma.PackingItemUncheckedCreateNestedManyWithoutTripInput
+  routePoints?: Prisma.RoutePointUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutBookingsInput = {
@@ -966,6 +1029,7 @@ export type TripUpdateWithoutBookingsInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.MemberUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   photos?: Prisma.PhotoUpdateManyWithoutTripNestedInput
@@ -973,6 +1037,7 @@ export type TripUpdateWithoutBookingsInput = {
   storageConfig?: Prisma.StorageConfigUpdateOneWithoutTripNestedInput
   dateVotes?: Prisma.DateVoteUpdateManyWithoutTripNestedInput
   packingItems?: Prisma.PackingItemUpdateManyWithoutTripNestedInput
+  routePoints?: Prisma.RoutePointUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutBookingsInput = {
@@ -989,6 +1054,7 @@ export type TripUncheckedUpdateWithoutBookingsInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.MemberUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   photos?: Prisma.PhotoUncheckedUpdateManyWithoutTripNestedInput
@@ -996,6 +1062,7 @@ export type TripUncheckedUpdateWithoutBookingsInput = {
   storageConfig?: Prisma.StorageConfigUncheckedUpdateOneWithoutTripNestedInput
   dateVotes?: Prisma.DateVoteUncheckedUpdateManyWithoutTripNestedInput
   packingItems?: Prisma.PackingItemUncheckedUpdateManyWithoutTripNestedInput
+  routePoints?: Prisma.RoutePointUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutPhotosInput = {
@@ -1012,6 +1079,7 @@ export type TripCreateWithoutPhotosInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   members?: Prisma.MemberCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   bookings?: Prisma.BookingCreateNestedManyWithoutTripInput
@@ -1019,6 +1087,7 @@ export type TripCreateWithoutPhotosInput = {
   storageConfig?: Prisma.StorageConfigCreateNestedOneWithoutTripInput
   dateVotes?: Prisma.DateVoteCreateNestedManyWithoutTripInput
   packingItems?: Prisma.PackingItemCreateNestedManyWithoutTripInput
+  routePoints?: Prisma.RoutePointCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutPhotosInput = {
@@ -1035,6 +1104,7 @@ export type TripUncheckedCreateWithoutPhotosInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutTripInput
@@ -1042,6 +1112,7 @@ export type TripUncheckedCreateWithoutPhotosInput = {
   storageConfig?: Prisma.StorageConfigUncheckedCreateNestedOneWithoutTripInput
   dateVotes?: Prisma.DateVoteUncheckedCreateNestedManyWithoutTripInput
   packingItems?: Prisma.PackingItemUncheckedCreateNestedManyWithoutTripInput
+  routePoints?: Prisma.RoutePointUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutPhotosInput = {
@@ -1074,6 +1145,7 @@ export type TripUpdateWithoutPhotosInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.MemberUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutTripNestedInput
@@ -1081,6 +1153,7 @@ export type TripUpdateWithoutPhotosInput = {
   storageConfig?: Prisma.StorageConfigUpdateOneWithoutTripNestedInput
   dateVotes?: Prisma.DateVoteUpdateManyWithoutTripNestedInput
   packingItems?: Prisma.PackingItemUpdateManyWithoutTripNestedInput
+  routePoints?: Prisma.RoutePointUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutPhotosInput = {
@@ -1097,6 +1170,7 @@ export type TripUncheckedUpdateWithoutPhotosInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.MemberUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutTripNestedInput
@@ -1104,6 +1178,7 @@ export type TripUncheckedUpdateWithoutPhotosInput = {
   storageConfig?: Prisma.StorageConfigUncheckedUpdateOneWithoutTripNestedInput
   dateVotes?: Prisma.DateVoteUncheckedUpdateManyWithoutTripNestedInput
   packingItems?: Prisma.PackingItemUncheckedUpdateManyWithoutTripNestedInput
+  routePoints?: Prisma.RoutePointUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutStorageConfigInput = {
@@ -1120,6 +1195,7 @@ export type TripCreateWithoutStorageConfigInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   members?: Prisma.MemberCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   bookings?: Prisma.BookingCreateNestedManyWithoutTripInput
@@ -1127,6 +1203,7 @@ export type TripCreateWithoutStorageConfigInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutTripInput
   dateVotes?: Prisma.DateVoteCreateNestedManyWithoutTripInput
   packingItems?: Prisma.PackingItemCreateNestedManyWithoutTripInput
+  routePoints?: Prisma.RoutePointCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutStorageConfigInput = {
@@ -1143,6 +1220,7 @@ export type TripUncheckedCreateWithoutStorageConfigInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutTripInput
@@ -1150,6 +1228,7 @@ export type TripUncheckedCreateWithoutStorageConfigInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutTripInput
   dateVotes?: Prisma.DateVoteUncheckedCreateNestedManyWithoutTripInput
   packingItems?: Prisma.PackingItemUncheckedCreateNestedManyWithoutTripInput
+  routePoints?: Prisma.RoutePointUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutStorageConfigInput = {
@@ -1182,6 +1261,7 @@ export type TripUpdateWithoutStorageConfigInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.MemberUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutTripNestedInput
@@ -1189,6 +1269,7 @@ export type TripUpdateWithoutStorageConfigInput = {
   payments?: Prisma.PaymentUpdateManyWithoutTripNestedInput
   dateVotes?: Prisma.DateVoteUpdateManyWithoutTripNestedInput
   packingItems?: Prisma.PackingItemUpdateManyWithoutTripNestedInput
+  routePoints?: Prisma.RoutePointUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutStorageConfigInput = {
@@ -1205,6 +1286,7 @@ export type TripUncheckedUpdateWithoutStorageConfigInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.MemberUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutTripNestedInput
@@ -1212,6 +1294,7 @@ export type TripUncheckedUpdateWithoutStorageConfigInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutTripNestedInput
   dateVotes?: Prisma.DateVoteUncheckedUpdateManyWithoutTripNestedInput
   packingItems?: Prisma.PackingItemUncheckedUpdateManyWithoutTripNestedInput
+  routePoints?: Prisma.RoutePointUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutPaymentsInput = {
@@ -1228,6 +1311,7 @@ export type TripCreateWithoutPaymentsInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   members?: Prisma.MemberCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   bookings?: Prisma.BookingCreateNestedManyWithoutTripInput
@@ -1235,6 +1319,7 @@ export type TripCreateWithoutPaymentsInput = {
   storageConfig?: Prisma.StorageConfigCreateNestedOneWithoutTripInput
   dateVotes?: Prisma.DateVoteCreateNestedManyWithoutTripInput
   packingItems?: Prisma.PackingItemCreateNestedManyWithoutTripInput
+  routePoints?: Prisma.RoutePointCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutPaymentsInput = {
@@ -1251,6 +1336,7 @@ export type TripUncheckedCreateWithoutPaymentsInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutTripInput
@@ -1258,6 +1344,7 @@ export type TripUncheckedCreateWithoutPaymentsInput = {
   storageConfig?: Prisma.StorageConfigUncheckedCreateNestedOneWithoutTripInput
   dateVotes?: Prisma.DateVoteUncheckedCreateNestedManyWithoutTripInput
   packingItems?: Prisma.PackingItemUncheckedCreateNestedManyWithoutTripInput
+  routePoints?: Prisma.RoutePointUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutPaymentsInput = {
@@ -1290,6 +1377,7 @@ export type TripUpdateWithoutPaymentsInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.MemberUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutTripNestedInput
@@ -1297,6 +1385,7 @@ export type TripUpdateWithoutPaymentsInput = {
   storageConfig?: Prisma.StorageConfigUpdateOneWithoutTripNestedInput
   dateVotes?: Prisma.DateVoteUpdateManyWithoutTripNestedInput
   packingItems?: Prisma.PackingItemUpdateManyWithoutTripNestedInput
+  routePoints?: Prisma.RoutePointUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutPaymentsInput = {
@@ -1313,6 +1402,7 @@ export type TripUncheckedUpdateWithoutPaymentsInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.MemberUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutTripNestedInput
@@ -1320,6 +1410,7 @@ export type TripUncheckedUpdateWithoutPaymentsInput = {
   storageConfig?: Prisma.StorageConfigUncheckedUpdateOneWithoutTripNestedInput
   dateVotes?: Prisma.DateVoteUncheckedUpdateManyWithoutTripNestedInput
   packingItems?: Prisma.PackingItemUncheckedUpdateManyWithoutTripNestedInput
+  routePoints?: Prisma.RoutePointUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutDateVotesInput = {
@@ -1336,6 +1427,7 @@ export type TripCreateWithoutDateVotesInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   members?: Prisma.MemberCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   bookings?: Prisma.BookingCreateNestedManyWithoutTripInput
@@ -1343,6 +1435,7 @@ export type TripCreateWithoutDateVotesInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutTripInput
   storageConfig?: Prisma.StorageConfigCreateNestedOneWithoutTripInput
   packingItems?: Prisma.PackingItemCreateNestedManyWithoutTripInput
+  routePoints?: Prisma.RoutePointCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutDateVotesInput = {
@@ -1359,6 +1452,7 @@ export type TripUncheckedCreateWithoutDateVotesInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutTripInput
@@ -1366,6 +1460,7 @@ export type TripUncheckedCreateWithoutDateVotesInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutTripInput
   storageConfig?: Prisma.StorageConfigUncheckedCreateNestedOneWithoutTripInput
   packingItems?: Prisma.PackingItemUncheckedCreateNestedManyWithoutTripInput
+  routePoints?: Prisma.RoutePointUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutDateVotesInput = {
@@ -1398,6 +1493,7 @@ export type TripUpdateWithoutDateVotesInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.MemberUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutTripNestedInput
@@ -1405,6 +1501,7 @@ export type TripUpdateWithoutDateVotesInput = {
   payments?: Prisma.PaymentUpdateManyWithoutTripNestedInput
   storageConfig?: Prisma.StorageConfigUpdateOneWithoutTripNestedInput
   packingItems?: Prisma.PackingItemUpdateManyWithoutTripNestedInput
+  routePoints?: Prisma.RoutePointUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutDateVotesInput = {
@@ -1421,6 +1518,7 @@ export type TripUncheckedUpdateWithoutDateVotesInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.MemberUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutTripNestedInput
@@ -1428,6 +1526,7 @@ export type TripUncheckedUpdateWithoutDateVotesInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutTripNestedInput
   storageConfig?: Prisma.StorageConfigUncheckedUpdateOneWithoutTripNestedInput
   packingItems?: Prisma.PackingItemUncheckedUpdateManyWithoutTripNestedInput
+  routePoints?: Prisma.RoutePointUncheckedUpdateManyWithoutTripNestedInput
 }
 
 export type TripCreateWithoutPackingItemsInput = {
@@ -1444,6 +1543,7 @@ export type TripCreateWithoutPackingItemsInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   members?: Prisma.MemberCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
   bookings?: Prisma.BookingCreateNestedManyWithoutTripInput
@@ -1451,6 +1551,7 @@ export type TripCreateWithoutPackingItemsInput = {
   payments?: Prisma.PaymentCreateNestedManyWithoutTripInput
   storageConfig?: Prisma.StorageConfigCreateNestedOneWithoutTripInput
   dateVotes?: Prisma.DateVoteCreateNestedManyWithoutTripInput
+  routePoints?: Prisma.RoutePointCreateNestedManyWithoutTripInput
 }
 
 export type TripUncheckedCreateWithoutPackingItemsInput = {
@@ -1467,6 +1568,7 @@ export type TripUncheckedCreateWithoutPackingItemsInput = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   members?: Prisma.MemberUncheckedCreateNestedManyWithoutTripInput
   expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
   bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutTripInput
@@ -1474,6 +1576,7 @@ export type TripUncheckedCreateWithoutPackingItemsInput = {
   payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutTripInput
   storageConfig?: Prisma.StorageConfigUncheckedCreateNestedOneWithoutTripInput
   dateVotes?: Prisma.DateVoteUncheckedCreateNestedManyWithoutTripInput
+  routePoints?: Prisma.RoutePointUncheckedCreateNestedManyWithoutTripInput
 }
 
 export type TripCreateOrConnectWithoutPackingItemsInput = {
@@ -1506,6 +1609,7 @@ export type TripUpdateWithoutPackingItemsInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.MemberUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
   bookings?: Prisma.BookingUpdateManyWithoutTripNestedInput
@@ -1513,6 +1617,7 @@ export type TripUpdateWithoutPackingItemsInput = {
   payments?: Prisma.PaymentUpdateManyWithoutTripNestedInput
   storageConfig?: Prisma.StorageConfigUpdateOneWithoutTripNestedInput
   dateVotes?: Prisma.DateVoteUpdateManyWithoutTripNestedInput
+  routePoints?: Prisma.RoutePointUpdateManyWithoutTripNestedInput
 }
 
 export type TripUncheckedUpdateWithoutPackingItemsInput = {
@@ -1529,6 +1634,7 @@ export type TripUncheckedUpdateWithoutPackingItemsInput = {
   hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
   hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
   members?: Prisma.MemberUncheckedUpdateManyWithoutTripNestedInput
   expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
   bookings?: Prisma.BookingUncheckedUpdateManyWithoutTripNestedInput
@@ -1536,6 +1642,123 @@ export type TripUncheckedUpdateWithoutPackingItemsInput = {
   payments?: Prisma.PaymentUncheckedUpdateManyWithoutTripNestedInput
   storageConfig?: Prisma.StorageConfigUncheckedUpdateOneWithoutTripNestedInput
   dateVotes?: Prisma.DateVoteUncheckedUpdateManyWithoutTripNestedInput
+  routePoints?: Prisma.RoutePointUncheckedUpdateManyWithoutTripNestedInput
+}
+
+export type TripCreateWithoutRoutePointsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  shareCode: string
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  notes?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  hasExpenses?: boolean
+  hasPhotos?: boolean
+  hasDateVoting?: boolean
+  hasPackingList?: boolean
+  hasMap?: boolean
+  members?: Prisma.MemberCreateNestedManyWithoutTripInput
+  expenses?: Prisma.ExpenseCreateNestedManyWithoutTripInput
+  bookings?: Prisma.BookingCreateNestedManyWithoutTripInput
+  photos?: Prisma.PhotoCreateNestedManyWithoutTripInput
+  payments?: Prisma.PaymentCreateNestedManyWithoutTripInput
+  storageConfig?: Prisma.StorageConfigCreateNestedOneWithoutTripInput
+  dateVotes?: Prisma.DateVoteCreateNestedManyWithoutTripInput
+  packingItems?: Prisma.PackingItemCreateNestedManyWithoutTripInput
+}
+
+export type TripUncheckedCreateWithoutRoutePointsInput = {
+  id?: string
+  name: string
+  description?: string | null
+  shareCode: string
+  startDate?: Date | string | null
+  endDate?: Date | string | null
+  notes?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  hasExpenses?: boolean
+  hasPhotos?: boolean
+  hasDateVoting?: boolean
+  hasPackingList?: boolean
+  hasMap?: boolean
+  members?: Prisma.MemberUncheckedCreateNestedManyWithoutTripInput
+  expenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutTripInput
+  bookings?: Prisma.BookingUncheckedCreateNestedManyWithoutTripInput
+  photos?: Prisma.PhotoUncheckedCreateNestedManyWithoutTripInput
+  payments?: Prisma.PaymentUncheckedCreateNestedManyWithoutTripInput
+  storageConfig?: Prisma.StorageConfigUncheckedCreateNestedOneWithoutTripInput
+  dateVotes?: Prisma.DateVoteUncheckedCreateNestedManyWithoutTripInput
+  packingItems?: Prisma.PackingItemUncheckedCreateNestedManyWithoutTripInput
+}
+
+export type TripCreateOrConnectWithoutRoutePointsInput = {
+  where: Prisma.TripWhereUniqueInput
+  create: Prisma.XOR<Prisma.TripCreateWithoutRoutePointsInput, Prisma.TripUncheckedCreateWithoutRoutePointsInput>
+}
+
+export type TripUpsertWithoutRoutePointsInput = {
+  update: Prisma.XOR<Prisma.TripUpdateWithoutRoutePointsInput, Prisma.TripUncheckedUpdateWithoutRoutePointsInput>
+  create: Prisma.XOR<Prisma.TripCreateWithoutRoutePointsInput, Prisma.TripUncheckedCreateWithoutRoutePointsInput>
+  where?: Prisma.TripWhereInput
+}
+
+export type TripUpdateToOneWithWhereWithoutRoutePointsInput = {
+  where?: Prisma.TripWhereInput
+  data: Prisma.XOR<Prisma.TripUpdateWithoutRoutePointsInput, Prisma.TripUncheckedUpdateWithoutRoutePointsInput>
+}
+
+export type TripUpdateWithoutRoutePointsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shareCode?: Prisma.StringFieldUpdateOperationsInput | string
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hasExpenses?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  members?: Prisma.MemberUpdateManyWithoutTripNestedInput
+  expenses?: Prisma.ExpenseUpdateManyWithoutTripNestedInput
+  bookings?: Prisma.BookingUpdateManyWithoutTripNestedInput
+  photos?: Prisma.PhotoUpdateManyWithoutTripNestedInput
+  payments?: Prisma.PaymentUpdateManyWithoutTripNestedInput
+  storageConfig?: Prisma.StorageConfigUpdateOneWithoutTripNestedInput
+  dateVotes?: Prisma.DateVoteUpdateManyWithoutTripNestedInput
+  packingItems?: Prisma.PackingItemUpdateManyWithoutTripNestedInput
+}
+
+export type TripUncheckedUpdateWithoutRoutePointsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  shareCode?: Prisma.StringFieldUpdateOperationsInput | string
+  startDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  endDate?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
+  notes?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  hasExpenses?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasPhotos?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasDateVoting?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasPackingList?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  hasMap?: Prisma.BoolFieldUpdateOperationsInput | boolean
+  members?: Prisma.MemberUncheckedUpdateManyWithoutTripNestedInput
+  expenses?: Prisma.ExpenseUncheckedUpdateManyWithoutTripNestedInput
+  bookings?: Prisma.BookingUncheckedUpdateManyWithoutTripNestedInput
+  photos?: Prisma.PhotoUncheckedUpdateManyWithoutTripNestedInput
+  payments?: Prisma.PaymentUncheckedUpdateManyWithoutTripNestedInput
+  storageConfig?: Prisma.StorageConfigUncheckedUpdateOneWithoutTripNestedInput
+  dateVotes?: Prisma.DateVoteUncheckedUpdateManyWithoutTripNestedInput
+  packingItems?: Prisma.PackingItemUncheckedUpdateManyWithoutTripNestedInput
 }
 
 
@@ -1551,6 +1774,7 @@ export type TripCountOutputType = {
   payments: number
   dateVotes: number
   packingItems: number
+  routePoints: number
 }
 
 export type TripCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -1561,6 +1785,7 @@ export type TripCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.I
   payments?: boolean | TripCountOutputTypeCountPaymentsArgs
   dateVotes?: boolean | TripCountOutputTypeCountDateVotesArgs
   packingItems?: boolean | TripCountOutputTypeCountPackingItemsArgs
+  routePoints?: boolean | TripCountOutputTypeCountRoutePointsArgs
 }
 
 /**
@@ -1622,6 +1847,13 @@ export type TripCountOutputTypeCountPackingItemsArgs<ExtArgs extends runtime.Typ
   where?: Prisma.PackingItemWhereInput
 }
 
+/**
+ * TripCountOutputType without action
+ */
+export type TripCountOutputTypeCountRoutePointsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.RoutePointWhereInput
+}
+
 
 export type TripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -1637,6 +1869,7 @@ export type TripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
   members?: boolean | Prisma.Trip$membersArgs<ExtArgs>
   expenses?: boolean | Prisma.Trip$expensesArgs<ExtArgs>
   bookings?: boolean | Prisma.Trip$bookingsArgs<ExtArgs>
@@ -1645,6 +1878,7 @@ export type TripSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   storageConfig?: boolean | Prisma.Trip$storageConfigArgs<ExtArgs>
   dateVotes?: boolean | Prisma.Trip$dateVotesArgs<ExtArgs>
   packingItems?: boolean | Prisma.Trip$packingItemsArgs<ExtArgs>
+  routePoints?: boolean | Prisma.Trip$routePointsArgs<ExtArgs>
   _count?: boolean | Prisma.TripCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["trip"]>
 
@@ -1662,6 +1896,7 @@ export type TripSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
 }, ExtArgs["result"]["trip"]>
 
 export type TripSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -1678,6 +1913,7 @@ export type TripSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
 }, ExtArgs["result"]["trip"]>
 
 export type TripSelectScalar = {
@@ -1694,9 +1930,10 @@ export type TripSelectScalar = {
   hasPhotos?: boolean
   hasDateVoting?: boolean
   hasPackingList?: boolean
+  hasMap?: boolean
 }
 
-export type TripOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "shareCode" | "startDate" | "endDate" | "notes" | "createdAt" | "updatedAt" | "hasExpenses" | "hasPhotos" | "hasDateVoting" | "hasPackingList", ExtArgs["result"]["trip"]>
+export type TripOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "description" | "shareCode" | "startDate" | "endDate" | "notes" | "createdAt" | "updatedAt" | "hasExpenses" | "hasPhotos" | "hasDateVoting" | "hasPackingList" | "hasMap", ExtArgs["result"]["trip"]>
 export type TripInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   members?: boolean | Prisma.Trip$membersArgs<ExtArgs>
   expenses?: boolean | Prisma.Trip$expensesArgs<ExtArgs>
@@ -1706,6 +1943,7 @@ export type TripInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   storageConfig?: boolean | Prisma.Trip$storageConfigArgs<ExtArgs>
   dateVotes?: boolean | Prisma.Trip$dateVotesArgs<ExtArgs>
   packingItems?: boolean | Prisma.Trip$packingItemsArgs<ExtArgs>
+  routePoints?: boolean | Prisma.Trip$routePointsArgs<ExtArgs>
   _count?: boolean | Prisma.TripCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type TripIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {}
@@ -1722,6 +1960,7 @@ export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     storageConfig: Prisma.$StorageConfigPayload<ExtArgs> | null
     dateVotes: Prisma.$DateVotePayload<ExtArgs>[]
     packingItems: Prisma.$PackingItemPayload<ExtArgs>[]
+    routePoints: Prisma.$RoutePointPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1737,6 +1976,7 @@ export type $TripPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     hasPhotos: boolean
     hasDateVoting: boolean
     hasPackingList: boolean
+    hasMap: boolean
   }, ExtArgs["result"]["trip"]>
   composites: {}
 }
@@ -2139,6 +2379,7 @@ export interface Prisma__TripClient<T, Null = never, ExtArgs extends runtime.Typ
   storageConfig<T extends Prisma.Trip$storageConfigArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$storageConfigArgs<ExtArgs>>): Prisma.Prisma__StorageConfigClient<runtime.Types.Result.GetResult<Prisma.$StorageConfigPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   dateVotes<T extends Prisma.Trip$dateVotesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$dateVotesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$DateVotePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   packingItems<T extends Prisma.Trip$packingItemsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$packingItemsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$PackingItemPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  routePoints<T extends Prisma.Trip$routePointsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.Trip$routePointsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$RoutePointPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -2181,6 +2422,7 @@ export interface TripFieldRefs {
   readonly hasPhotos: Prisma.FieldRef<"Trip", 'Boolean'>
   readonly hasDateVoting: Prisma.FieldRef<"Trip", 'Boolean'>
   readonly hasPackingList: Prisma.FieldRef<"Trip", 'Boolean'>
+  readonly hasMap: Prisma.FieldRef<"Trip", 'Boolean'>
 }
     
 
@@ -2758,6 +3000,30 @@ export type Trip$packingItemsArgs<ExtArgs extends runtime.Types.Extensions.Inter
   take?: number
   skip?: number
   distinct?: Prisma.PackingItemScalarFieldEnum | Prisma.PackingItemScalarFieldEnum[]
+}
+
+/**
+ * Trip.routePoints
+ */
+export type Trip$routePointsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the RoutePoint
+   */
+  select?: Prisma.RoutePointSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the RoutePoint
+   */
+  omit?: Prisma.RoutePointOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.RoutePointInclude<ExtArgs> | null
+  where?: Prisma.RoutePointWhereInput
+  orderBy?: Prisma.RoutePointOrderByWithRelationInput | Prisma.RoutePointOrderByWithRelationInput[]
+  cursor?: Prisma.RoutePointWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.RoutePointScalarFieldEnum | Prisma.RoutePointScalarFieldEnum[]
 }
 
 /**

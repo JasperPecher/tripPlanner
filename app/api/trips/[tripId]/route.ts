@@ -22,6 +22,9 @@ export async function GET(
           include: { assignedTo: true },
           orderBy: { createdAt: "asc" },
         },
+        routePoints: {
+          orderBy: { date: "asc" },
+        },
       },
     });
     if (!trip)
@@ -80,7 +83,7 @@ export async function PATCH(
   try {
     const { tripId } = await params;
     const body = await request.json();
-    const { name, description, startDate, endDate, hasExpenses, hasPhotos, hasDateVoting, hasPackingList } = body;
+    const { name, description, startDate, endDate, hasExpenses, hasPhotos, hasDateVoting, hasPackingList, hasMap } = body;
     const updateData: any = {};
     if (name !== undefined) updateData.name = name;
     if (description !== undefined) updateData.description = description;
@@ -92,6 +95,7 @@ export async function PATCH(
     if (hasPhotos !== undefined) updateData.hasPhotos = hasPhotos;
     if (hasDateVoting !== undefined) updateData.hasDateVoting = hasDateVoting;
     if (hasPackingList !== undefined) updateData.hasPackingList = hasPackingList;
+    if (hasMap !== undefined) updateData.hasMap = hasMap;
     const trip = await prisma.trip.update({
       where: { id: tripId },
       data: updateData,

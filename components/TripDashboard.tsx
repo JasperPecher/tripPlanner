@@ -2,6 +2,8 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import dynamic from "next/dynamic";
+import type { RouteMapPageProps } from "./RouteMapPage";
 import {
   Calendar,
   Users,
@@ -28,6 +30,16 @@ import { SettingsPage } from "./SettingsPage";
 import { UserSettings } from "./UserSettings";
 import { DateVoteCalendar } from "./DateVoteCalendar";
 import PackingListPage from "./PackingListPage";
+const RouteMapPage = dynamic<RouteMapPageProps>(() => import("./RouteMapPage"), { ssr: false });
+
+type RoutePoint = {
+  id: string;
+  location: string;
+  latitude: number | null;
+  longitude: number | null;
+  date: string | null;
+  order: number;
+};
 
 type Member = {
   id: string;
@@ -100,11 +112,13 @@ type Trip = {
   photos: Photo[];
   payments: Payment[];
   packingItems: PackingItem[];
+  routePoints: RoutePoint[];
   storageConfig: StorageConfig;
   hasExpenses: boolean;
   hasPhotos: boolean;
   hasDateVoting: boolean;
   hasPackingList: boolean;
+  hasMap: boolean;
 };
 
 interface TripDashboardProps {
@@ -117,6 +131,7 @@ type Tab =
   | "photos"
   | "calendar"
   | "packing"
+  | "map"
   | "user"
   | "settings";
 
@@ -180,6 +195,11 @@ export function TripDashboard({
       id: "packing" as Tab,
       label: t.dashboard.tabs.packingList,
       icon: <Briefcase className="w-4 h-4" />,
+    }] : []),
+    ...(trip.hasMap ?? true ? [{
+      id: "map" as Tab,
+      label: t.dashboard.tabs.map || "Map",
+      icon: <Globe className="w-4 h-4" />,
     }] : []),
     {
       id: "user" as Tab,
@@ -504,6 +524,13 @@ export function TripDashboard({
         )}
         {activeTab === "packing" && (
           <PackingListPage
+            trip={trip}
+            currentMember={currentMember}
+            onTripUpdated={setTrip}
+          />
+        )}
+        {activeTab === "map" && (
+          <RouteMapPage
             trip={trip}
             currentMember={currentMember}
             onTripUpdated={setTrip}

@@ -33,6 +33,7 @@ type Trip = {
   hasPhotos: boolean;
   hasDateVoting: boolean;
   hasPackingList: boolean;
+  hasMap: boolean;
 };
 
 interface SettingsPageProps {
@@ -58,6 +59,7 @@ export function SettingsPage({
     hasPhotos: trip.hasPhotos ?? true,
     hasDateVoting: trip.hasDateVoting ?? true,
     hasPackingList: trip.hasPackingList ?? true,
+    hasMap: trip.hasMap ?? true,
   });
 
   const [storage, setStorage] = useState({
@@ -261,6 +263,15 @@ export function SettingsPage({
                   type="checkbox"
                   checked={tripInfo.hasPackingList}
                   onChange={(e) => setTripInfo({ ...tripInfo, hasPackingList: e.target.checked })}
+                  className="w-5 h-5 accent-orange-500"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-stone-600 dark:text-stone-400">{t.dashboard.tabs.map || "Map"}</span>
+                <input
+                  type="checkbox"
+                  checked={tripInfo.hasMap}
+                  onChange={(e) => setTripInfo({ ...tripInfo, hasMap: e.target.checked })}
                   className="w-5 h-5 accent-orange-500"
                 />
               </div>

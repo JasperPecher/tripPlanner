@@ -393,7 +393,8 @@ export const ModelName = {
   StorageConfig: 'StorageConfig',
   Payment: 'Payment',
   DateVote: 'DateVote',
-  PackingItem: 'PackingItem'
+  PackingItem: 'PackingItem',
+  RoutePoint: 'RoutePoint'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -409,7 +410,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "trip" | "member" | "expense" | "splitMember" | "booking" | "photo" | "storageConfig" | "payment" | "dateVote" | "packingItem"
+    modelProps: "trip" | "member" | "expense" | "splitMember" | "booking" | "photo" | "storageConfig" | "payment" | "dateVote" | "packingItem" | "routePoint"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1153,6 +1154,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    RoutePoint: {
+      payload: Prisma.$RoutePointPayload<ExtArgs>
+      fields: Prisma.RoutePointFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.RoutePointFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoutePointPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.RoutePointFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoutePointPayload>
+        }
+        findFirst: {
+          args: Prisma.RoutePointFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoutePointPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.RoutePointFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoutePointPayload>
+        }
+        findMany: {
+          args: Prisma.RoutePointFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoutePointPayload>[]
+        }
+        create: {
+          args: Prisma.RoutePointCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoutePointPayload>
+        }
+        createMany: {
+          args: Prisma.RoutePointCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.RoutePointCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoutePointPayload>[]
+        }
+        delete: {
+          args: Prisma.RoutePointDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoutePointPayload>
+        }
+        update: {
+          args: Prisma.RoutePointUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoutePointPayload>
+        }
+        deleteMany: {
+          args: Prisma.RoutePointDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.RoutePointUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.RoutePointUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoutePointPayload>[]
+        }
+        upsert: {
+          args: Prisma.RoutePointUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$RoutePointPayload>
+        }
+        aggregate: {
+          args: Prisma.RoutePointAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateRoutePoint>
+        }
+        groupBy: {
+          args: Prisma.RoutePointGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RoutePointGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.RoutePointCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.RoutePointCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1205,7 +1280,8 @@ export const TripScalarFieldEnum = {
   hasExpenses: 'hasExpenses',
   hasPhotos: 'hasPhotos',
   hasDateVoting: 'hasDateVoting',
-  hasPackingList: 'hasPackingList'
+  hasPackingList: 'hasPackingList',
+  hasMap: 'hasMap'
 } as const
 
 export type TripScalarFieldEnum = (typeof TripScalarFieldEnum)[keyof typeof TripScalarFieldEnum]
@@ -1323,6 +1399,21 @@ export const PackingItemScalarFieldEnum = {
 } as const
 
 export type PackingItemScalarFieldEnum = (typeof PackingItemScalarFieldEnum)[keyof typeof PackingItemScalarFieldEnum]
+
+
+export const RoutePointScalarFieldEnum = {
+  id: 'id',
+  location: 'location',
+  latitude: 'latitude',
+  longitude: 'longitude',
+  date: 'date',
+  order: 'order',
+  tripId: 'tripId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type RoutePointScalarFieldEnum = (typeof RoutePointScalarFieldEnum)[keyof typeof RoutePointScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1522,6 +1613,7 @@ export type GlobalOmitConfig = {
   payment?: Prisma.PaymentOmit
   dateVote?: Prisma.DateVoteOmit
   packingItem?: Prisma.PackingItemOmit
+  routePoint?: Prisma.RoutePointOmit
 }
 
 /* Types for Logging */

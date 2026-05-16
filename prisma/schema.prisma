@@ -26,6 +26,7 @@ model Trip {
   hasPhotos     Boolean   @default(true)
   hasDateVoting Boolean   @default(true)
   hasPackingList Boolean   @default(true)
+  hasMap        Boolean   @default(true)
 
   members       Member[]
   expenses      Expense[]
@@ -35,6 +36,7 @@ model Trip {
   storageConfig StorageConfig?
   dateVotes     DateVote[]
   packingItems  PackingItem[]
+  routePoints   RoutePoint[]
 
   @@map("trips")
 }
@@ -181,4 +183,21 @@ model PackingItem {
   updatedAt   DateTime @updatedAt
 
   @@map("packing_items")
+}
+
+model RoutePoint {
+  id          String   @id @default(cuid())
+  location    String
+  latitude    Float?
+  longitude   Float?
+  date        DateTime?
+  order       Int      @default(0)
+  
+  tripId      String
+  trip        Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("route_points")
 }
