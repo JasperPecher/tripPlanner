@@ -166,6 +166,7 @@ export const translations = {
     },
     settings: {
       title: "Einstellungen",
+      additionalComponents: "Zusätzliche Komponenten",
       tripInfo: "Reiseinformationen",
       tripName: "Reisename",
       description: "Beschreibung",
@@ -414,6 +415,7 @@ export const translations = {
     },
     settings: {
       title: "Settings",
+      additionalComponents: "Additional Components",
       tripInfo: "Trip Information",
       tripName: "Trip Name",
       description: "Description",

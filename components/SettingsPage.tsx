@@ -29,6 +29,9 @@ type Trip = {
   endDate: string | null;
   notes: string;
   storageConfig: StorageConfig;
+  hasExpenses: boolean;
+  hasPhotos: boolean;
+  hasDateVoting: boolean;
 };
 
 interface SettingsPageProps {
@@ -50,6 +53,9 @@ export function SettingsPage({
     description: trip.description || "",
     startDate: trip.startDate ? trip.startDate.split("T")[0] : "",
     endDate: trip.endDate ? trip.endDate.split("T")[0] : "",
+    hasExpenses: trip.hasExpenses ?? true,
+    hasPhotos: trip.hasPhotos ?? true,
+    hasDateVoting: trip.hasDateVoting ?? true,
   });
 
   const [storage, setStorage] = useState({
@@ -71,7 +77,7 @@ export function SettingsPage({
           });
         }
       })
-      .catch(() => {});
+      .catch(() => { });
   }, [trip.id, trip.storageConfig]);
 
   const [savingTrip, setSavingTrip] = useState(false);
@@ -215,6 +221,40 @@ export function SettingsPage({
               />
             </div>
           </div>
+          <div className="border-t border-stone-200 dark:border-stone-700 pt-4 mt-4">
+            <h3 className="text-sm font-medium text-stone-700 dark:text-stone-300 mb-3">
+              {t.settings.additionalComponents}
+            </h3>
+            <div className="space-y-3">
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-stone-600 dark:text-stone-400">{t.dashboard.tabs.expenses}</span>
+                <input
+                  type="checkbox"
+                  checked={tripInfo.hasExpenses}
+                  onChange={(e) => setTripInfo({ ...tripInfo, hasExpenses: e.target.checked })}
+                  className="w-5 h-5 accent-orange-500"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-stone-600 dark:text-stone-400">{t.dashboard.tabs.photos}</span>
+                <input
+                  type="checkbox"
+                  checked={tripInfo.hasPhotos}
+                  onChange={(e) => setTripInfo({ ...tripInfo, hasPhotos: e.target.checked })}
+                  className="w-5 h-5 accent-orange-500"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-stone-600 dark:text-stone-400">{t.dashboard.tabs.calendarVoting}</span>
+                <input
+                  type="checkbox"
+                  checked={tripInfo.hasDateVoting}
+                  onChange={(e) => setTripInfo({ ...tripInfo, hasDateVoting: e.target.checked })}
+                  className="w-5 h-5 accent-orange-500"
+                />
+              </div>
+            </div>
+          </div>
           <button
             onClick={handleSaveTripInfo}
             disabled={savingTrip}
@@ -230,135 +270,137 @@ export function SettingsPage({
         </div>
       </div>
 
-      <div className={cardClasses}>
-        <h2 className="text-lg font-semibold mb-6 dark:text-white">
-          {t.settings.storageConfig}
-        </h2>
-        <div className="space-y-6">
-          <div>
-            <div className="flex items-center gap-2 mb-3">
-              <Cloud className="w-5 h-5 text-blue-500" />
-              <h3 className="text-sm font-semibold text-stone-700 dark:text-stone-300">
-                Google Photos
-              </h3>
-            </div>
+      {tripInfo.hasPhotos && (
+        <div className={cardClasses}>
+          <h2 className="text-lg font-semibold mb-6 dark:text-white">
+            {t.settings.storageConfig}
+          </h2>
+          <div className="space-y-6">
             <div>
-              <label className={labelClasses}>
-                {t.settings.googlePhotosLink}
-              </label>
-              <input
-                type="url"
-                value={storage.googlePhotosLink}
-                onChange={(e) =>
-                  setStorage({ ...storage, googlePhotosLink: e.target.value })
-                }
-                className={inputClasses}
-                placeholder="https://photos.app.goo.gl/..."
-              />
-              <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
-                {t.settings.googlePhotosLinkDesc}
-              </p>
+              <div className="flex items-center gap-2 mb-3">
+                <Cloud className="w-5 h-5 text-blue-500" />
+                <h3 className="text-sm font-semibold text-stone-700 dark:text-stone-300">
+                  Google Photos
+                </h3>
+              </div>
+              <div>
+                <label className={labelClasses}>
+                  {t.settings.googlePhotosLink}
+                </label>
+                <input
+                  type="url"
+                  value={storage.googlePhotosLink}
+                  onChange={(e) =>
+                    setStorage({ ...storage, googlePhotosLink: e.target.value })
+                  }
+                  className={inputClasses}
+                  placeholder="https://photos.app.goo.gl/..."
+                />
+                <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
+                  {t.settings.googlePhotosLinkDesc}
+                </p>
+              </div>
             </div>
-          </div>
 
-          <div className="border-t border-stone-200 dark:border-stone-700 pt-6">
-            <div className="flex items-center gap-2 mb-3">
-              <Server className="w-5 h-5 text-orange-500" />
-              <h3 className="text-sm font-semibold text-stone-700 dark:text-stone-300">
-                Synology NAS
-              </h3>
-            </div>
-            <div className="space-y-4">
-              <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
-                <div className="flex items-start gap-2">
-                  <Info className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
-                  <div className="text-xs text-blue-700 dark:text-blue-400">
-                    <p className="font-medium mb-1">
-                      {t.settings.synologyHowTo}
-                    </p>
-                    <ol className="list-decimal list-inside space-y-0.5">
-                      <li>{t.settings.synologyStep1}</li>
-                      <li>{t.settings.synologyStep2}</li>
-                      <li>{t.settings.synologyStep3}</li>
-                    </ol>
+            <div className="border-t border-stone-200 dark:border-stone-700 pt-6">
+              <div className="flex items-center gap-2 mb-3">
+                <Server className="w-5 h-5 text-orange-500" />
+                <h3 className="text-sm font-semibold text-stone-700 dark:text-stone-300">
+                  Synology NAS
+                </h3>
+              </div>
+              <div className="space-y-4">
+                <div className="bg-blue-50 dark:bg-blue-900/20 border border-blue-200 dark:border-blue-800 rounded-lg p-3">
+                  <div className="flex items-start gap-2">
+                    <Info className="w-4 h-4 text-blue-600 dark:text-blue-400 shrink-0 mt-0.5" />
+                    <div className="text-xs text-blue-700 dark:text-blue-400">
+                      <p className="font-medium mb-1">
+                        {t.settings.synologyHowTo}
+                      </p>
+                      <ol className="list-decimal list-inside space-y-0.5">
+                        <li>{t.settings.synologyStep1}</li>
+                        <li>{t.settings.synologyStep2}</li>
+                        <li>{t.settings.synologyStep3}</li>
+                      </ol>
+                    </div>
                   </div>
                 </div>
-              </div>
 
-              <div>
-                <label className={labelClasses}>
-                  {t.settings.synologyShareLink}
-                </label>
-                <input
-                  type="url"
-                  value={storage.synologyShareLink}
-                  onChange={(e) =>
-                    setStorage({
-                      ...storage,
-                      synologyShareLink: e.target.value,
-                    })
-                  }
-                  className={inputClasses}
-                  placeholder="https://nas.quickconnect.to/sharing/XXXXX"
-                />
-                <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
-                  {t.settings.synologyShareLinkDesc}
-                </p>
-              </div>
+                <div>
+                  <label className={labelClasses}>
+                    {t.settings.synologyShareLink}
+                  </label>
+                  <input
+                    type="url"
+                    value={storage.synologyShareLink}
+                    onChange={(e) =>
+                      setStorage({
+                        ...storage,
+                        synologyShareLink: e.target.value,
+                      })
+                    }
+                    className={inputClasses}
+                    placeholder="https://nas.quickconnect.to/sharing/XXXXX"
+                  />
+                  <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
+                    {t.settings.synologyShareLinkDesc}
+                  </p>
+                </div>
 
-              <div>
-                <label className={labelClasses}>
-                  {t.settings.synologyRequestLink}
-                </label>
-                <input
-                  type="url"
-                  value={storage.synologyRequestLink}
-                  onChange={(e) =>
-                    setStorage({
-                      ...storage,
-                      synologyRequestLink: e.target.value,
-                    })
-                  }
-                  className={inputClasses}
-                  placeholder="https://your-nas:5000/sharing/XXXXX"
-                />
-                <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
-                  {t.settings.synologyRequestLinkDesc}
-                </p>
+                <div>
+                  <label className={labelClasses}>
+                    {t.settings.synologyRequestLink}
+                  </label>
+                  <input
+                    type="url"
+                    value={storage.synologyRequestLink}
+                    onChange={(e) =>
+                      setStorage({
+                        ...storage,
+                        synologyRequestLink: e.target.value,
+                      })
+                    }
+                    className={inputClasses}
+                    placeholder="https://your-nas:5000/sharing/XXXXX"
+                  />
+                  <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
+                    {t.settings.synologyRequestLinkDesc}
+                  </p>
+                </div>
               </div>
             </div>
-          </div>
 
-          <div className="flex gap-3">
-            <button
-              onClick={handleSaveStorage}
-              disabled={savingStorage}
-              className="flex items-center gap-2 px-4 py-2.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 font-medium disabled:opacity-50"
-            >
-              {savingStorage ? (
-                <Loader2 className="w-4 h-4 animate-spin" />
-              ) : (
-                <Save className="w-4 h-4" />
-              )}
-              {t.settings.saveStorage}
-            </button>
-            {trip.storageConfig && (
+            <div className="flex gap-3">
               <button
-                onClick={handleTestStorage}
-                disabled={testingStorage}
-                className="flex items-center gap-2 px-4 py-2.5 border border-stone-300 dark:border-stone-600 rounded-lg hover:bg-stone-50 dark:hover:bg-stone-800 font-medium disabled:opacity-50 text-stone-700 dark:text-stone-300"
+                onClick={handleSaveStorage}
+                disabled={savingStorage}
+                className="flex items-center gap-2 px-4 py-2.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 font-medium disabled:opacity-50"
               >
-                {testingStorage ? (
+                {savingStorage ? (
                   <Loader2 className="w-4 h-4 animate-spin" />
                 ) : (
-                  <Server className="w-4 h-4" />
+                  <Save className="w-4 h-4" />
                 )}
-                Test Links
+                {t.settings.saveStorage}
               </button>
-            )}
+              {trip.storageConfig && (
+                <button
+                  onClick={handleTestStorage}
+                  disabled={testingStorage}
+                  className="flex items-center gap-2 px-4 py-2.5 border border-stone-300 dark:border-stone-600 rounded-lg hover:bg-stone-50 dark:hover:bg-stone-800 font-medium disabled:opacity-50 text-stone-700 dark:text-stone-300"
+                >
+                  {testingStorage ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Server className="w-4 h-4" />
+                  )}
+                  Test Links
+                </button>
+              )}
+            </div>
           </div>
         </div>
-      </div>
+      )}
 
       <div className="bg-white dark:bg-stone-900 rounded-xl p-6 shadow-sm border border-red-200 dark:border-red-900">
         <h2 className="text-lg font-semibold mb-2 text-red-600 dark:text-red-400 flex items-center gap-2">

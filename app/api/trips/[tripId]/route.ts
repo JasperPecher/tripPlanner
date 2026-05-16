@@ -70,7 +70,7 @@ export async function PATCH(
   try {
     const { tripId } = await params;
     const body = await request.json();
-    const { name, description, startDate, endDate } = body;
+    const { name, description, startDate, endDate, hasExpenses, hasPhotos, hasDateVoting } = body;
     const updateData: any = {};
     if (name !== undefined) updateData.name = name;
     if (description !== undefined) updateData.description = description;
@@ -78,6 +78,9 @@ export async function PATCH(
       updateData.startDate = startDate ? new Date(startDate) : null;
     if (endDate !== undefined)
       updateData.endDate = endDate ? new Date(endDate) : null;
+    if (hasExpenses !== undefined) updateData.hasExpenses = hasExpenses;
+    if (hasPhotos !== undefined) updateData.hasPhotos = hasPhotos;
+    if (hasDateVoting !== undefined) updateData.hasDateVoting = hasDateVoting;
     const trip = await prisma.trip.update({
       where: { id: tripId },
       data: updateData,

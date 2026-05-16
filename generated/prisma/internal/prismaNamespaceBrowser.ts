@@ -87,7 +87,10 @@ export const TripScalarFieldEnum = {
   endDate: 'endDate',
   notes: 'notes',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  hasExpenses: 'hasExpenses',
+  hasPhotos: 'hasPhotos',
+  hasDateVoting: 'hasDateVoting'
 } as const
 
 export type TripScalarFieldEnum = (typeof TripScalarFieldEnum)[keyof typeof TripScalarFieldEnum]

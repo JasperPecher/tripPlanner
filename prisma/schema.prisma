@@ -22,6 +22,10 @@ model Trip {
   createdAt   DateTime  @default(now())
   updatedAt   DateTime  @updatedAt
 
+  hasExpenses   Boolean   @default(true)
+  hasPhotos     Boolean   @default(true)
+  hasDateVoting Boolean   @default(true)
+
   members       Member[]
   expenses      Expense[]
   bookings      Booking[]

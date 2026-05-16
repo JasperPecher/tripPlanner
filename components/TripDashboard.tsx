@@ -90,6 +90,9 @@ type Trip = {
   photos: Photo[];
   payments: Payment[];
   storageConfig: StorageConfig;
+  hasExpenses: boolean;
+  hasPhotos: boolean;
+  hasDateVoting: boolean;
 };
 
 interface TripDashboardProps {
@@ -145,21 +148,21 @@ export function TripDashboard({
       label: t.dashboard.tabs.overview,
       icon: <Calendar className="w-4 h-4" />,
     },
-    {
+    ...(trip.hasExpenses ?? true ? [{
       id: "expenses" as Tab,
       label: t.dashboard.tabs.expenses,
       icon: <Receipt className="w-4 h-4" />,
-    },
-    {
+    }] : []),
+    ...(trip.hasPhotos ?? true ? [{
       id: "photos" as Tab,
       label: t.dashboard.tabs.photos,
       icon: <Camera className="w-4 h-4" />,
-    },
-    {
+    }] : []),
+    ...(trip.hasDateVoting ?? true ? [{
       id: "calendar" as Tab,
       label: t.dashboard.tabs.calendarVoting,
       icon: <Calendar className="w-4 h-4" />,
-    },
+    }] : []),
     {
       id: "user" as Tab,
       label: t.dashboard.tabs.user,
