@@ -15,6 +15,7 @@ import {
   Moon,
   Globe,
   User,
+  Briefcase,
 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
@@ -26,6 +27,7 @@ import { BookingsSection } from "./BookingsSection";
 import { SettingsPage } from "./SettingsPage";
 import { UserSettings } from "./UserSettings";
 import { DateVoteCalendar } from "./DateVoteCalendar";
+import PackingListPage from "./PackingListPage";
 
 type Member = {
   id: string;
@@ -74,6 +76,14 @@ type Payment = {
   to: Member;
 };
 type StorageConfig = { id: string; type: string; config: string } | null;
+type PackingItem = {
+  id: string;
+  item: string;
+  category: string | null;
+  packed: boolean;
+  assignedToId: string | null;
+  assignedTo: Member | null;
+};
 type Trip = {
   id: string;
   name: string;
@@ -89,10 +99,12 @@ type Trip = {
   bookings: Booking[];
   photos: Photo[];
   payments: Payment[];
+  packingItems: PackingItem[];
   storageConfig: StorageConfig;
   hasExpenses: boolean;
   hasPhotos: boolean;
   hasDateVoting: boolean;
+  hasPackingList: boolean;
 };
 
 interface TripDashboardProps {
@@ -104,6 +116,7 @@ type Tab =
   | "expenses"
   | "photos"
   | "calendar"
+  | "packing"
   | "user"
   | "settings";
 
@@ -162,6 +175,11 @@ export function TripDashboard({
       id: "calendar" as Tab,
       label: t.dashboard.tabs.calendarVoting,
       icon: <Calendar className="w-4 h-4" />,
+    }] : []),
+    ...(trip.hasPackingList ?? true ? [{
+      id: "packing" as Tab,
+      label: t.dashboard.tabs.packingList,
+      icon: <Briefcase className="w-4 h-4" />,
     }] : []),
     {
       id: "user" as Tab,
@@ -482,6 +500,13 @@ export function TripDashboard({
             tripId={trip.id}
             members={trip.members}
             currentMember={currentMember}
+          />
+        )}
+        {activeTab === "packing" && (
+          <PackingListPage
+            trip={trip}
+            currentMember={currentMember}
+            onTripUpdated={setTrip}
           />
         )}
         {activeTab === "user" && currentMember && (

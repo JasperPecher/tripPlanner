@@ -54,6 +54,7 @@ export const translations = {
         calendarVoting: "Zeitraum Voting",
         user: "Profil",
         settings: "Einstellungen",
+        packingList: "Packliste",
       },
     },
     overview: {
@@ -107,6 +108,7 @@ export const translations = {
       addExpense: "Ausgabe hinzufügen",
       noExpenses: "Noch keine Ausgaben. Füge deine erste Ausgabe hinzu!",
       whoOwes: "Wer schuldet wem",
+      deleteConfirm: "Bist du sicher, dass du diesen Eintrag löschen möchtest?",
       form: {
         addTitle: "Ausgabe hinzufügen",
         description: "Beschreibung",
@@ -250,6 +252,13 @@ export const translations = {
       confirmDeletePayment:
         "Zahlung wirklich löschen? Der Schuldenstand wird wiederhergestellt.",
     },
+    packing: {
+      packed: "gepackt",
+      addItemPlaceholder: "Artikel hinzufügen...",
+      add: "Hinzufügen",
+      noItems: "Noch keine Artikel.",
+      unassigned: "Nicht zugewiesen",
+    },
   },
   en: {
     common: {
@@ -305,6 +314,7 @@ export const translations = {
         calendarVoting: "Date Voting",
         user: "Profile",
         settings: "Settings",
+        packingList: "Packing List",
       },
     },
     overview: {
@@ -357,6 +367,7 @@ export const translations = {
       addExpense: "Add Expense",
       noExpenses: "No expenses yet. Add your first expense to get started!",
       whoOwes: "Who Owes Whom",
+      deleteConfirm: "Are you sure you want to delete this item?",
       form: {
         addTitle: "Add Expense",
         description: "Description",
@@ -495,6 +506,13 @@ export const translations = {
       markAsPaid: "Mark as paid",
       paymentHistory: "Payments",
       confirmDeletePayment: "Delete this payment? The debt will be restored.",
+    },
+    packing: {
+      packed: "packed",
+      addItemPlaceholder: "Add an item...",
+      add: "Add",
+      noItems: "No items yet.",
+      unassigned: "Unassigned",
     },
   },
 };

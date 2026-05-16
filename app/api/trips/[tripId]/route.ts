@@ -18,6 +18,10 @@ export async function GET(
         bookings: { orderBy: { createdAt: "desc" } },
         photos: { orderBy: { createdAt: "desc" } },
         storageConfig: true,
+        packingItems: {
+          include: { assignedTo: true },
+          orderBy: { createdAt: "asc" },
+        },
       },
     });
     if (!trip)
@@ -48,6 +52,12 @@ export async function GET(
         createdAt: b.createdAt.toISOString(),
         updatedAt: b.updatedAt.toISOString(),
       })),
+      packingItems: trip.packingItems.map((p) => ({
+        ...p,
+        createdAt: p.createdAt.toISOString(),
+        updatedAt: p.updatedAt.toISOString(),
+        assignedTo: p.assignedTo ? { ...p.assignedTo, joinedAt: p.assignedTo.joinedAt.toISOString() } : null,
+      })),
       photos: trip.photos.map((p) => ({
         ...p,
         createdAt: p.createdAt.toISOString(),
@@ -70,7 +80,7 @@ export async function PATCH(
   try {
     const { tripId } = await params;
     const body = await request.json();
-    const { name, description, startDate, endDate, hasExpenses, hasPhotos, hasDateVoting } = body;
+    const { name, description, startDate, endDate, hasExpenses, hasPhotos, hasDateVoting, hasPackingList } = body;
     const updateData: any = {};
     if (name !== undefined) updateData.name = name;
     if (description !== undefined) updateData.description = description;
@@ -81,6 +91,7 @@ export async function PATCH(
     if (hasExpenses !== undefined) updateData.hasExpenses = hasExpenses;
     if (hasPhotos !== undefined) updateData.hasPhotos = hasPhotos;
     if (hasDateVoting !== undefined) updateData.hasDateVoting = hasDateVoting;
+    if (hasPackingList !== undefined) updateData.hasPackingList = hasPackingList;
     const trip = await prisma.trip.update({
       where: { id: tripId },
       data: updateData,

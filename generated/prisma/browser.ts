@@ -62,3 +62,8 @@ export type Payment = Prisma.PaymentModel
  * 
  */
 export type DateVote = Prisma.DateVoteModel
+/**
+ * Model PackingItem
+ * 
+ */
+export type PackingItem = Prisma.PackingItemModel

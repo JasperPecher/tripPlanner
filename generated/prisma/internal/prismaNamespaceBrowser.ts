@@ -59,7 +59,8 @@ export const ModelName = {
   Photo: 'Photo',
   StorageConfig: 'StorageConfig',
   Payment: 'Payment',
-  DateVote: 'DateVote'
+  DateVote: 'DateVote',
+  PackingItem: 'PackingItem'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -90,7 +91,8 @@ export const TripScalarFieldEnum = {
   updatedAt: 'updatedAt',
   hasExpenses: 'hasExpenses',
   hasPhotos: 'hasPhotos',
-  hasDateVoting: 'hasDateVoting'
+  hasDateVoting: 'hasDateVoting',
+  hasPackingList: 'hasPackingList'
 } as const
 
 export type TripScalarFieldEnum = (typeof TripScalarFieldEnum)[keyof typeof TripScalarFieldEnum]
@@ -194,6 +196,20 @@ export const DateVoteScalarFieldEnum = {
 } as const
 
 export type DateVoteScalarFieldEnum = (typeof DateVoteScalarFieldEnum)[keyof typeof DateVoteScalarFieldEnum]
+
+
+export const PackingItemScalarFieldEnum = {
+  id: 'id',
+  item: 'item',
+  category: 'category',
+  packed: 'packed',
+  assignedToId: 'assignedToId',
+  tripId: 'tripId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PackingItemScalarFieldEnum = (typeof PackingItemScalarFieldEnum)[keyof typeof PackingItemScalarFieldEnum]
 
 
 export const SortOrder = {

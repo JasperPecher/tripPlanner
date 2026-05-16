@@ -41,6 +41,12 @@ function serializeTrip(trip: any) {
       ...p,
       createdAt: p.createdAt.toISOString(),
     })),
+    packingItems: trip.packingItems.map((p: any) => ({
+      ...p,
+      createdAt: p.createdAt.toISOString(),
+      updatedAt: p.updatedAt.toISOString(),
+      assignedTo: p.assignedTo ? { ...p.assignedTo, joinedAt: p.assignedTo.joinedAt.toISOString() } : null,
+    })),
   };
 }
 
@@ -62,6 +68,10 @@ export default async function TripPage({ params }: PageProps) {
         orderBy: { createdAt: "desc" },
       },
       storageConfig: true,
+      packingItems: {
+        include: { assignedTo: true },
+        orderBy: { createdAt: "asc" },
+      },
     },
   });
 

@@ -392,7 +392,8 @@ export const ModelName = {
   Photo: 'Photo',
   StorageConfig: 'StorageConfig',
   Payment: 'Payment',
-  DateVote: 'DateVote'
+  DateVote: 'DateVote',
+  PackingItem: 'PackingItem'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -408,7 +409,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "trip" | "member" | "expense" | "splitMember" | "booking" | "photo" | "storageConfig" | "payment" | "dateVote"
+    modelProps: "trip" | "member" | "expense" | "splitMember" | "booking" | "photo" | "storageConfig" | "payment" | "dateVote" | "packingItem"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1078,6 +1079,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    PackingItem: {
+      payload: Prisma.$PackingItemPayload<ExtArgs>
+      fields: Prisma.PackingItemFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.PackingItemFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PackingItemPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.PackingItemFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PackingItemPayload>
+        }
+        findFirst: {
+          args: Prisma.PackingItemFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PackingItemPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.PackingItemFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PackingItemPayload>
+        }
+        findMany: {
+          args: Prisma.PackingItemFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PackingItemPayload>[]
+        }
+        create: {
+          args: Prisma.PackingItemCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PackingItemPayload>
+        }
+        createMany: {
+          args: Prisma.PackingItemCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.PackingItemCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PackingItemPayload>[]
+        }
+        delete: {
+          args: Prisma.PackingItemDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PackingItemPayload>
+        }
+        update: {
+          args: Prisma.PackingItemUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PackingItemPayload>
+        }
+        deleteMany: {
+          args: Prisma.PackingItemDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.PackingItemUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.PackingItemUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PackingItemPayload>[]
+        }
+        upsert: {
+          args: Prisma.PackingItemUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$PackingItemPayload>
+        }
+        aggregate: {
+          args: Prisma.PackingItemAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregatePackingItem>
+        }
+        groupBy: {
+          args: Prisma.PackingItemGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PackingItemGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.PackingItemCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.PackingItemCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1129,7 +1204,8 @@ export const TripScalarFieldEnum = {
   updatedAt: 'updatedAt',
   hasExpenses: 'hasExpenses',
   hasPhotos: 'hasPhotos',
-  hasDateVoting: 'hasDateVoting'
+  hasDateVoting: 'hasDateVoting',
+  hasPackingList: 'hasPackingList'
 } as const
 
 export type TripScalarFieldEnum = (typeof TripScalarFieldEnum)[keyof typeof TripScalarFieldEnum]
@@ -1233,6 +1309,20 @@ export const DateVoteScalarFieldEnum = {
 } as const
 
 export type DateVoteScalarFieldEnum = (typeof DateVoteScalarFieldEnum)[keyof typeof DateVoteScalarFieldEnum]
+
+
+export const PackingItemScalarFieldEnum = {
+  id: 'id',
+  item: 'item',
+  category: 'category',
+  packed: 'packed',
+  assignedToId: 'assignedToId',
+  tripId: 'tripId',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type PackingItemScalarFieldEnum = (typeof PackingItemScalarFieldEnum)[keyof typeof PackingItemScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1431,6 +1521,7 @@ export type GlobalOmitConfig = {
   storageConfig?: Prisma.StorageConfigOmit
   payment?: Prisma.PaymentOmit
   dateVote?: Prisma.DateVoteOmit
+  packingItem?: Prisma.PackingItemOmit
 }
 
 /* Types for Logging */
