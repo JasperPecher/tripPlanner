@@ -147,6 +147,18 @@ export function TripDashboard({
   const { theme, toggleTheme } = useTheme();
   const [isOpenMenu, setIsOpenMenu] = useState(false);
 
+  // Lock background scroll when mobile sidebar drawer is open
+  useEffect(() => {
+    if (isOpenMenu) {
+      document.body.classList.add("overflow-hidden");
+    } else {
+      document.body.classList.remove("overflow-hidden");
+    }
+    return () => {
+      document.body.classList.remove("overflow-hidden");
+    };
+  }, [isOpenMenu]);
+
   useEffect(() => {
     const stored = localStorage.getItem(`trip_${trip.id}_member`);
     if (stored) {
@@ -293,127 +305,182 @@ export function TripDashboard({
           </div>
         </div>
       </div>
-      <div className="flex md:hidden w-full">
-        <h1 className="text-2xl sm:text-2xl font-bold text-stone-900 dark:text-white my-auto mx-4 truncate">
-          {trip.name}
-        </h1>
-        <button
-          aria-label={isOpenMenu ? "Close menu" : "Open menu"}
-          className="relative flex items-center justify-center bg-stone-100 dark:bg-stone-950 w-20 h-20 top-2 right-4 ml-auto z-[1070]"
-          onClick={() => setIsOpenMenu((s) => !s)}
-        >
-          <div className="relative flex flex-col justify-between w-2/5 h-2/5">
-            <div
-              className={`relative w-full h-[5%] transition-all duration-500 ${
-                isOpenMenu ? "rotate-45 top-1/2 -translate-y-1/2" : "top-0"
-              }`}
-            >
-              <span className="absolute left-0 bg-black dark:bg-white w-full h-full" />
-            </div>
-
-            <div
-              className={`relative w-full h-[5%] transition-all duration-300 ${
-                isOpenMenu ? "translate-x-1/2 opacity-0" : ""
-              }`}
-            >
-              <span className="absolute left-0 bg-black dark:bg-white w-full h-full" />
-            </div>
-
-            <div
-              className={`relative w-full h-[5%] transition-all duration-500 ${
-                isOpenMenu ? "-rotate-45 -top-1/2 translate-y-1/2" : "bottom-0"
-              }`}
-            >
-              <span className="absolute left-0 bg-black dark:bg-white w-full h-full" />
-            </div>
+      {/* Sticky, Glassmorphic Mobile Header */}
+      <header className="sticky top-0 z-[100] w-full bg-white/80 dark:bg-stone-900/80 backdrop-blur-md border-b border-stone-200/80 dark:border-stone-800/80 md:hidden">
+        <div className="flex items-center justify-between px-4 py-3">
+          <div className="flex items-center gap-2 min-w-0">
+            <Briefcase className="w-5 h-5 text-orange-500 shrink-0" />
+            <h1 className="text-lg font-bold text-stone-900 dark:text-white truncate">
+              {trip.name}
+            </h1>
           </div>
-        </button>
 
+          <div className="flex items-center gap-2 shrink-0">
+            {/* Quick Share Link */}
+            <button
+              onClick={handleCopyLink}
+              className="w-10 h-10 flex items-center justify-center bg-stone-50 dark:bg-stone-800/50 border border-stone-200/50 dark:border-stone-700/50 text-stone-600 dark:text-stone-300 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 transition"
+              aria-label="Share trip"
+            >
+              {copied ? (
+                <Check className="w-4 h-4 text-green-500" />
+              ) : (
+                <Share2 className="w-4 h-4" />
+              )}
+            </button>
+
+            {/* Compact Hamburger Button */}
+            <button
+              aria-label={isOpenMenu ? "Close menu" : "Open menu"}
+              className="w-10 h-10 flex items-center justify-center bg-stone-50 dark:bg-stone-800/50 border border-stone-200/50 dark:border-stone-700/50 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-xl text-stone-900 dark:text-white transition relative z-[1070]"
+              onClick={() => setIsOpenMenu((s) => !s)}
+            >
+              <div className="relative flex flex-col justify-between w-4 h-3">
+                <div
+                  className={`relative w-full h-[2px] transition-all duration-300 ${
+                    isOpenMenu ? "rotate-45 top-[5px]" : "top-0"
+                  }`}
+                >
+                  <span className="absolute left-0 bg-stone-900 dark:bg-white w-full h-full rounded" />
+                </div>
+
+                <div
+                  className={`relative w-full h-[2px] transition-all duration-200 ${
+                    isOpenMenu ? "translate-x-4 opacity-0" : ""
+                  }`}
+                >
+                  <span className="absolute left-0 bg-stone-900 dark:bg-white w-full h-full rounded" />
+                </div>
+
+                <div
+                  className={`relative w-full h-[2px] transition-all duration-300 ${
+                    isOpenMenu ? "-rotate-45 -top-[5px]" : "bottom-0"
+                  }`}
+                >
+                  <span className="absolute left-0 bg-stone-900 dark:bg-white w-full h-full rounded" />
+                </div>
+              </div>
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <div className="md:hidden">
         {/* Backdrop */}
         <div
           aria-hidden={!isOpenMenu}
           onClick={() => setIsOpenMenu(false)}
-          className={`fixed inset-0 bg-white dark:bg-black transition-opacity duration-300 z-[1050] ${
+          className={`fixed inset-0 bg-stone-950/40 backdrop-blur-sm transition-opacity duration-300 z-[1050] ${
             isOpenMenu
-              ? "opacity-50 pointer-events-auto"
+              ? "opacity-100 pointer-events-auto"
               : "opacity-0 pointer-events-none"
           }`}
         />
 
-        {/* Sidebar */}
+        {/* Sidebar Drawer */}
         <aside
           aria-hidden={!isOpenMenu}
-          className={`fixed top-0 right-0 h-full w-72 bg-black shadow-xl transform transition-transform duration-300 z-[1060] ${
+          className={`fixed top-0 right-0 h-full w-72 bg-white dark:bg-stone-900 shadow-2xl transform transition-transform duration-300 z-[1060] ${
             isOpenMenu ? "translate-x-0" : "translate-x-full"
           }`}
         >
-          <nav className="p-4 bg-stone-100 dark:bg-stone-950 h-screen">
-            <ul className="space-y-4">
-              <div className="flex items-center gap-1.5 shrink-0">
+          <nav className="p-6 bg-white dark:bg-stone-900 h-screen flex flex-col justify-between border-l border-stone-200 dark:border-stone-800">
+            {/* Top Navigation Options */}
+            <div className="space-y-6 overflow-y-auto scrollbar-hide py-4">
+              <div className="flex items-center gap-2 pb-4 border-b border-stone-100 dark:border-stone-800">
+                <Briefcase className="w-5 h-5 text-orange-500 shrink-0" />
+                <span className="font-bold text-stone-900 dark:text-white truncate">
+                  {trip.name}
+                </span>
+              </div>
+
+              {/* Current Active User Profile Card */}
+              {currentMember && (
+                <div className="p-3 bg-stone-50 dark:bg-stone-800/40 rounded-xl flex items-center gap-3 border border-stone-200/20 dark:border-stone-700/20">
+                  <div className="w-9 h-9 rounded-full bg-orange-100 dark:bg-orange-950/40 text-orange-600 dark:text-orange-400 flex items-center justify-center text-sm font-semibold shrink-0">
+                    {currentMember.name.charAt(0).toUpperCase()}
+                  </div>
+                  <div className="min-w-0">
+                    <p className="text-[10px] text-stone-400 dark:text-stone-500 uppercase tracking-wider font-semibold">
+                      {t.dashboard.tabs.user}
+                    </p>
+                    <p className="text-sm font-bold text-stone-800 dark:text-stone-200 truncate">
+                      {currentMember.name}
+                    </p>
+                  </div>
+                </div>
+              )}
+
+              {/* Tab Navigation list */}
+              <ul className="space-y-1.5">
+                {tabs.map((tab) => {
+                  const isActive = activeTab === tab.id;
+                  return (
+                    <li key={tab.id}>
+                      <button
+                        onClick={() => {
+                          setActiveTab(tab.id);
+                          setIsOpenMenu(false);
+                        }}
+                        className={`w-full flex items-center gap-3 px-4 py-3 rounded-xl text-sm font-medium transition-all duration-200 ${
+                          isActive
+                            ? "bg-orange-50 dark:bg-orange-950/20 text-orange-600 dark:text-orange-400 font-semibold border-l-4 border-orange-500 shadow-sm"
+                            : "text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-50 hover:bg-stone-50 dark:hover:bg-stone-800/40"
+                        }`}
+                      >
+                        <span className={`${isActive ? "text-orange-500" : "text-stone-400 dark:text-stone-500"}`}>
+                          {tab.icon}
+                        </span>
+                        <span>{tab.label}</span>
+                      </button>
+                    </li>
+                  );
+                })}
+              </ul>
+            </div>
+
+            {/* Bottom Utilities Footer */}
+            <div className="pt-4 border-t border-stone-100 dark:border-stone-800 space-y-4 shrink-0">
+              <div className="grid grid-cols-2 gap-2">
+                {/* Locale Toggle */}
                 <button
                   onClick={() => setLocale(locale === "de" ? "en" : "de")}
-                  className="p-1.5 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition"
+                  className="flex items-center justify-center gap-2 py-2.5 px-3 bg-stone-50 dark:bg-stone-800/40 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-300 rounded-xl text-xs font-semibold border border-stone-200/20 dark:border-stone-700/20 transition"
                 >
-                  <span className="flex gap-1 text-sm items-center">
-                    <Globe className="w-4 h-4" />
-                    <div>{locale === "de" ? "DE" : "EN"}</div>
-                  </span>
+                  <Globe className="w-3.5 h-3.5" />
+                  <span>{locale === "de" ? "DE" : "EN"}</span>
                 </button>
+
+                {/* Theme Toggle */}
                 <button
                   onClick={toggleTheme}
-                  className="p-1.5 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition"
+                  className="flex items-center justify-center gap-2 py-2.5 px-3 bg-stone-50 dark:bg-stone-800/40 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-300 rounded-xl text-xs font-semibold border border-stone-200/20 dark:border-stone-700/20 transition"
                 >
                   {theme === "dark" ? (
-                    <span className="flex gap-1 text-sm items-center">
-                      <Moon className="w-4 h-4" />
-                      Dark Mode
-                    </span>
+                    <>
+                      <Moon className="w-3.5 h-3.5 text-orange-400" />
+                      <span>Dark</span>
+                    </>
                   ) : (
-                    <span className="flex gap-1 text-sm items-center">
-                      <Sun className="w-4 h-4" /> Light Mode
-                    </span>
+                    <>
+                      <Sun className="w-3.5 h-3.5 text-orange-500" />
+                      <span>Light</span>
+                    </>
                   )}
                 </button>
-                <div className="text-right hidden sm:block">
-                  <div className="flex items-center gap-1 px-2 text-sm text-stone-600 dark:text-stone-400">
-                    <Users className="w-4 h-4" />
-                    <span>
-                      {trip.members.length} {t.dashboard.members}
-                    </span>
-                  </div>
-                  {currentMember && (
-                    <span className="text-xs text-orange-600 dark:text-orange-400">
-                      {currentMember.name}
-                    </span>
-                  )}
-                </div>
               </div>
-              <div>
-                <div className="flex items-center gap-1 px-2 text-sm text-stone-600 dark:text-stone-400">
-                  <Users className="w-4 h-4" />
-                  <span>
-                    {trip.members.length} {t.dashboard.members}
-                  </span>
-                </div>
-                {currentMember && (
-                  <span className="text-xs text-orange-600 dark:text-orange-400 ml-2">
-                    {currentMember.name}
-                  </span>
-                )}
+
+              {/* Members Status Indicator */}
+              <div className="flex items-center justify-between text-xs text-stone-500 dark:text-stone-400 px-1">
+                <span className="flex items-center gap-1.5">
+                  <Users className="w-3.5 h-3.5" />
+                  <span>{t.overview.members}</span>
+                </span>
+                <span className="font-bold text-stone-700 dark:text-stone-300 bg-stone-100 dark:bg-stone-800 px-2 py-0.5 rounded-full text-[10px]">
+                  {trip.members.length}
+                </span>
               </div>
-              {tabs.map((tab) => (
-                <li key={tab.id}>
-                  <button
-                    key={tab.id}
-                    onClick={() => setActiveTab(tab.id)}
-                    className={`flex items-center gap-1.5 py-2 text-md ${activeTab === tab.id ? "bg-stone-100 dark:bg-stone-950 text-orange-600 dark:text-orange-400" : "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800"}`}
-                  >
-                    {tab.icon}
-                    {tab.label}
-                  </button>
-                </li>
-              ))}
-            </ul>
+            </div>
           </nav>
         </aside>
       </div>
