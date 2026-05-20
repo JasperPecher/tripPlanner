@@ -299,7 +299,7 @@ export function TripDashboard({
         </h1>
         <button
           aria-label={isOpenMenu ? "Close menu" : "Open menu"}
-          className="flex items-center justify-center bg-stone-100 dark:bg-stone-950 w-20 h-20 top-2 right-4 ml-auto z-60"
+          className="relative flex items-center justify-center bg-stone-100 dark:bg-stone-950 w-20 h-20 top-2 right-4 ml-auto z-[1070]"
           onClick={() => setIsOpenMenu((s) => !s)}
         >
           <div className="relative flex flex-col justify-between w-2/5 h-2/5">
@@ -333,7 +333,7 @@ export function TripDashboard({
         <div
           aria-hidden={!isOpenMenu}
           onClick={() => setIsOpenMenu(false)}
-          className={`fixed inset-0 bg-white dark:bg-black transition-opacity duration-300 ${
+          className={`fixed inset-0 bg-white dark:bg-black transition-opacity duration-300 z-[1050] ${
             isOpenMenu
               ? "opacity-50 pointer-events-auto"
               : "opacity-0 pointer-events-none"
@@ -343,7 +343,7 @@ export function TripDashboard({
         {/* Sidebar */}
         <aside
           aria-hidden={!isOpenMenu}
-          className={`fixed top-0 right-0 h-full w-72 bg-black shadow-xl transform transition-transform duration-300 z-50 ${
+          className={`fixed top-0 right-0 h-full w-72 bg-black shadow-xl transform transition-transform duration-300 z-[1060] ${
             isOpenMenu ? "translate-x-0" : "translate-x-full"
           }`}
         >
