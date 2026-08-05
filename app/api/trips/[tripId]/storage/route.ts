@@ -1,19 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
-import { isValidSynologyLink } from "@/lib/synology";
 
 export async function POST(
   request: NextRequest,
-  { params }: { params: Promise<{ tripId: string }> }
+  { params }: { params: Promise<{ tripId: string }> },
 ) {
   try {
     const { tripId } = await params;
     const body = await request.json();
-    const {
-      googlePhotosLink,
-      synologyShareLink,
-      synologyRequestLink,
-    } = body;
+    const { googlePhotosLink, synologyShareLink, synologyRequestLink } = body;
 
     const config = JSON.stringify({
       googlePhotosLink: googlePhotosLink || "",
@@ -35,14 +30,14 @@ export async function POST(
     console.error("Error saving storage config:", error);
     return NextResponse.json(
       { error: "Failed to save storage configuration" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: Promise<{ tripId: string }> }
+  { params }: { params: Promise<{ tripId: string }> },
 ) {
   try {
     const { tripId } = await params;
@@ -65,7 +60,7 @@ export async function GET(
     console.error("Error fetching storage config:", error);
     return NextResponse.json(
       { error: "Failed to fetch storage configuration" },
-      { status: 500 }
+      { status: 500 },
     );
   }
 }

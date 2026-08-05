@@ -127,6 +127,8 @@ export const translations = {
     },
     photos: {
       title: "Fotos",
+      noLinkSet:
+        "Es wurde noch kein Link für einen Speicherplatz festgelegt. Bitte deinen Admin dies zu tun und kehre danach hierher zurück",
       upload: "Fotos hochladen",
       uploading: "Wird hochgeladen...",
       storageSettings: "Speicher-Einstellungen",
@@ -262,7 +264,8 @@ export const translations = {
     },
     map: {
       title: "Route Map",
-      clickToToggle: "Klicke auf die Karte oder auf das Eingabefeldum einen Stop hinzuzufügen",
+      clickToToggle:
+        "Klicke auf die Karte oder auf das Eingabefeldum einen Stop hinzuzufügen",
       noItems: "Noch keine Stops hinzugefügt.",
       addStop: "Stop hinzufügen",
       locationName: "Ortsname",
@@ -396,6 +399,8 @@ export const translations = {
     photos: {
       title: "Photos",
       upload: "Upload Photos",
+      noLinkSet:
+        "There is no link for a storage set yet. Ask your admin to do so and return afterwards",
       uploading: "Uploading...",
       storageSettings: "Storage Settings",
       storageLabel: "Storage:",

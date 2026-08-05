@@ -135,7 +135,11 @@ export function PhotoGallery({
           ""
         )} */}
       </div>
-      {loading ? (
+      {!storageConfig ? (
+        <div className="rounded-lg border px-4 py-3 text-sm ">
+          <p className="font-semibold">{t.photos.noLinkSet}</p>
+        </div>
+      ) : loading ? (
         <div className="h-100 content-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 mx-auto mt-auto"></div>
         </div>
