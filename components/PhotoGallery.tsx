@@ -50,7 +50,10 @@ export function PhotoGallery({
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    if (!storageConfig) return;
+    if (!storageConfig) {
+      setLoading(false);
+      return;
+    }
 
     fetch(`/api/trips/${tripId}/storage`)
       .then((res) => res.json())
