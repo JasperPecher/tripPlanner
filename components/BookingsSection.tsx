@@ -167,7 +167,7 @@ export function BookingsSection({
   };
 
   return (
-    <div className="bg-white dark:bg-stone-900 rounded-xl p-2 md:p-6 shadow-sm border border-stone-200 dark:border-stone-800">
+    <div className="bg-white dark:bg-stone-900 rounded-xl p-6 shadow-sm border border-stone-200 dark:border-stone-800">
       <div className="flex items-center justify-between mb-4">
         <h2 className="text-lg font-semibold flex items-center gap-2">
           <Ticket className="w-5 h-5 text-orange-500" />
