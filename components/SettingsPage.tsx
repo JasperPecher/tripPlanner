@@ -81,7 +81,7 @@ export function SettingsPage({
           });
         }
       })
-      .catch(() => { });
+      .catch(() => {});
   }, [trip.id, trip.storageConfig]);
 
   const [savingTrip, setSavingTrip] = useState(false);
@@ -91,7 +91,7 @@ export function SettingsPage({
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
   const inputClasses =
-    "w-full px-4 py-2.5 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition disabled:opacity-50";
+    "w-full px-4 py-2.5 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition disabled:opacity-50 block min-w-0 appearance-none";
   const labelClasses =
     "block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1";
   const cardClasses =
@@ -231,47 +231,73 @@ export function SettingsPage({
             </h3>
             <div className="space-y-3">
               <div className="flex items-center justify-between">
-                <span className="text-sm text-stone-600 dark:text-stone-400">{t.dashboard.tabs.expenses}</span>
+                <span className="text-sm text-stone-600 dark:text-stone-400">
+                  {t.dashboard.tabs.expenses}
+                </span>
                 <input
                   type="checkbox"
                   checked={tripInfo.hasExpenses}
-                  onChange={(e) => setTripInfo({ ...tripInfo, hasExpenses: e.target.checked })}
+                  onChange={(e) =>
+                    setTripInfo({ ...tripInfo, hasExpenses: e.target.checked })
+                  }
                   className="w-5 h-5 accent-orange-500"
                 />
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-stone-600 dark:text-stone-400">{t.dashboard.tabs.photos}</span>
+                <span className="text-sm text-stone-600 dark:text-stone-400">
+                  {t.dashboard.tabs.photos}
+                </span>
                 <input
                   type="checkbox"
                   checked={tripInfo.hasPhotos}
-                  onChange={(e) => setTripInfo({ ...tripInfo, hasPhotos: e.target.checked })}
+                  onChange={(e) =>
+                    setTripInfo({ ...tripInfo, hasPhotos: e.target.checked })
+                  }
                   className="w-5 h-5 accent-orange-500"
                 />
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-stone-600 dark:text-stone-400">{t.dashboard.tabs.calendarVoting}</span>
+                <span className="text-sm text-stone-600 dark:text-stone-400">
+                  {t.dashboard.tabs.calendarVoting}
+                </span>
                 <input
                   type="checkbox"
                   checked={tripInfo.hasDateVoting}
-                  onChange={(e) => setTripInfo({ ...tripInfo, hasDateVoting: e.target.checked })}
+                  onChange={(e) =>
+                    setTripInfo({
+                      ...tripInfo,
+                      hasDateVoting: e.target.checked,
+                    })
+                  }
                   className="w-5 h-5 accent-orange-500"
                 />
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-stone-600 dark:text-stone-400">{t.dashboard.tabs.packingList}</span>
+                <span className="text-sm text-stone-600 dark:text-stone-400">
+                  {t.dashboard.tabs.packingList}
+                </span>
                 <input
                   type="checkbox"
                   checked={tripInfo.hasPackingList}
-                  onChange={(e) => setTripInfo({ ...tripInfo, hasPackingList: e.target.checked })}
+                  onChange={(e) =>
+                    setTripInfo({
+                      ...tripInfo,
+                      hasPackingList: e.target.checked,
+                    })
+                  }
                   className="w-5 h-5 accent-orange-500"
                 />
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-sm text-stone-600 dark:text-stone-400">{t.dashboard.tabs.map || "Map"}</span>
+                <span className="text-sm text-stone-600 dark:text-stone-400">
+                  {t.dashboard.tabs.map || "Map"}
+                </span>
                 <input
                   type="checkbox"
                   checked={tripInfo.hasMap}
-                  onChange={(e) => setTripInfo({ ...tripInfo, hasMap: e.target.checked })}
+                  onChange={(e) =>
+                    setTripInfo({ ...tripInfo, hasMap: e.target.checked })
+                  }
                   className="w-5 h-5 accent-orange-500"
                 />
               </div>
