@@ -1,10 +1,27 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { MapContainer, TileLayer, Marker, Popup, Polyline, useMapEvents } from "react-leaflet";
+import {
+  MapContainer,
+  TileLayer,
+  Marker,
+  Popup,
+  Polyline,
+  useMapEvents,
+} from "react-leaflet";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
-import { Plus, Trash, Calendar, MapPin, Loader2, Edit, Check, ArrowUp, ArrowDown } from "lucide-react";
+import {
+  Plus,
+  Trash,
+  Calendar,
+  MapPin,
+  Loader2,
+  Edit,
+  Check,
+  ArrowUp,
+  ArrowDown,
+} from "lucide-react";
 import { useLocale } from "@/lib/LocaleContext";
 import { formatDate } from "@/lib/utils";
 
@@ -38,7 +55,9 @@ export default function RouteMapPage({
 }: RouteMapPageProps) {
   const { t } = useLocale();
   const [points, setPoints] = useState<RoutePoint[]>(trip.routePoints || []);
-  const [newPoint, setNewPoint] = useState<{ lat: number; lng: number } | null>(null);
+  const [newPoint, setNewPoint] = useState<{ lat: number; lng: number } | null>(
+    null,
+  );
   const [locationName, setLocationName] = useState("");
   const [date, setDate] = useState("");
   const [adding, setAdding] = useState(false);
@@ -78,7 +97,8 @@ export default function RouteMapPage({
           ...trip,
           routePoints: [...points, createdPoint].sort((a, b) => {
             if (a.date && b.date) {
-              const dateDiff = new Date(a.date).getTime() - new Date(b.date).getTime();
+              const dateDiff =
+                new Date(a.date).getTime() - new Date(b.date).getTime();
               if (dateDiff !== 0) return dateDiff;
             }
             return a.order - b.order;
@@ -99,9 +119,12 @@ export default function RouteMapPage({
     if (!confirm(t.map.deleteConfirm || "Are you sure?")) return;
 
     try {
-      const response = await fetch(`/api/trips/${trip.id}/route-points/${pointId}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `/api/trips/${trip.id}/route-points/${pointId}`,
+        {
+          method: "DELETE",
+        },
+      );
 
       if (response.ok) {
         onTripUpdated({
@@ -121,7 +144,9 @@ export default function RouteMapPage({
     setSearching(true);
     setSearchResults([]);
     try {
-      const response = await fetch(`https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery.trim())}`);
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(searchQuery.trim())}`,
+      );
       if (response.ok) {
         const data = await response.json();
         setSearchResults(data);
@@ -154,23 +179,29 @@ export default function RouteMapPage({
 
     setUpdating(true);
     try {
-      const response = await fetch(`/api/trips/${trip.id}/route-points/${pointId}`, {
-        method: "PATCH",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          location: editLocationName.trim(),
-          date: editDate || null,
-        }),
-      });
+      const response = await fetch(
+        `/api/trips/${trip.id}/route-points/${pointId}`,
+        {
+          method: "PATCH",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            location: editLocationName.trim(),
+            date: editDate || null,
+          }),
+        },
+      );
 
       if (response.ok) {
         const updatedPoint = await response.json();
         onTripUpdated({
           ...trip,
-          routePoints: points.map((p) => (p.id === pointId ? updatedPoint : p)).sort((a, b) => {
-            if (a.date && b.date) return new Date(a.date).getTime() - new Date(b.date).getTime();
-            return a.order - b.order;
-          }),
+          routePoints: points
+            .map((p) => (p.id === pointId ? updatedPoint : p))
+            .sort((a, b) => {
+              if (a.date && b.date)
+                return new Date(a.date).getTime() - new Date(b.date).getTime();
+              return a.order - b.order;
+            }),
         });
         setEditingPointId(null);
       }
@@ -200,16 +231,17 @@ export default function RouteMapPage({
       const updatedPoints = [...points];
       updatedPoints[index] = { ...currentPoint, order: targetOrder };
       updatedPoints[targetIndex] = { ...targetPoint, order: currentOrder };
-      
+
       // Re-sort to reflect change
       updatedPoints.sort((a, b) => {
         if (a.date && b.date) {
-          const dateDiff = new Date(a.date).getTime() - new Date(b.date).getTime();
+          const dateDiff =
+            new Date(a.date).getTime() - new Date(b.date).getTime();
           if (dateDiff !== 0) return dateDiff;
         }
         return a.order - b.order;
       });
-      
+
       setPoints(updatedPoints);
 
       // Save to API (we need to update both points!)
@@ -248,10 +280,10 @@ export default function RouteMapPage({
     return null;
   }
 
+  const activePoints = points.filter(
+    (p) => p.latitude !== null && p.longitude !== null,
+  );
 
-
-  const activePoints = points.filter((p) => p.latitude !== null && p.longitude !== null);
-  
   const sortedActivePoints = [...activePoints].sort((a, b) => {
     if (a.date && b.date) {
       const dateDiff = new Date(a.date).getTime() - new Date(b.date).getTime();
@@ -262,12 +294,18 @@ export default function RouteMapPage({
     return a.order - b.order;
   });
 
-  const polylinePositions = sortedActivePoints.map((p) => [p.latitude!, p.longitude!] as [number, number]);
+  const polylinePositions = sortedActivePoints.map(
+    (p) => [p.latitude!, p.longitude!] as [number, number],
+  );
 
   // Center of the map (default to first point or center of Europe)
-  const center = activePoints.length > 0
-    ? [activePoints[0].latitude!, activePoints[0].longitude!] as [number, number]
-    : [51.03, 13.44] as [number, number]; // Dresden
+  const center =
+    activePoints.length > 0
+      ? ([activePoints[0].latitude!, activePoints[0].longitude!] as [
+          number,
+          number,
+        ])
+      : ([51.03, 13.44] as [number, number]); // Dresden
 
   return (
     <div className="space-y-6">
@@ -284,8 +322,12 @@ export default function RouteMapPage({
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Map Area */}
-          <div className="lg:col-span-2 h-[400px] rounded-xl overflow-hidden border border-stone-200 dark:border-stone-700">
-            <MapContainer center={center} zoom={5} style={{ height: "100%", width: "100%" }}>
+          <div className="lg:col-span-2 h-100 lg:h-[calc(100vh-20rem)] lg:min-h-125 rounded-xl overflow-hidden border border-stone-200 dark:border-stone-700">
+            <MapContainer
+              center={center}
+              zoom={5}
+              style={{ height: "100%", width: "100%" }}
+            >
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>'
                 url="https://{s}.basemaps.cartocdn.com/rastertiles/voyager_labels_under/{z}/{x}/{y}{r}.png"
@@ -314,7 +356,9 @@ export default function RouteMapPage({
                 >
                   <Popup>
                     <div className="p-1">
-                      <p className="font-semibold text-stone-800">{point.location}</p>
+                      <p className="font-semibold text-stone-800">
+                        {point.location}
+                      </p>
                       {point.date && (
                         <p className="text-xs text-stone-500 mt-1 flex items-center gap-1">
                           <Calendar className="w-3 h-3" />
@@ -327,15 +371,23 @@ export default function RouteMapPage({
               ))}
 
               {polylinePositions.length > 1 && (
-                <Polyline positions={polylinePositions} color="#f97316" weight={3} opacity={0.7} />
+                <Polyline
+                  positions={polylinePositions}
+                  color="#f97316"
+                  weight={3}
+                  opacity={0.7}
+                />
               )}
             </MapContainer>
           </div>
 
           {/* Sidebar / List */}
-          <div className="space-y-4">
+          <div className="space-y-4 flex flex-col lg:h-[calc(100vh-20rem)] lg:min-h-125">
             {/* Address Search */}
-            <form onSubmit={handleSearchAddress} className="bg-stone-50 dark:bg-stone-900 p-4 rounded-lg border border-stone-200 dark:border-stone-700 space-y-3">
+            <form
+              onSubmit={handleSearchAddress}
+              className="bg-stone-50 dark:bg-stone-900 p-4 rounded-lg border border-stone-200 dark:border-stone-700 space-y-3"
+            >
               <p className="text-sm font-medium text-stone-700 dark:text-white flex items-center gap-1">
                 <MapPin className="w-4 h-4" /> {t.map.title || "Search"}
               </p>
@@ -352,11 +404,15 @@ export default function RouteMapPage({
                   disabled={searching || !searchQuery.trim()}
                   className="px-3 py-1.5 bg-orange-500 text-white text-sm rounded hover:bg-orange-600 focus:outline-none disabled:opacity-50 flex items-center justify-center gap-1"
                 >
-                  {searching ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                  {searching ? (
+                    <Loader2 className="w-4 h-4 animate-spin" />
+                  ) : (
+                    <Plus className="w-4 h-4" />
+                  )}
                 </button>
               </div>
               {searchResults.length > 0 && (
-                <div className="mt-2 text-xs space-y-1 max-h-[150px] overflow-y-auto bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg p-1">
+                <div className="mt-2 text-xs space-y-1 max-h-37.5 overflow-y-auto bg-white dark:bg-stone-800 border border-stone-200 dark:border-stone-700 rounded-lg p-1">
                   {searchResults.map((result: any) => (
                     <button
                       key={result.place_id}
@@ -372,9 +428,13 @@ export default function RouteMapPage({
             </form>
 
             {newPoint && (
-              <form onSubmit={handleAddPoint} className="bg-stone-50 dark:bg-stone-900 p-4 rounded-lg border border-orange-200 dark:border-orange-900 space-y-3">
+              <form
+                onSubmit={handleAddPoint}
+                className="bg-stone-50 dark:bg-stone-900 p-4 rounded-lg border border-orange-200 dark:border-orange-900 space-y-3"
+              >
                 <p className="text-sm font-medium text-orange-600 dark:text-orange-400 flex items-center gap-1">
-                  <Plus className="w-4 h-4" /> {t.map.addStop || "Add Stop Here"}
+                  <Plus className="w-4 h-4" />{" "}
+                  {t.map.addStop || "Add Stop Here"}
                 </p>
                 <input
                   type="text"
@@ -396,7 +456,11 @@ export default function RouteMapPage({
                     disabled={adding || !locationName.trim()}
                     className="flex-1 px-3 py-1.5 bg-orange-500 text-white text-sm rounded hover:bg-orange-600 focus:outline-none disabled:opacity-50 flex items-center justify-center gap-1"
                   >
-                    {adding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
+                    {adding ? (
+                      <Loader2 className="w-4 h-4 animate-spin" />
+                    ) : (
+                      <Plus className="w-4 h-4" />
+                    )}
                     Add
                   </button>
                   <button
@@ -410,7 +474,7 @@ export default function RouteMapPage({
               </form>
             )}
 
-            <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+            <div className="space-y-3 flex-1 min-h-0 max-h-100 lg:max-h-none overflow-y-auto pr-2">
               {points.length === 0 ? (
                 <p className="text-center text-stone-500 dark:text-stone-400 py-4 text-sm">
                   {t.map.noItems || "No stops added yet."}
@@ -442,7 +506,11 @@ export default function RouteMapPage({
                             disabled={updating || !editLocationName.trim()}
                             className="text-xs px-2 py-1 bg-orange-500 text-white rounded hover:bg-orange-600 disabled:opacity-50 flex items-center gap-1"
                           >
-                            {updating ? <Loader2 className="w-3 h-3 animate-spin" /> : <Check className="w-3 h-3" />}
+                            {updating ? (
+                              <Loader2 className="w-3 h-3 animate-spin" />
+                            ) : (
+                              <Check className="w-3 h-3" />
+                            )}
                             Save
                           </button>
                           <button
