@@ -13,6 +13,7 @@ import {
   CreditCard,
   Users,
   CheckCircle,
+  Pencil,
 } from "lucide-react";
 import { formatCurrency, calculateBalances, simplifyDebts } from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
@@ -61,7 +62,8 @@ export function ExpenseTracker({
   const { t } = useLocale();
   const [expenses, setExpenses] = useState(initialExpenses);
   const [payments, setPayments] = useState(initialPayments);
-  const [showAddForm, setShowAddForm] = useState(false);
+  const [showForm, setShowForm] = useState(false);
+  const [editingExpenseId, setEditingExpenseId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     description: "",
@@ -114,7 +116,48 @@ export function ExpenseTracker({
   const inputClasses =
     "w-full px-4 py-2 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none";
 
-  const handleAddExpense = async (e: React.FormEvent) => {
+  const openEditForm = (expense: Expense) => {
+    setEditingExpenseId(expense.id);
+    const isEqual = expense.splits.every(
+      (s) => Math.abs(s.amount - expense.amount / expense.splits.length) < 0.02
+    );
+    setFormData({
+      description: expense.description,
+      amount: expense.amount.toString(),
+      paidById: expense.paidById,
+      splitType: isEqual ? "equal" : "custom",
+      splits: members.reduce(
+        (acc, m) => ({ ...acc, [m.id]: expense.splits.some((s) => s.memberId === m.id) }),
+        {} as Record<string, boolean>
+      ),
+      customAmounts: members.reduce((acc, m) => {
+        const split = expense.splits.find((s) => s.memberId === m.id);
+        return { ...acc, [m.id]: split ? split.amount.toString() : "" };
+      }, {} as Record<string, string>),
+    });
+    setShowForm(true);
+  };
+
+  const closeForm = () => {
+    setShowForm(false);
+    setEditingExpenseId(null);
+    setFormData({
+      description: "",
+      amount: "",
+      paidById: currentMember?.id || members[0]?.id || "",
+      splitType: "equal",
+      splits: members.reduce(
+        (acc, m) => ({ ...acc, [m.id]: true }),
+        {} as Record<string, boolean>
+      ),
+      customAmounts: members.reduce(
+        (acc, m) => ({ ...acc, [m.id]: "" }),
+        {} as Record<string, string>
+      ),
+    });
+  };
+
+  const handleSubmitExpense = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
     try {
@@ -147,8 +190,14 @@ export function ExpenseTracker({
           return;
         }
       }
-      const response = await fetch(`/api/trips/${tripId}/expenses`, {
-        method: "POST",
+      
+      const url = editingExpenseId 
+        ? `/api/trips/${tripId}/expenses/${editingExpenseId}`
+        : `/api/trips/${tripId}/expenses`;
+      const method = editingExpenseId ? "PUT" : "POST";
+
+      const response = await fetch(url, {
+        method,
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           description: formData.description,
@@ -158,23 +207,13 @@ export function ExpenseTracker({
         }),
       });
       if (response.ok) {
-        const newExpense = await response.json();
-        setExpenses([newExpense, ...expenses]);
-        setShowAddForm(false);
-        setFormData({
-          description: "",
-          amount: "",
-          paidById: currentMember?.id || members[0]?.id || "",
-          splitType: "equal",
-          splits: members.reduce(
-            (acc, m) => ({ ...acc, [m.id]: true }),
-            {} as Record<string, boolean>,
-          ),
-          customAmounts: members.reduce(
-            (acc, m) => ({ ...acc, [m.id]: "" }),
-            {} as Record<string, string>,
-          ),
-        });
+        const savedExpense = await response.json();
+        if (editingExpenseId) {
+          setExpenses(expenses.map(e => e.id === editingExpenseId ? savedExpense : e));
+        } else {
+          setExpenses([savedExpense, ...expenses]);
+        }
+        closeForm();
       } else {
         const data = await response.json();
         alert(data.error || t.common.error);
@@ -248,7 +287,10 @@ export function ExpenseTracker({
           {t.expenses.title}
         </h2>
         <button
-          onClick={() => setShowAddForm(true)}
+          onClick={() => {
+            setEditingExpenseId(null);
+            setShowForm(true);
+          }}
           className="flex items-center gap-2 px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 text-sm font-medium"
         >
           <Plus className="w-4 h-4" />
@@ -256,21 +298,21 @@ export function ExpenseTracker({
         </button>
       </div>
 
-      {showAddForm && (
+      {showForm && (
         <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-70 p-4">
           <div className="bg-white dark:bg-stone-900 rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold dark:text-white">
-                {t.expenses.form.addTitle}
+                {editingExpenseId ? "Edit Expense" : t.expenses.form.addTitle}
               </h3>
               <button
-                onClick={() => setShowAddForm(false)}
+                onClick={closeForm}
                 className="text-stone-400 hover:text-stone-600 dark:hover:text-stone-200"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <form onSubmit={handleAddExpense} className="space-y-4">
+            <form onSubmit={handleSubmitExpense} className="space-y-4">
               <div>
                 <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
                   {t.expenses.form.description}
@@ -431,7 +473,7 @@ export function ExpenseTracker({
                     {t.common.loading}
                   </>
                 ) : (
-                  t.expenses.form.addButton
+                  editingExpenseId ? "Save Changes" : t.expenses.form.addButton
                 )}
               </button>
             </form>
@@ -623,12 +665,20 @@ export function ExpenseTracker({
                       {new Date(expense.createdAt).toLocaleDateString()}
                     </p>
                   </div>
-                  <button
-                    onClick={() => handleDeleteExpense(expense.id)}
-                    className="text-stone-400 hover:text-red-500 transition p-1"
-                  >
-                    <X className="w-4 h-4" />
-                  </button>
+                  <div className="flex items-center gap-1">
+                    <button
+                      onClick={() => openEditForm(expense)}
+                      className="text-stone-400 hover:text-stone-600 dark:hover:text-stone-300 transition p-1"
+                    >
+                      <Pencil className="w-4 h-4" />
+                    </button>
+                    <button
+                      onClick={() => handleDeleteExpense(expense.id)}
+                      className="text-stone-400 hover:text-red-500 transition p-1"
+                    >
+                      <X className="w-4 h-4" />
+                    </button>
+                  </div>
                 </div>
               </div>
             ))}
