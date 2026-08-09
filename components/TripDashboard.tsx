@@ -30,7 +30,10 @@ import { SettingsPage } from "./SettingsPage";
 import { UserSettings } from "./UserSettings";
 import { DateVoteCalendar } from "./DateVoteCalendar";
 import PackingListPage from "./PackingListPage";
-const RouteMapPage = dynamic<RouteMapPageProps>(() => import("./RouteMapPage"), { ssr: false });
+const RouteMapPage = dynamic<RouteMapPageProps>(
+  () => import("./RouteMapPage"),
+  { ssr: false },
+);
 
 type RoutePoint = {
   id: string;
@@ -188,31 +191,51 @@ export function TripDashboard({
       label: t.dashboard.tabs.overview,
       icon: <Calendar className="w-4 h-4" />,
     },
-    ...(trip.hasExpenses ?? true ? [{
-      id: "expenses" as Tab,
-      label: t.dashboard.tabs.expenses,
-      icon: <Receipt className="w-4 h-4" />,
-    }] : []),
-    ...(trip.hasPhotos ?? true ? [{
-      id: "photos" as Tab,
-      label: t.dashboard.tabs.photos,
-      icon: <Camera className="w-4 h-4" />,
-    }] : []),
-    ...(trip.hasDateVoting ?? true ? [{
-      id: "calendar" as Tab,
-      label: t.dashboard.tabs.calendarVoting,
-      icon: <Calendar className="w-4 h-4" />,
-    }] : []),
-    ...(trip.hasPackingList ?? true ? [{
-      id: "packing" as Tab,
-      label: t.dashboard.tabs.packingList,
-      icon: <Briefcase className="w-4 h-4" />,
-    }] : []),
-    ...(trip.hasMap ?? true ? [{
-      id: "map" as Tab,
-      label: t.dashboard.tabs.map || "Map",
-      icon: <Globe className="w-4 h-4" />,
-    }] : []),
+    ...((trip.hasExpenses ?? true)
+      ? [
+          {
+            id: "expenses" as Tab,
+            label: t.dashboard.tabs.expenses,
+            icon: <Receipt className="w-4 h-4" />,
+          },
+        ]
+      : []),
+    ...((trip.hasPhotos ?? true)
+      ? [
+          {
+            id: "photos" as Tab,
+            label: t.dashboard.tabs.photos,
+            icon: <Camera className="w-4 h-4" />,
+          },
+        ]
+      : []),
+    ...((trip.hasDateVoting ?? true)
+      ? [
+          {
+            id: "calendar" as Tab,
+            label: t.dashboard.tabs.calendarVoting,
+            icon: <Calendar className="w-4 h-4" />,
+          },
+        ]
+      : []),
+    ...((trip.hasPackingList ?? true)
+      ? [
+          {
+            id: "packing" as Tab,
+            label: t.dashboard.tabs.packingList,
+            icon: <Briefcase className="w-4 h-4" />,
+          },
+        ]
+      : []),
+    ...((trip.hasMap ?? true)
+      ? [
+          {
+            id: "map" as Tab,
+            label: t.dashboard.tabs.map || "Map",
+            icon: <Globe className="w-4 h-4" />,
+          },
+        ]
+      : []),
     {
       id: "user" as Tab,
       label: t.dashboard.tabs.user,
@@ -306,7 +329,7 @@ export function TripDashboard({
         </div>
       </div>
       {/* Sticky, Glassmorphic Mobile Header */}
-      <header className="sticky top-0 z-[100] w-full bg-white/80 dark:bg-stone-900/80 backdrop-blur-md border-b border-stone-200/80 dark:border-stone-800/80 md:hidden">
+      <header className="sticky top-0 z-100 w-full bg-white/80 dark:bg-stone-900/80 backdrop-blur-md border-b border-stone-200/80 dark:border-stone-800/80 md:hidden">
         <div className="flex items-center justify-between px-4 py-3">
           <div className="flex items-center gap-2 min-w-0">
             <Briefcase className="w-5 h-5 text-orange-500 shrink-0" />
@@ -332,20 +355,20 @@ export function TripDashboard({
             {/* Compact Hamburger Button */}
             <button
               aria-label={isOpenMenu ? "Close menu" : "Open menu"}
-              className="w-10 h-10 flex items-center justify-center bg-stone-50 dark:bg-stone-800/50 border border-stone-200/50 dark:border-stone-700/50 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-xl text-stone-900 dark:text-white transition relative z-[1070]"
+              className="w-10 h-10 flex items-center justify-center bg-stone-50 dark:bg-stone-800/50 border border-stone-200/50 dark:border-stone-700/50 hover:bg-stone-100 dark:hover:bg-stone-800 rounded-xl text-stone-900 dark:text-white transition relative z-1070"
               onClick={() => setIsOpenMenu((s) => !s)}
             >
               <div className="relative flex flex-col justify-between w-4 h-3">
                 <div
-                  className={`relative w-full h-[2px] transition-all duration-300 ${
-                    isOpenMenu ? "rotate-45 top-[5px]" : "top-0"
+                  className={`relative w-full h-0.5 transition-all duration-300 ${
+                    isOpenMenu ? "rotate-45 top-1.25" : "top-0"
                   }`}
                 >
                   <span className="absolute left-0 bg-stone-900 dark:bg-white w-full h-full rounded" />
                 </div>
 
                 <div
-                  className={`relative w-full h-[2px] transition-all duration-200 ${
+                  className={`relative w-full h-0.5 transition-all duration-200 ${
                     isOpenMenu ? "translate-x-4 opacity-0" : ""
                   }`}
                 >
@@ -353,8 +376,8 @@ export function TripDashboard({
                 </div>
 
                 <div
-                  className={`relative w-full h-[2px] transition-all duration-300 ${
-                    isOpenMenu ? "-rotate-45 -top-[5px]" : "bottom-0"
+                  className={`relative w-full h-0.5 transition-all duration-300 ${
+                    isOpenMenu ? "-rotate-45 -top-1.5" : "bottom-0"
                   }`}
                 >
                   <span className="absolute left-0 bg-stone-900 dark:bg-white w-full h-full rounded" />
@@ -370,7 +393,7 @@ export function TripDashboard({
         <div
           aria-hidden={!isOpenMenu}
           onClick={() => setIsOpenMenu(false)}
-          className={`fixed inset-0 bg-stone-950/40 backdrop-blur-sm transition-opacity duration-300 z-[1050] ${
+          className={`fixed inset-0 bg-stone-950/40 backdrop-blur-sm transition-opacity duration-300 z-1050 ${
             isOpenMenu
               ? "opacity-100 pointer-events-auto"
               : "opacity-0 pointer-events-none"
@@ -380,7 +403,7 @@ export function TripDashboard({
         {/* Sidebar Drawer */}
         <aside
           aria-hidden={!isOpenMenu}
-          className={`fixed top-0 right-0 h-full w-72 bg-white dark:bg-stone-900 shadow-2xl transform transition-transform duration-300 z-[1060] ${
+          className={`fixed top-0 right-0 h-full w-72 bg-white dark:bg-stone-900 shadow-2xl transform transition-transform duration-300 z-1060 ${
             isOpenMenu ? "translate-x-0" : "translate-x-full"
           }`}
         >
@@ -428,7 +451,9 @@ export function TripDashboard({
                             : "text-stone-600 dark:text-stone-400 hover:text-stone-950 dark:hover:text-stone-50 hover:bg-stone-50 dark:hover:bg-stone-800/40"
                         }`}
                       >
-                        <span className={`${isActive ? "text-orange-500" : "text-stone-400 dark:text-stone-500"}`}>
+                        <span
+                          className={`${isActive ? "text-orange-500" : "text-stone-400 dark:text-stone-500"}`}
+                        >
                           {tab.icon}
                         </span>
                         <span>{tab.label}</span>
@@ -485,7 +510,7 @@ export function TripDashboard({
         </aside>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4 py-0 md:py-6">
+      <div className="max-w-6xl mx-auto px-4 py-6">
         {activeTab === "overview" && (
           <div className="grid lg:grid-cols-3 gap-6">
             <div className="lg:col-span-2 space-y-6">
