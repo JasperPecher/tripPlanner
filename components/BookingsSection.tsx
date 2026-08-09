@@ -14,7 +14,6 @@ import {
   Pen,
   TrainFrontIcon,
   BedDouble,
-  HandFist,
 } from "lucide-react";
 import { formatDateTime, formatCurrency, toLocalInput } from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
@@ -38,12 +37,10 @@ interface BookingsSectionProps {
 
 const typeIcons: Record<string, React.ElementType> = {
   hotel: Hotel,
-  airbnb: BedDouble,
   flight: Plane,
   train: TrainFrontIcon,
   car: Car,
   activity: Ticket,
-  tims_category: HandFist,
   other: MapPin,
 };
 
@@ -70,16 +67,10 @@ export function BookingsSection({
 
   const bookingTypes = [
     { value: "hotel", label: t.bookings.types.hotel, icon: Hotel },
-    { value: "airbnb", label: "Airbnb", icon: BedDouble },
     { value: "flight", label: t.bookings.types.flight, icon: Plane },
     { value: "train", label: t.bookings.types.train, icon: TrainFrontIcon },
     { value: "car", label: t.bookings.types.car, icon: Car },
     { value: "activity", label: t.bookings.types.activity, icon: Ticket },
-    {
-      value: "tims_category",
-      label: t.bookings.types.tims_category,
-      icon: HandFist,
-    },
     { value: "other", label: t.bookings.types.other, icon: MapPin },
   ];
 

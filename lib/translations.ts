@@ -83,7 +83,6 @@ export const translations = {
         train: "Zug",
         car: "Mietwagen",
         activity: "Aktivität",
-        tims_category: "Tims versaute Sexkategorie",
         other: "Sonstiges",
       },
       form: {
@@ -355,7 +354,6 @@ export const translations = {
         train: "Train",
         car: "Car Rental",
         activity: "Activity",
-        tims_category: "Tims weird sexcategory",
         other: "Other",
       },
       form: {
