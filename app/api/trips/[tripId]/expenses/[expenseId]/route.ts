@@ -19,7 +19,7 @@ export async function PUT(
   try {
     const { expenseId } = await params;
     const json = await request.json();
-    const { description, amount, paidById, splits } = json;
+    const { description, amount, paidById, splits, category } = json;
 
     const updatedExpense = await prisma.$transaction(async (tx) => {
       await tx.splitMember.deleteMany({
@@ -32,6 +32,7 @@ export async function PUT(
           description,
           amount,
           paidById,
+          category: category || "other",
           splits: {
             create: splits.map((s: { amount: number; memberId: string }) => ({
               amount: s.amount,

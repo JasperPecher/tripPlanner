@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Camera,
   Upload,
@@ -42,6 +43,7 @@ export function PhotoGallery({
   storageConfig,
   currentMember,
 }: PhotoGalleryProps) {
+  const router = useRouter();
   const { t } = useLocale();
   const [photos, setPhotos] = useState(initialPhotos);
   const [uploading, setUploading] = useState(false);
@@ -91,6 +93,7 @@ export function PhotoGallery({
       if (response.ok) {
         const newPhotos = await response.json();
         setPhotos([...newPhotos, ...photos]);
+        router.refresh();
       } else {
         const data = await response.json();
         alert(data.error || t.common.error);

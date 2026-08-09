@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { useRouter } from "next/navigation";
 import {
   Plus,
   Receipt,
@@ -14,9 +15,18 @@ import {
   Users,
   CheckCircle,
   Pencil,
+  PieChart as PieChartIcon,
 } from "lucide-react";
 import { formatCurrency, calculateBalances, simplifyDebts } from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
+import {
+  PieChart,
+  Pie,
+  Cell,
+  ResponsiveContainer,
+  Tooltip,
+  Legend,
+} from "recharts";
 
 type Member = {
   id: string;
@@ -29,6 +39,7 @@ type Expense = {
   description: string;
   amount: number;
   currency: string;
+  category: string;
   createdAt: string;
   paidById: string;
   paidBy: Member;
@@ -59,6 +70,7 @@ export function ExpenseTracker({
   payments: initialPayments,
   currentMember,
 }: ExpenseTrackerProps) {
+  const router = useRouter();
   const { t } = useLocale();
   const [expenses, setExpenses] = useState(initialExpenses);
   const [payments, setPayments] = useState(initialPayments);
@@ -68,6 +80,7 @@ export function ExpenseTracker({
   const [formData, setFormData] = useState({
     description: "",
     amount: "",
+    category: "other",
     paidById: currentMember?.id || members[0]?.id || "",
     splitType: "equal" as "equal" | "custom",
     splits: members.reduce(
@@ -113,27 +126,65 @@ export function ExpenseTracker({
     return totals;
   }, [expenses]);
 
+  const pieChartData = useMemo(() => {
+    const categoryTotals = new Map<string, number>();
+
+    expenses.forEach((expense) => {
+      const cat = expense.category || "other";
+      categoryTotals.set(cat, (categoryTotals.get(cat) || 0) + expense.amount);
+    });
+
+    const data = Array.from(categoryTotals.entries())
+      .map(([name, value]) => ({
+        name,
+        value: Math.round(value * 100) / 100,
+      }))
+      .sort((a, b) => b.value - a.value);
+
+    return data;
+  }, [expenses]);
+
+  const totalExpensesAmount = useMemo(() => {
+    return pieChartData.reduce((sum, item) => sum + item.value, 0);
+  }, [pieChartData]);
+
+  const COLORS = [
+    "#f97316",
+    "#3b82f6",
+    "#10b981",
+    "#8b5cf6",
+    "#ec4899",
+    "#64748b",
+  ];
+
   const inputClasses =
     "w-full px-4 py-2 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none";
 
   const openEditForm = (expense: Expense) => {
     setEditingExpenseId(expense.id);
     const isEqual = expense.splits.every(
-      (s) => Math.abs(s.amount - expense.amount / expense.splits.length) < 0.02
+      (s) => Math.abs(s.amount - expense.amount / expense.splits.length) < 0.02,
     );
     setFormData({
       description: expense.description,
       amount: expense.amount.toString(),
+      category: expense.category || "other",
       paidById: expense.paidById,
       splitType: isEqual ? "equal" : "custom",
       splits: members.reduce(
-        (acc, m) => ({ ...acc, [m.id]: expense.splits.some((s) => s.memberId === m.id) }),
-        {} as Record<string, boolean>
+        (acc, m) => ({
+          ...acc,
+          [m.id]: expense.splits.some((s) => s.memberId === m.id),
+        }),
+        {} as Record<string, boolean>,
       ),
-      customAmounts: members.reduce((acc, m) => {
-        const split = expense.splits.find((s) => s.memberId === m.id);
-        return { ...acc, [m.id]: split ? split.amount.toString() : "" };
-      }, {} as Record<string, string>),
+      customAmounts: members.reduce(
+        (acc, m) => {
+          const split = expense.splits.find((s) => s.memberId === m.id);
+          return { ...acc, [m.id]: split ? split.amount.toString() : "" };
+        },
+        {} as Record<string, string>,
+      ),
     });
     setShowForm(true);
   };
@@ -144,15 +195,16 @@ export function ExpenseTracker({
     setFormData({
       description: "",
       amount: "",
+      category: "other",
       paidById: currentMember?.id || members[0]?.id || "",
       splitType: "equal",
       splits: members.reduce(
         (acc, m) => ({ ...acc, [m.id]: true }),
-        {} as Record<string, boolean>
+        {} as Record<string, boolean>,
       ),
       customAmounts: members.reduce(
         (acc, m) => ({ ...acc, [m.id]: "" }),
-        {} as Record<string, string>
+        {} as Record<string, string>,
       ),
     });
   };
@@ -190,8 +242,8 @@ export function ExpenseTracker({
           return;
         }
       }
-      
-      const url = editingExpenseId 
+
+      const url = editingExpenseId
         ? `/api/trips/${tripId}/expenses/${editingExpenseId}`
         : `/api/trips/${tripId}/expenses`;
       const method = editingExpenseId ? "PUT" : "POST";
@@ -202,6 +254,7 @@ export function ExpenseTracker({
         body: JSON.stringify({
           description: formData.description,
           amount,
+          category: formData.category,
           paidById: formData.paidById,
           splits,
         }),
@@ -209,10 +262,13 @@ export function ExpenseTracker({
       if (response.ok) {
         const savedExpense = await response.json();
         if (editingExpenseId) {
-          setExpenses(expenses.map(e => e.id === editingExpenseId ? savedExpense : e));
+          setExpenses(
+            expenses.map((e) => (e.id === editingExpenseId ? savedExpense : e)),
+          );
         } else {
           setExpenses([savedExpense, ...expenses]);
         }
+        router.refresh();
         closeForm();
       } else {
         const data = await response.json();
@@ -232,7 +288,10 @@ export function ExpenseTracker({
         `/api/trips/${tripId}/expenses/${expenseId}`,
         { method: "DELETE" },
       );
-      if (response.ok) setExpenses(expenses.filter((e) => e.id !== expenseId));
+      if (response.ok) {
+        setExpenses(expenses.filter((e) => e.id !== expenseId));
+        router.refresh();
+      }
     } catch (error) {
       alert(t.common.error);
     }
@@ -256,6 +315,7 @@ export function ExpenseTracker({
       if (response.ok) {
         const newPayment = await response.json();
         setPayments([newPayment, ...payments]);
+        router.refresh();
       }
     } catch (error) {
       console.error("Failed to record payment:", error);
@@ -273,6 +333,7 @@ export function ExpenseTracker({
       );
       if (response.ok) {
         setPayments(payments.filter((p) => p.id !== paymentId));
+        router.refresh();
       }
     } catch (error) {
       console.error("Failed to delete payment:", error);
@@ -362,6 +423,33 @@ export function ExpenseTracker({
                         {m.name}
                       </option>
                     ))}
+                  </select>
+                </div>
+                <div>
+                  <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
+                    {t.expenses.category}
+                  </label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) =>
+                      setFormData({ ...formData, category: e.target.value })
+                    }
+                    className={inputClasses}
+                  >
+                    <option value="food">{t.expenses.categories.food}</option>
+                    <option value="transport">
+                      {t.expenses.categories.transport}
+                    </option>
+                    <option value="accommodation">
+                      {t.expenses.categories.accommodation}
+                    </option>
+                    <option value="activity">
+                      {t.expenses.categories.activity}
+                    </option>
+                    <option value="shopping">
+                      {t.expenses.categories.shopping}
+                    </option>
+                    <option value="other">{t.expenses.categories.other}</option>
                   </select>
                 </div>
               </div>
@@ -472,8 +560,10 @@ export function ExpenseTracker({
                     <Loader2 className="w-5 h-5 animate-spin" />
                     {t.common.loading}
                   </>
+                ) : editingExpenseId ? (
+                  "Save Changes"
                 ) : (
-                  editingExpenseId ? "Save Changes" : t.expenses.form.addButton
+                  t.expenses.form.addButton
                 )}
               </button>
             </form>
@@ -632,6 +722,89 @@ export function ExpenseTracker({
         </div>
       )}
 
+      {expenses.length > 0 && pieChartData.length > 0 && (
+        <div className="bg-white dark:bg-stone-900 rounded-xl p-5 shadow-sm border border-stone-200 dark:border-stone-800">
+          <div className="flex items-center justify-between mb-4">
+            <div className="flex flex-col">
+              <h3 className="font-semibold text-stone-800 dark:text-stone-200 flex items-center gap-2">
+                <PieChartIcon className="w-5 h-5 text-orange-500" />
+                {t.expenses.breakdown}
+              </h3>
+              <p className="text-sm text-stone-500 dark:text-stone-400 mt-1">
+                Gesamt:{" "}
+                <span className="font-medium text-stone-700 dark:text-stone-300">
+                  {formatCurrency(totalExpensesAmount)}
+                </span>
+              </p>
+            </div>
+          </div>
+
+          <div className="h-64 w-full">
+            <ResponsiveContainer width="100%" height="100%">
+              <PieChart>
+                <Pie
+                  data={pieChartData}
+                  cx="50%"
+                  cy="50%"
+                  innerRadius={50}
+                  outerRadius={90}
+                  paddingAngle={2}
+                  dataKey="value"
+                  label={({ cx, cy, midAngle, innerRadius, outerRadius, value, name }: any) => {
+                    const RADIAN = Math.PI / 180;
+                    const radius = outerRadius + 20;
+                    const safeMidAngle = midAngle || 0;
+                    const x = cx + radius * Math.cos(-safeMidAngle * RADIAN);
+                    const y = cy + radius * Math.sin(-safeMidAngle * RADIAN);
+
+                    return (
+                      <text
+                        x={x}
+                        y={y}
+                        fill="currentColor"
+                        textAnchor={x > cx ? "start" : "end"}
+                        dominantBaseline="central"
+                        className="text-[10px] sm:text-xs font-medium dark:text-stone-300"
+                      >
+                        {`${t.expenses.categories[name as keyof typeof t.expenses.categories] || name}: ${formatCurrency(value)}`}
+                      </text>
+                    );
+                  }}
+                  labelLine={true}
+                >
+                  {pieChartData.map((entry, index) => (
+                    <Cell
+                      key={`cell-${index}`}
+                      fill={COLORS[index % COLORS.length]}
+                    />
+                  ))}
+                </Pie>
+                <Tooltip
+                  formatter={(value: any) => formatCurrency(Number(value))}
+                  labelFormatter={(label) =>
+                    t.expenses.categories[
+                      label as keyof typeof t.expenses.categories
+                    ] || label
+                  }
+                  contentStyle={{
+                    borderRadius: "8px",
+                    border: "none",
+                    boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
+                  }}
+                />
+                <Legend
+                  formatter={(value) =>
+                    t.expenses.categories[
+                      value as keyof typeof t.expenses.categories
+                    ] || value
+                  }
+                />
+              </PieChart>
+            </ResponsiveContainer>
+          </div>
+        </div>
+      )}
+
       <div className="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800">
         {expenses.length === 0 ? (
           <div className="p-8 text-center text-stone-500 dark:text-stone-400">
@@ -653,6 +826,16 @@ export function ExpenseTracker({
                       </h4>
                       <span className="text-lg font-semibold text-stone-900 dark:text-white">
                         {formatCurrency(expense.amount, expense.currency)}
+                      </span>
+                    </div>
+                    <div className="flex items-center gap-2 mt-1">
+                      <span className="text-xs font-medium px-2 py-0.5 rounded-full bg-stone-100 dark:bg-stone-800 text-stone-600 dark:text-stone-300 border border-stone-200 dark:border-stone-700">
+                        {
+                          t.expenses.categories[
+                            (expense.category ||
+                              "other") as keyof typeof t.expenses.categories
+                          ]
+                        }
                       </span>
                     </div>
                     <p className="text-sm text-stone-500 dark:text-stone-400 mt-1">

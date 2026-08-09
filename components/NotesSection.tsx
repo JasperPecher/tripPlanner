@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import { StickyNote, Save, Loader2 } from "lucide-react";
 import { useLocale } from "@/lib/LocaleContext";
 
@@ -10,6 +11,7 @@ interface NotesSectionProps {
 }
 
 export function NotesSection({ tripId, initialNotes }: NotesSectionProps) {
+  const router = useRouter();
   const { t } = useLocale();
   const [notes, setNotes] = useState(initialNotes);
   const [editing, setEditing] = useState(false);
@@ -26,6 +28,7 @@ export function NotesSection({ tripId, initialNotes }: NotesSectionProps) {
       });
       if (response.ok) {
         setNotes(draft);
+        router.refresh();
         setEditing(false);
       }
     } catch (error) {

@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import {
   Plus,
   Plane,
@@ -13,7 +14,6 @@ import {
   Calendar,
   Pen,
   TrainFrontIcon,
-  BedDouble,
 } from "lucide-react";
 import { formatDateTime, formatCurrency, toLocalInput } from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
@@ -59,6 +59,7 @@ export function BookingsSection({
   currentMember = null,
   onExpenseAdded,
 }: BookingsSectionProps) {
+  const router = useRouter();
   const { t } = useLocale();
   const [bookings, setBookings] = useState(initialBookings);
   const [showForm, setShowForm] = useState(false);
@@ -79,8 +80,13 @@ export function BookingsSection({
   });
 
   useEffect(() => {
-    if (showForm && formData.id === "new" && !formData.paidById && currentMember?.id) {
-      setFormData(prev => ({ ...prev, paidById: currentMember.id }));
+    if (
+      showForm &&
+      formData.id === "new" &&
+      !formData.paidById &&
+      currentMember?.id
+    ) {
+      setFormData((prev) => ({ ...prev, paidById: currentMember.id }));
     }
   }, [currentMember, showForm, formData.id, formData.paidById]);
 
@@ -115,6 +121,7 @@ export function BookingsSection({
         if (data.expense && onExpenseAdded) {
           onExpenseAdded(data.expense);
         }
+        router.refresh();
         setShowForm(false);
         setFormData({
           id: "new",
@@ -158,6 +165,7 @@ export function BookingsSection({
         setBookings((prev) =>
           prev.map((b) => (b.id === updatedBooking.id ? updatedBooking : b)),
         );
+        router.refresh();
         setShowForm(false);
         setFormData({
           id: "new",
@@ -188,7 +196,10 @@ export function BookingsSection({
         `/api/trips/${tripId}/bookings/${bookingId}`,
         { method: "DELETE" },
       );
-      if (response.ok) setBookings(bookings.filter((b) => b.id !== bookingId));
+      if (response.ok) {
+        setBookings(bookings.filter((b) => b.id !== bookingId));
+        router.refresh();
+      }
     } catch (error) {
       alert(t.common.error);
     }
@@ -220,7 +231,7 @@ export function BookingsSection({
                 paidById: currentMember?.id || "",
               });
             } else if (!formData.paidById && currentMember?.id) {
-              setFormData(prev => ({ ...prev, paidById: currentMember.id }));
+              setFormData((prev) => ({ ...prev, paidById: currentMember.id }));
             }
           }}
           className="flex items-center gap-0 md:gap-1 text-sm text-orange-600 hover:text-orange-700 dark:text-orange-400"
