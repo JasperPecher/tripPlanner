@@ -47,11 +47,22 @@ export async function POST(
 
       const splitAmount = tripMembers.length > 0 ? parsedPrice / tripMembers.length : parsedPrice;
 
+      const categoryMap: Record<string, string> = {
+        hotel: "accommodation",
+        flight: "transport",
+        train: "transport",
+        car: "transport",
+        activity: "activity",
+        other: "other",
+      };
+      const category = categoryMap[type || "other"] || "other";
+
       expense = await prisma.expense.create({
         data: {
           description: `Booking: ${title}`,
           amount: parsedPrice,
           currency: currency || "EUR",
+          category,
           tripId,
           paidById: body.paidById,
           splits: {

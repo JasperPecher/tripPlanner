@@ -116,6 +116,7 @@ export const ExpenseScalarFieldEnum = {
   description: 'description',
   amount: 'amount',
   currency: 'currency',
+  category: 'category',
   createdAt: 'createdAt',
   tripId: 'tripId',
   paidById: 'paidById'

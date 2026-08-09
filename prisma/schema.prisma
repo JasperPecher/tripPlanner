@@ -66,6 +66,7 @@ model Expense {
   description String
   amount      Float
   currency    String   @default("EUR")
+  category    String   @default("other")
   createdAt   DateTime @default(now())
 
   tripId String

@@ -55,6 +55,7 @@ type Expense = {
   description: string;
   amount: number;
   currency: string;
+  category: string;
   createdAt: string;
   paidById: string;
   paidBy: Member;
@@ -143,6 +144,11 @@ export function TripDashboard({
   shareUrl,
 }: TripDashboardProps) {
   const [trip, setTrip] = useState(initialTrip);
+  
+  useEffect(() => {
+    setTrip(initialTrip);
+  }, [initialTrip]);
+
   const [activeTab, setActiveTab] = useState<Tab>("overview");
   const [copied, setCopied] = useState(false);
   const [currentMember, setCurrentMember] = useState<Member | null>(null);

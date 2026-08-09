@@ -107,6 +107,16 @@ export const translations = {
     },
     expenses: {
       title: "Ausgaben",
+      categories: {
+        food: "Essen & Trinken",
+        transport: "Transport",
+        accommodation: "Unterkunft",
+        activity: "Aktivitäten",
+        shopping: "Shopping",
+        other: "Sonstiges",
+      },
+      category: "Kategorie",
+      breakdown: "Auswertung",
       addExpense: "Ausgabe hinzufügen",
       noExpenses: "Noch keine Ausgaben. Füge deine erste Ausgabe hinzu!",
       whoOwes: "Wer schuldet wem",
@@ -379,6 +389,16 @@ export const translations = {
     },
     expenses: {
       title: "Expenses",
+      categories: {
+        food: "Food & Drink",
+        transport: "Transport",
+        accommodation: "Accommodation",
+        activity: "Activities",
+        shopping: "Shopping",
+        other: "Other",
+      },
+      category: "Category",
+      breakdown: "Breakdown",
       addExpense: "Add Expense",
       noExpenses: "No expenses yet. Add your first expense to get started!",
       whoOwes: "Who Owes Whom",
