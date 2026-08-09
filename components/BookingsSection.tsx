@@ -38,10 +38,12 @@ interface BookingsSectionProps {
 
 const typeIcons: Record<string, React.ElementType> = {
   hotel: Hotel,
+  airbnb: BedDouble,
   flight: Plane,
   train: TrainFrontIcon,
   car: Car,
   activity: Ticket,
+  tims_category: HandFist,
   other: MapPin,
 };
 
