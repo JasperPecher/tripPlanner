@@ -539,7 +539,18 @@ export function TripDashboard({
                 </div>
               </div>
 
-              <BookingsSection tripId={trip.id} bookings={trip.bookings} />
+              <BookingsSection
+                tripId={trip.id}
+                bookings={trip.bookings}
+                members={trip.members}
+                currentMember={currentMember}
+                onExpenseAdded={(expense) => {
+                  setTrip((prev) => ({
+                    ...prev,
+                    expenses: [expense, ...prev.expenses],
+                  }));
+                }}
+              />
               <NotesSection tripId={trip.id} initialNotes={trip.notes} />
             </div>
             <div className="space-y-6">
