@@ -41,6 +41,12 @@ export async function POST(
 
     let expense = null;
     if (body.addAsExpense && parsedPrice && body.paidById) {
+      const tripMembers = await prisma.member.findMany({
+        where: { tripId },
+      });
+
+      const splitAmount = tripMembers.length > 0 ? parsedPrice / tripMembers.length : parsedPrice;
+
       expense = await prisma.expense.create({
         data: {
           description: `Booking: ${title}`,
@@ -48,6 +54,12 @@ export async function POST(
           currency: currency || "EUR",
           tripId,
           paidById: body.paidById,
+          splits: {
+            create: tripMembers.map(member => ({
+              amount: splitAmount,
+              memberId: member.id,
+            })),
+          },
         },
         include: {
           paidBy: true,
