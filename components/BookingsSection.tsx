@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Plus,
   Plane,
@@ -30,9 +30,17 @@ type Booking = {
   price: number | null;
   currency: string;
 };
+type Member = {
+  id: string;
+  name: string;
+};
+
 interface BookingsSectionProps {
   tripId: string;
   bookings: Booking[];
+  members?: Member[];
+  currentMember?: Member | null;
+  onExpenseAdded?: (expense: any) => void;
 }
 
 const typeIcons: Record<string, React.ElementType> = {
@@ -47,6 +55,9 @@ const typeIcons: Record<string, React.ElementType> = {
 export function BookingsSection({
   tripId,
   bookings: initialBookings,
+  members = [],
+  currentMember = null,
+  onExpenseAdded,
 }: BookingsSectionProps) {
   const { t } = useLocale();
   const [bookings, setBookings] = useState(initialBookings);
@@ -63,7 +74,15 @@ export function BookingsSection({
     location: "",
     price: "",
     currency: "EUR",
+    addAsExpense: false,
+    paidById: currentMember?.id || "",
   });
+
+  useEffect(() => {
+    if (showForm && formData.id === "new" && !formData.paidById && currentMember?.id) {
+      setFormData(prev => ({ ...prev, paidById: currentMember.id }));
+    }
+  }, [currentMember, showForm, formData.id, formData.paidById]);
 
   const bookingTypes = [
     { value: "hotel", label: t.bookings.types.hotel, icon: Hotel },
@@ -90,8 +109,12 @@ export function BookingsSection({
         }),
       });
       if (response.ok) {
-        const newBooking = await response.json();
+        const data = await response.json();
+        const newBooking = data.booking || data;
         setBookings([newBooking, ...bookings]);
+        if (data.expense && onExpenseAdded) {
+          onExpenseAdded(data.expense);
+        }
         setShowForm(false);
         setFormData({
           id: "new",
@@ -104,6 +127,8 @@ export function BookingsSection({
           location: "",
           price: "",
           currency: "EUR",
+          addAsExpense: false,
+          paidById: currentMember?.id || "",
         });
       }
     } catch (error) {
@@ -145,6 +170,8 @@ export function BookingsSection({
           location: "",
           price: "",
           currency: "EUR",
+          addAsExpense: false,
+          paidById: currentMember?.id || "",
         });
       }
     } catch (error) {
@@ -175,7 +202,27 @@ export function BookingsSection({
           {t.bookings.title}
         </h2>
         <button
-          onClick={() => setShowForm(true)}
+          onClick={() => {
+            setShowForm(true);
+            if (formData.id !== "new") {
+              setFormData({
+                id: "new",
+                title: "",
+                description: "",
+                type: "hotel",
+                reference: "",
+                checkIn: "",
+                checkOut: "",
+                location: "",
+                price: "",
+                currency: "EUR",
+                addAsExpense: false,
+                paidById: currentMember?.id || "",
+              });
+            } else if (!formData.paidById && currentMember?.id) {
+              setFormData(prev => ({ ...prev, paidById: currentMember.id }));
+            }
+          }}
           className="flex items-center gap-0 md:gap-1 text-sm text-orange-600 hover:text-orange-700 dark:text-orange-400"
         >
           <Plus className="w-4 h-4" />
@@ -333,6 +380,50 @@ export function BookingsSection({
                   placeholder={t.bookings.form.descriptionPlaceholder}
                 />
               </div>
+              {formData.id === "new" && members.length > 0 && (
+                <div className="flex flex-col gap-2 p-3 bg-stone-50 dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700">
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="checkbox"
+                      checked={formData.addAsExpense}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          addAsExpense: e.target.checked,
+                        })
+                      }
+                      className="w-4 h-4 text-orange-500 rounded border-stone-300 focus:ring-orange-500"
+                    />
+                    <span className="text-sm font-medium text-stone-700 dark:text-stone-300">
+                      {t.bookings.form.addExpense}
+                    </span>
+                  </label>
+                  {formData.addAsExpense && (
+                    <div>
+                      <label className="block text-xs font-medium text-stone-600 dark:text-stone-400 mb-1">
+                        Paid by
+                      </label>
+                      <select
+                        value={formData.paidById}
+                        onChange={(e) =>
+                          setFormData({ ...formData, paidById: e.target.value })
+                        }
+                        className={inputClasses}
+                        required={formData.addAsExpense}
+                      >
+                        <option value="" disabled>
+                          Select member
+                        </option>
+                        {members.map((m) => (
+                          <option key={m.id} value={m.id}>
+                            {m.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  )}
+                </div>
+              )}
               {formData.id !== "new" ? (
                 <button
                   type="submit"
@@ -447,6 +538,8 @@ export function BookingsSection({
                           location: booking.location || "",
                           price: String(booking.price) || "",
                           currency: booking.currency,
+                          addAsExpense: false,
+                          paidById: currentMember?.id || "",
                         }));
                     }}
                     className="text-stone-400 hover:text-red-500 transition p-1"

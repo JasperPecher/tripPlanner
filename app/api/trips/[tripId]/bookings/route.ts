@@ -21,6 +21,9 @@ export async function POST(
     } = body;
     if (!title)
       return NextResponse.json({ error: "Title is required" }, { status: 400 });
+
+    const parsedPrice = price ? parseFloat(price) : null;
+
     const booking = await prisma.booking.create({
       data: {
         title,
@@ -30,12 +33,30 @@ export async function POST(
         checkIn: checkIn || null,
         checkOut: checkOut || null,
         location: location || null,
-        price: price ? parseFloat(price) : null,
+        price: parsedPrice,
         currency: currency || "EUR",
         tripId,
       },
     });
-    return NextResponse.json(booking);
+
+    let expense = null;
+    if (body.addAsExpense && parsedPrice && body.paidById) {
+      expense = await prisma.expense.create({
+        data: {
+          description: `Booking: ${title}`,
+          amount: parsedPrice,
+          currency: currency || "EUR",
+          tripId,
+          paidById: body.paidById,
+        },
+        include: {
+          paidBy: true,
+          splits: { include: { member: true } },
+        },
+      });
+    }
+
+    return NextResponse.json({ booking, expense });
   } catch (error) {
     console.error("Error creating booking:", error);
     return NextResponse.json(
