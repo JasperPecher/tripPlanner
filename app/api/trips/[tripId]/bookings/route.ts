@@ -40,7 +40,7 @@ export async function POST(
     });
 
     let expense = null;
-    if (body.addAsExpense && parsedPrice && body.paidById) {
+    if (parsedPrice && body.paidById) {
       const tripMembers = await prisma.member.findMany({
         where: { tripId },
       });

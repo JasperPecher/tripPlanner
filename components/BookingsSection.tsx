@@ -377,6 +377,35 @@ export function BookingsSection({
                   </select>
                 </div>
               </div>
+              {formData.id === "new" &&
+                members.length > 0 &&
+                formData.price &&
+                Number(formData.price) > 0 && (
+                  <div className="flex flex-col gap-2 p-3 bg-stone-50 dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700">
+                    <div>
+                      <label className="block text-xs font-medium text-stone-600 dark:text-stone-400 mb-1">
+                        {t.expenses.paidBy}
+                      </label>
+                      <select
+                        value={formData.paidById}
+                        onChange={(e) =>
+                          setFormData({ ...formData, paidById: e.target.value })
+                        }
+                        className={inputClasses}
+                        required={Number(formData.price) > 0}
+                      >
+                        <option value="" disabled>
+                          Select member
+                        </option>
+                        {members.map((m) => (
+                          <option key={m.id} value={m.id}>
+                            {m.name}
+                          </option>
+                        ))}
+                      </select>
+                    </div>
+                  </div>
+                )}
               <div>
                 <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
                   {t.bookings.form.description}
@@ -391,50 +420,6 @@ export function BookingsSection({
                   placeholder={t.bookings.form.descriptionPlaceholder}
                 />
               </div>
-              {formData.id === "new" && members.length > 0 && (
-                <div className="flex flex-col gap-2 p-3 bg-stone-50 dark:bg-stone-800 rounded-lg border border-stone-200 dark:border-stone-700">
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="checkbox"
-                      checked={formData.addAsExpense}
-                      onChange={(e) =>
-                        setFormData({
-                          ...formData,
-                          addAsExpense: e.target.checked,
-                        })
-                      }
-                      className="w-4 h-4 text-orange-500 rounded border-stone-300 focus:ring-orange-500"
-                    />
-                    <span className="text-sm font-medium text-stone-700 dark:text-stone-300">
-                      {t.bookings.form.addExpense}
-                    </span>
-                  </label>
-                  {formData.addAsExpense && (
-                    <div>
-                      <label className="block text-xs font-medium text-stone-600 dark:text-stone-400 mb-1">
-                        Paid by
-                      </label>
-                      <select
-                        value={formData.paidById}
-                        onChange={(e) =>
-                          setFormData({ ...formData, paidById: e.target.value })
-                        }
-                        className={inputClasses}
-                        required={formData.addAsExpense}
-                      >
-                        <option value="" disabled>
-                          Select member
-                        </option>
-                        {members.map((m) => (
-                          <option key={m.id} value={m.id}>
-                            {m.name}
-                          </option>
-                        ))}
-                      </select>
-                    </div>
-                  )}
-                </div>
-              )}
               {formData.id !== "new" ? (
                 <button
                   type="submit"
