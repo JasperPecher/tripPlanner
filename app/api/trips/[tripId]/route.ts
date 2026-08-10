@@ -23,7 +23,7 @@ export async function GET(
           orderBy: { createdAt: "asc" },
         },
         routePoints: {
-          orderBy: { date: "asc" },
+          orderBy: [{ date: "asc" }, { order: "asc" }],
         },
       },
     });

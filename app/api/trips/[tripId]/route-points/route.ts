@@ -14,13 +14,20 @@ export async function POST(
       return NextResponse.json({ error: "Location is required" }, { status: 400 });
     }
 
+    // Determine the next order index for this trip by finding the maximum current order
+    const lastPoint = await prisma.routePoint.findFirst({
+      where: { tripId },
+      orderBy: { order: 'desc' }
+    });
+    const nextOrder = lastPoint ? lastPoint.order + 1 : 0;
+
     const routePoint = await prisma.routePoint.create({
       data: {
         location,
         latitude,
         longitude,
         date: date ? new Date(date) : null,
-        order: order || 0,
+        order: nextOrder,
         tripId,
       },
     });

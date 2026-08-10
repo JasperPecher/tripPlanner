@@ -101,6 +101,8 @@ export default function RouteMapPage({
                 new Date(a.date).getTime() - new Date(b.date).getTime();
               if (dateDiff !== 0) return dateDiff;
             }
+            if (a.date) return -1;
+            if (b.date) return 1;
             return a.order - b.order;
           }),
         });
@@ -200,6 +202,8 @@ export default function RouteMapPage({
             .sort((a, b) => {
               if (a.date && b.date)
                 return new Date(a.date).getTime() - new Date(b.date).getTime();
+              if (a.date) return -1;
+              if (b.date) return 1;
               return a.order - b.order;
             }),
         });
@@ -213,50 +217,41 @@ export default function RouteMapPage({
   };
 
   const handleMovePoint = async (pointId: string, direction: "up" | "down") => {
-    const index = points.findIndex((p) => p.id === pointId);
+    // Sort points properly by current visual order to ensure no duplicate index issues
+    const sortedPoints = [...points].sort((a, b) => {
+      if (a.date && b.date) {
+        const dateDiff = new Date(a.date).getTime() - new Date(b.date).getTime();
+        if (dateDiff !== 0) return dateDiff;
+      }
+      if (a.date) return -1;
+      if (b.date) return 1;
+      return a.order - b.order;
+    });
+
+    const index = sortedPoints.findIndex((p) => p.id === pointId);
     if (index === -1) return;
 
     const targetIndex = direction === "up" ? index - 1 : index + 1;
-    if (targetIndex < 0 || targetIndex >= points.length) return;
+    if (targetIndex < 0 || targetIndex >= sortedPoints.length) return;
 
-    const currentPoint = points[index];
-    const targetPoint = points[targetIndex];
+    // Swap elements in array
+    const temp = sortedPoints[index];
+    sortedPoints[index] = sortedPoints[targetIndex];
+    sortedPoints[targetIndex] = temp;
 
-    // Swap orders
-    const currentOrder = currentPoint.order;
-    const targetOrder = targetPoint.order;
+    // Reassign sequential orders to fix any previous duplicate/gap issues
+    const updatedPoints = sortedPoints.map((p, i) => ({ ...p, order: i }));
 
     try {
       // Optimistic update
-      const updatedPoints = [...points];
-      updatedPoints[index] = { ...currentPoint, order: targetOrder };
-      updatedPoints[targetIndex] = { ...targetPoint, order: currentOrder };
-
-      // Re-sort to reflect change
-      updatedPoints.sort((a, b) => {
-        if (a.date && b.date) {
-          const dateDiff =
-            new Date(a.date).getTime() - new Date(b.date).getTime();
-          if (dateDiff !== 0) return dateDiff;
-        }
-        return a.order - b.order;
-      });
-
       setPoints(updatedPoints);
 
-      // Save to API (we need to update both points!)
-      await Promise.all([
-        fetch(`/api/trips/${trip.id}/route-points/${currentPoint.id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ order: targetOrder }),
-        }),
-        fetch(`/api/trips/${trip.id}/route-points/${targetPoint.id}`, {
-          method: "PATCH",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ order: currentOrder }),
-        }),
-      ]);
+      // Save to API (batch update)
+      await fetch(`/api/trips/${trip.id}/route-points/reorder`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ pointIds: updatedPoints.map(p => p.id) }),
+      });
 
       // Notify parent
       onTripUpdated({
