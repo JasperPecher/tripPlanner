@@ -77,6 +77,10 @@ export function ExpenseTracker({
   const [showForm, setShowForm] = useState(false);
   const [editingExpenseId, setEditingExpenseId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [pieChartFilter, setPieChartFilter] = useState<string>(
+    currentMember?.id || "overall",
+  );
+
   const [formData, setFormData] = useState({
     description: "",
     amount: "",
@@ -131,7 +135,22 @@ export function ExpenseTracker({
 
     expenses.forEach((expense) => {
       const cat = expense.category || "other";
-      categoryTotals.set(cat, (categoryTotals.get(cat) || 0) + expense.amount);
+      if (pieChartFilter === "overall") {
+        categoryTotals.set(
+          cat,
+          (categoryTotals.get(cat) || 0) + expense.amount,
+        );
+      } else {
+        const userSplit = expense.splits.find(
+          (s) => s.memberId === pieChartFilter,
+        );
+        if (userSplit) {
+          categoryTotals.set(
+            cat,
+            (categoryTotals.get(cat) || 0) + userSplit.amount,
+          );
+        }
+      }
     });
 
     const data = Array.from(categoryTotals.entries())
@@ -139,10 +158,11 @@ export function ExpenseTracker({
         name,
         value: Math.round(value * 100) / 100,
       }))
+      .filter((item) => item.value > 0)
       .sort((a, b) => b.value - a.value);
 
     return data;
-  }, [expenses]);
+  }, [expenses, pieChartFilter]);
 
   const totalExpensesAmount = useMemo(() => {
     return pieChartData.reduce((sum, item) => sum + item.value, 0);
@@ -722,9 +742,9 @@ export function ExpenseTracker({
         </div>
       )}
 
-      {expenses.length > 0 && pieChartData.length > 0 && (
+      {expenses.length > 0 && (
         <div className="bg-white dark:bg-stone-900 rounded-xl p-5 shadow-sm border border-stone-200 dark:border-stone-800">
-          <div className="flex items-center justify-between mb-4">
+          <div className="flex flex-col sm:flex-row sm:items-center justify-between mb-4 gap-4">
             <div className="flex flex-col">
               <h3 className="font-semibold text-stone-800 dark:text-stone-200 flex items-center gap-2">
                 <PieChartIcon className="w-5 h-5 text-orange-500" />
@@ -737,71 +757,85 @@ export function ExpenseTracker({
                 </span>
               </p>
             </div>
+
+            <select
+              value={pieChartFilter}
+              onChange={(e) => setPieChartFilter(e.target.value)}
+              className="px-3 py-1.5 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-sm text-stone-900 dark:text-white outline-none focus:ring-2 focus:ring-orange-500 min-w-35"
+            >
+              <option value="overall">Gesamt</option>
+              {members.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.name}
+                </option>
+              ))}
+            </select>
           </div>
 
-          <div className="h-64 w-full">
-            <ResponsiveContainer width="100%" height="100%">
-              <PieChart>
-                <Pie
-                  data={pieChartData}
-                  cx="50%"
-                  cy="50%"
-                  innerRadius={50}
-                  outerRadius={90}
-                  paddingAngle={2}
-                  dataKey="value"
-                  label={({ cx, cy, midAngle, innerRadius, outerRadius, value, name }: any) => {
-                    const RADIAN = Math.PI / 180;
-                    const radius = outerRadius + 20;
-                    const safeMidAngle = midAngle || 0;
-                    const x = cx + radius * Math.cos(-safeMidAngle * RADIAN);
-                    const y = cy + radius * Math.sin(-safeMidAngle * RADIAN);
-
-                    return (
-                      <text
-                        x={x}
-                        y={y}
-                        fill="currentColor"
-                        textAnchor={x > cx ? "start" : "end"}
-                        dominantBaseline="central"
-                        className="text-[10px] sm:text-xs font-medium dark:text-stone-300"
-                      >
-                        {`${t.expenses.categories[name as keyof typeof t.expenses.categories] || name}: ${formatCurrency(value)}`}
-                      </text>
-                    );
-                  }}
-                  labelLine={true}
-                >
-                  {pieChartData.map((entry, index) => (
-                    <Cell
-                      key={`cell-${index}`}
-                      fill={COLORS[index % COLORS.length]}
-                    />
-                  ))}
-                </Pie>
-                <Tooltip
-                  formatter={(value: any) => formatCurrency(Number(value))}
-                  labelFormatter={(label) =>
-                    t.expenses.categories[
-                      label as keyof typeof t.expenses.categories
-                    ] || label
-                  }
-                  contentStyle={{
-                    borderRadius: "8px",
-                    border: "none",
-                    boxShadow: "0 4px 6px -1px rgb(0 0 0 / 0.1)",
-                  }}
-                />
-                <Legend
-                  formatter={(value) =>
-                    t.expenses.categories[
-                      value as keyof typeof t.expenses.categories
-                    ] || value
-                  }
-                />
-              </PieChart>
-            </ResponsiveContainer>
-          </div>
+          {pieChartData.length > 0 ? (
+            <div className="h-64 w-full">
+              <ResponsiveContainer width="100%" height="100%">
+                <PieChart key={pieChartFilter}>
+                  <Pie
+                    data={pieChartData}
+                    cx="50%"
+                    cy="50%"
+                    innerRadius={50}
+                    outerRadius={90}
+                    paddingAngle={2}
+                    dataKey="value"
+                    animationDuration={1000}
+                    label={({
+                      cx,
+                      cy,
+                      midAngle,
+                      innerRadius,
+                      outerRadius,
+                      value,
+                      name,
+                    }: any) => {
+                      const RADIAN = Math.PI / 180;
+                      const radius = outerRadius + 20;
+                      const safeMidAngle = midAngle || 0;
+                      const x = cx + radius * Math.cos(-safeMidAngle * RADIAN);
+                      const y = cy + radius * Math.sin(-safeMidAngle * RADIAN);
+                      return (
+                        <text
+                          x={x}
+                          y={y}
+                          fill="currentColor"
+                          textAnchor={x > cx ? "start" : "end"}
+                          dominantBaseline="central"
+                          className="text-[10px] sm:text-xs font-medium dark:text-stone-300"
+                        >
+                          {`${t.expenses.categories[name as keyof typeof t.expenses.categories] || name}: ${formatCurrency(value)}`}
+                        </text>
+                      );
+                    }}
+                    labelLine={true}
+                  >
+                    {pieChartData.map((entry, index) => (
+                      <Cell
+                        key={`cell-${index}`}
+                        fill={COLORS[index % COLORS.length]}
+                      />
+                    ))}
+                  </Pie>
+                  <Legend
+                    formatter={(value) =>
+                      t.expenses.categories[
+                        value as keyof typeof t.expenses.categories
+                      ] || value
+                    }
+                  />
+                </PieChart>
+              </ResponsiveContainer>
+            </div>
+          ) : (
+            <div className="h-64 w-full flex items-center justify-center text-sm text-stone-500 dark:text-stone-400">
+              Keine Ausgaben
+            </div>
+          )}
         </div>
       )}
 
