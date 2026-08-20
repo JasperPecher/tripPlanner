@@ -100,9 +100,8 @@ export default function RouteMapPage({
               const dateDiff =
                 new Date(a.date).getTime() - new Date(b.date).getTime();
               if (dateDiff !== 0) return dateDiff;
-            }
-            if (a.date) return -1;
-            if (b.date) return 1;
+            } else if (a.date) return -1;
+            else if (b.date) return 1;
             return a.order - b.order;
           }),
         });
@@ -200,10 +199,11 @@ export default function RouteMapPage({
           routePoints: points
             .map((p) => (p.id === pointId ? updatedPoint : p))
             .sort((a, b) => {
-              if (a.date && b.date)
-                return new Date(a.date).getTime() - new Date(b.date).getTime();
-              if (a.date) return -1;
-              if (b.date) return 1;
+              if (a.date && b.date) {
+                const dateDiff = new Date(a.date).getTime() - new Date(b.date).getTime();
+                if (dateDiff !== 0) return dateDiff;
+              } else if (a.date) return -1;
+              else if (b.date) return 1;
               return a.order - b.order;
             }),
         });
@@ -222,9 +222,8 @@ export default function RouteMapPage({
       if (a.date && b.date) {
         const dateDiff = new Date(a.date).getTime() - new Date(b.date).getTime();
         if (dateDiff !== 0) return dateDiff;
-      }
-      if (a.date) return -1;
-      if (b.date) return 1;
+      } else if (a.date) return -1;
+      else if (b.date) return 1;
       return a.order - b.order;
     });
 
@@ -283,9 +282,8 @@ export default function RouteMapPage({
     if (a.date && b.date) {
       const dateDiff = new Date(a.date).getTime() - new Date(b.date).getTime();
       if (dateDiff !== 0) return dateDiff;
-    }
-    if (a.date) return -1;
-    if (b.date) return 1;
+    } else if (a.date) return -1;
+    else if (b.date) return 1;
     return a.order - b.order;
   });
 
