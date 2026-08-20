@@ -45,6 +45,7 @@ export type RoutePointMinAggregateOutputType = {
   longitude: number | null
   date: Date | null
   order: number | null
+  travelType: string | null
   tripId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -57,6 +58,7 @@ export type RoutePointMaxAggregateOutputType = {
   longitude: number | null
   date: Date | null
   order: number | null
+  travelType: string | null
   tripId: string | null
   createdAt: Date | null
   updatedAt: Date | null
@@ -69,6 +71,7 @@ export type RoutePointCountAggregateOutputType = {
   longitude: number
   date: number
   order: number
+  travelType: number
   tripId: number
   createdAt: number
   updatedAt: number
@@ -95,6 +98,7 @@ export type RoutePointMinAggregateInputType = {
   longitude?: true
   date?: true
   order?: true
+  travelType?: true
   tripId?: true
   createdAt?: true
   updatedAt?: true
@@ -107,6 +111,7 @@ export type RoutePointMaxAggregateInputType = {
   longitude?: true
   date?: true
   order?: true
+  travelType?: true
   tripId?: true
   createdAt?: true
   updatedAt?: true
@@ -119,6 +124,7 @@ export type RoutePointCountAggregateInputType = {
   longitude?: true
   date?: true
   order?: true
+  travelType?: true
   tripId?: true
   createdAt?: true
   updatedAt?: true
@@ -218,6 +224,7 @@ export type RoutePointGroupByOutputType = {
   longitude: number | null
   date: Date | null
   order: number
+  travelType: string | null
   tripId: string
   createdAt: Date
   updatedAt: Date
@@ -253,6 +260,7 @@ export type RoutePointWhereInput = {
   longitude?: Prisma.FloatNullableFilter<"RoutePoint"> | number | null
   date?: Prisma.DateTimeNullableFilter<"RoutePoint"> | Date | string | null
   order?: Prisma.IntFilter<"RoutePoint"> | number
+  travelType?: Prisma.StringNullableFilter<"RoutePoint"> | string | null
   tripId?: Prisma.StringFilter<"RoutePoint"> | string
   createdAt?: Prisma.DateTimeFilter<"RoutePoint"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RoutePoint"> | Date | string
@@ -266,6 +274,7 @@ export type RoutePointOrderByWithRelationInput = {
   longitude?: Prisma.SortOrderInput | Prisma.SortOrder
   date?: Prisma.SortOrderInput | Prisma.SortOrder
   order?: Prisma.SortOrder
+  travelType?: Prisma.SortOrderInput | Prisma.SortOrder
   tripId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -282,6 +291,7 @@ export type RoutePointWhereUniqueInput = Prisma.AtLeast<{
   longitude?: Prisma.FloatNullableFilter<"RoutePoint"> | number | null
   date?: Prisma.DateTimeNullableFilter<"RoutePoint"> | Date | string | null
   order?: Prisma.IntFilter<"RoutePoint"> | number
+  travelType?: Prisma.StringNullableFilter<"RoutePoint"> | string | null
   tripId?: Prisma.StringFilter<"RoutePoint"> | string
   createdAt?: Prisma.DateTimeFilter<"RoutePoint"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RoutePoint"> | Date | string
@@ -295,6 +305,7 @@ export type RoutePointOrderByWithAggregationInput = {
   longitude?: Prisma.SortOrderInput | Prisma.SortOrder
   date?: Prisma.SortOrderInput | Prisma.SortOrder
   order?: Prisma.SortOrder
+  travelType?: Prisma.SortOrderInput | Prisma.SortOrder
   tripId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -315,6 +326,7 @@ export type RoutePointScalarWhereWithAggregatesInput = {
   longitude?: Prisma.FloatNullableWithAggregatesFilter<"RoutePoint"> | number | null
   date?: Prisma.DateTimeNullableWithAggregatesFilter<"RoutePoint"> | Date | string | null
   order?: Prisma.IntWithAggregatesFilter<"RoutePoint"> | number
+  travelType?: Prisma.StringNullableWithAggregatesFilter<"RoutePoint"> | string | null
   tripId?: Prisma.StringWithAggregatesFilter<"RoutePoint"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"RoutePoint"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"RoutePoint"> | Date | string
@@ -327,6 +339,7 @@ export type RoutePointCreateInput = {
   longitude?: number | null
   date?: Date | string | null
   order?: number
+  travelType?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
   trip: Prisma.TripCreateNestedOneWithoutRoutePointsInput
@@ -339,6 +352,7 @@ export type RoutePointUncheckedCreateInput = {
   longitude?: number | null
   date?: Date | string | null
   order?: number
+  travelType?: string | null
   tripId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -351,6 +365,7 @@ export type RoutePointUpdateInput = {
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  travelType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trip?: Prisma.TripUpdateOneRequiredWithoutRoutePointsNestedInput
@@ -363,6 +378,7 @@ export type RoutePointUncheckedUpdateInput = {
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  travelType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -375,6 +391,7 @@ export type RoutePointCreateManyInput = {
   longitude?: number | null
   date?: Date | string | null
   order?: number
+  travelType?: string | null
   tripId: string
   createdAt?: Date | string
   updatedAt?: Date | string
@@ -387,6 +404,7 @@ export type RoutePointUpdateManyMutationInput = {
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  travelType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -398,6 +416,7 @@ export type RoutePointUncheckedUpdateManyInput = {
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  travelType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
@@ -420,6 +439,7 @@ export type RoutePointCountOrderByAggregateInput = {
   longitude?: Prisma.SortOrder
   date?: Prisma.SortOrder
   order?: Prisma.SortOrder
+  travelType?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -438,6 +458,7 @@ export type RoutePointMaxOrderByAggregateInput = {
   longitude?: Prisma.SortOrder
   date?: Prisma.SortOrder
   order?: Prisma.SortOrder
+  travelType?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -450,6 +471,7 @@ export type RoutePointMinOrderByAggregateInput = {
   longitude?: Prisma.SortOrder
   date?: Prisma.SortOrder
   order?: Prisma.SortOrder
+  travelType?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
@@ -518,6 +540,7 @@ export type RoutePointCreateWithoutTripInput = {
   longitude?: number | null
   date?: Date | string | null
   order?: number
+  travelType?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -529,6 +552,7 @@ export type RoutePointUncheckedCreateWithoutTripInput = {
   longitude?: number | null
   date?: Date | string | null
   order?: number
+  travelType?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -569,6 +593,7 @@ export type RoutePointScalarWhereInput = {
   longitude?: Prisma.FloatNullableFilter<"RoutePoint"> | number | null
   date?: Prisma.DateTimeNullableFilter<"RoutePoint"> | Date | string | null
   order?: Prisma.IntFilter<"RoutePoint"> | number
+  travelType?: Prisma.StringNullableFilter<"RoutePoint"> | string | null
   tripId?: Prisma.StringFilter<"RoutePoint"> | string
   createdAt?: Prisma.DateTimeFilter<"RoutePoint"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"RoutePoint"> | Date | string
@@ -581,6 +606,7 @@ export type RoutePointCreateManyTripInput = {
   longitude?: number | null
   date?: Date | string | null
   order?: number
+  travelType?: string | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -592,6 +618,7 @@ export type RoutePointUpdateWithoutTripInput = {
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  travelType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -603,6 +630,7 @@ export type RoutePointUncheckedUpdateWithoutTripInput = {
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  travelType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -614,6 +642,7 @@ export type RoutePointUncheckedUpdateManyWithoutTripInput = {
   longitude?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
   date?: Prisma.NullableDateTimeFieldUpdateOperationsInput | Date | string | null
   order?: Prisma.IntFieldUpdateOperationsInput | number
+  travelType?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -627,6 +656,7 @@ export type RoutePointSelect<ExtArgs extends runtime.Types.Extensions.InternalAr
   longitude?: boolean
   date?: boolean
   order?: boolean
+  travelType?: boolean
   tripId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -640,6 +670,7 @@ export type RoutePointSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Ex
   longitude?: boolean
   date?: boolean
   order?: boolean
+  travelType?: boolean
   tripId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -653,6 +684,7 @@ export type RoutePointSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Ex
   longitude?: boolean
   date?: boolean
   order?: boolean
+  travelType?: boolean
   tripId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
@@ -666,12 +698,13 @@ export type RoutePointSelectScalar = {
   longitude?: boolean
   date?: boolean
   order?: boolean
+  travelType?: boolean
   tripId?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type RoutePointOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "location" | "latitude" | "longitude" | "date" | "order" | "tripId" | "createdAt" | "updatedAt", ExtArgs["result"]["routePoint"]>
+export type RoutePointOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "location" | "latitude" | "longitude" | "date" | "order" | "travelType" | "tripId" | "createdAt" | "updatedAt", ExtArgs["result"]["routePoint"]>
 export type RoutePointInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
 }
@@ -694,6 +727,7 @@ export type $RoutePointPayload<ExtArgs extends runtime.Types.Extensions.Internal
     longitude: number | null
     date: Date | null
     order: number
+    travelType: string | null
     tripId: string
     createdAt: Date
     updatedAt: Date
@@ -1127,6 +1161,7 @@ export interface RoutePointFieldRefs {
   readonly longitude: Prisma.FieldRef<"RoutePoint", 'Float'>
   readonly date: Prisma.FieldRef<"RoutePoint", 'DateTime'>
   readonly order: Prisma.FieldRef<"RoutePoint", 'Int'>
+  readonly travelType: Prisma.FieldRef<"RoutePoint", 'String'>
   readonly tripId: Prisma.FieldRef<"RoutePoint", 'String'>
   readonly createdAt: Prisma.FieldRef<"RoutePoint", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"RoutePoint", 'DateTime'>

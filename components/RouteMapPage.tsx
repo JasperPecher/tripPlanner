@@ -21,7 +21,13 @@ import {
   Check,
   ArrowUp,
   ArrowDown,
+  Car,
+  Plane,
+  Train,
+  Bus,
+  Footprints,
 } from "lucide-react";
+import { renderToString } from "react-dom/server";
 import { useLocale } from "@/lib/LocaleContext";
 import { formatDate } from "@/lib/utils";
 
@@ -35,6 +41,7 @@ type RoutePoint = {
   longitude: number | null;
   date: string | null;
   order: number;
+  travelType?: string | null;
 };
 
 type Trip = {
@@ -60,6 +67,7 @@ export default function RouteMapPage({
   );
   const [locationName, setLocationName] = useState("");
   const [date, setDate] = useState("");
+  const [travelType, setTravelType] = useState<string>("");
   const [adding, setAdding] = useState(false);
   const [searchQuery, setSearchQuery] = useState("");
   const [searching, setSearching] = useState(false);
@@ -67,7 +75,16 @@ export default function RouteMapPage({
   const [editingPointId, setEditingPointId] = useState<string | null>(null);
   const [editLocationName, setEditLocationName] = useState("");
   const [editDate, setEditDate] = useState("");
+  const [editTravelType, setEditTravelType] = useState<string>("");
   const [updating, setUpdating] = useState(false);
+
+  const travelTypes = [
+    { id: "Car", icon: Car, label: "Car" },
+    { id: "Plane", icon: Plane, label: "Plane" },
+    { id: "Train", icon: Train, label: "Train" },
+    { id: "Bus", icon: Bus, label: "Bus" },
+    { id: "Walk", icon: Footprints, label: "Walk" },
+  ];
 
   useEffect(() => {
     setPoints(trip.routePoints || []);
@@ -88,6 +105,7 @@ export default function RouteMapPage({
           longitude: newPoint.lng,
           date: date || null,
           order: points.length,
+          travelType: travelType || null,
         }),
       });
 
@@ -108,6 +126,7 @@ export default function RouteMapPage({
         setNewPoint(null);
         setLocationName("");
         setDate("");
+        setTravelType("");
       }
     } catch (error) {
       console.error("Error adding route point:", error);
@@ -173,6 +192,7 @@ export default function RouteMapPage({
     setEditingPointId(point.id);
     setEditLocationName(point.location);
     setEditDate(point.date ? point.date.split("T")[0] : "");
+    setEditTravelType(point.travelType || "");
   };
 
   const handleUpdatePoint = async (pointId: string) => {
@@ -188,6 +208,7 @@ export default function RouteMapPage({
           body: JSON.stringify({
             location: editLocationName.trim(),
             date: editDate || null,
+            travelType: editTravelType || null,
           }),
         },
       );
@@ -200,7 +221,8 @@ export default function RouteMapPage({
             .map((p) => (p.id === pointId ? updatedPoint : p))
             .sort((a, b) => {
               if (a.date && b.date) {
-                const dateDiff = new Date(a.date).getTime() - new Date(b.date).getTime();
+                const dateDiff =
+                  new Date(a.date).getTime() - new Date(b.date).getTime();
                 if (dateDiff !== 0) return dateDiff;
               } else if (a.date) return -1;
               else if (b.date) return 1;
@@ -220,7 +242,8 @@ export default function RouteMapPage({
     // Sort points properly by current visual order to ensure no duplicate index issues
     const sortedPoints = [...points].sort((a, b) => {
       if (a.date && b.date) {
-        const dateDiff = new Date(a.date).getTime() - new Date(b.date).getTime();
+        const dateDiff =
+          new Date(a.date).getTime() - new Date(b.date).getTime();
         if (dateDiff !== 0) return dateDiff;
       } else if (a.date) return -1;
       else if (b.date) return 1;
@@ -249,7 +272,7 @@ export default function RouteMapPage({
       await fetch(`/api/trips/${trip.id}/route-points/reorder`, {
         method: "PUT",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ pointIds: updatedPoints.map(p => p.id) }),
+        body: JSON.stringify({ pointIds: updatedPoints.map((p) => p.id) }),
       });
 
       // Notify parent
@@ -327,7 +350,10 @@ export default function RouteMapPage({
               />
               <MapEvents />
 
-              {activePoints.map((point) => (
+              {activePoints.map((point) => {
+                const mapPinHtml = renderToString(<MapPin size={14} className="text-white" />);
+                
+                return (
                 <Marker
                   key={point.id}
                   position={[point.latitude!, point.longitude!]}
@@ -338,8 +364,8 @@ export default function RouteMapPage({
                         <div class="bg-white dark:bg-stone-800 px-2 py-0.5 rounded shadow-md border border-stone-200 dark:border-stone-700 text-xs font-medium text-stone-700 dark:text-white whitespace-nowrap mb-1">
                           ${point.location}
                         </div>
-                        <div class="bg-orange-500 text-white p-1.5 rounded-full shadow-lg border-2 border-white">
-                          <svg xmlns="http://www.w3.org/2000/svg" width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-map-pin"><path d="M20 10c0 6-8 12-8 12s-8-6-8-12a8 8 0 0 1 16 0Z"/><circle cx="12" cy="10" r="3"/></svg>
+                        <div class="bg-orange-500 text-white p-1.5 rounded-full shadow-lg border-2 border-white flex items-center justify-center">
+                          ${mapPinHtml}
                         </div>
                       </div>
                     `,
@@ -358,10 +384,21 @@ export default function RouteMapPage({
                           {formatDate(point.date)}
                         </p>
                       )}
+                      {point.travelType && (
+                        <p className="text-xs text-stone-500 mt-1 flex items-center gap-1">
+                          {(() => {
+                            const Icon =
+                              travelTypes.find((t) => t.id === point.travelType)
+                                ?.icon || MapPin;
+                            return <Icon className="w-3 h-3" />;
+                          })()}
+                          {point.travelType}
+                        </p>
+                      )}
                     </div>
                   </Popup>
                 </Marker>
-              ))}
+              )})}
 
               {polylinePositions.length > 1 && (
                 <Polyline
@@ -371,6 +408,38 @@ export default function RouteMapPage({
                   opacity={0.7}
                 />
               )}
+              
+              {sortedActivePoints.map((point, index) => {
+                if (index === 0 || !point.travelType) return null;
+                const prevPoint = sortedActivePoints[index - 1];
+                
+                // Shift the position slightly based on index to avoid overlaps on same segments
+                // Using 0.35, 0.5, 0.65 of the way along the line
+                const fraction = 0.35 + (index % 3) * 0.15; 
+                const midLat = prevPoint.latitude! + (point.latitude! - prevPoint.latitude!) * fraction;
+                const midLng = prevPoint.longitude! + (point.longitude! - prevPoint.longitude!) * fraction;
+                
+                const Icon = travelTypes.find(t => t.id === point.travelType)?.icon || MapPin;
+                // Force inline style or use parent div to ensure currentColor works
+                const iconHtml = renderToString(<Icon size={16} strokeWidth={2.5} />);
+                
+                return (
+                  <Marker
+                    key={`mid-${point.id}`}
+                    position={[midLat, midLng]}
+                    icon={L.divIcon({
+                      className: "custom-div-icon",
+                      html: `
+                        <div class="bg-white dark:bg-stone-800 text-orange-500 p-1 rounded-full shadow-md border border-stone-200 dark:border-stone-700 flex items-center justify-center" style="transform: translate(-50%, -50%); width: 26px; height: 26px;">
+                          ${iconHtml}
+                        </div>
+                      `,
+                      iconSize: [0, 0],
+                      iconAnchor: [0, 0],
+                    })}
+                  />
+                );
+              })}
             </MapContainer>
           </div>
 
@@ -443,6 +512,25 @@ export default function RouteMapPage({
                   onChange={(e) => setDate(e.target.value)}
                   className="w-full px-3 py-1.5 text-sm rounded border border-stone-200 dark:border-stone-700 dark:bg-stone-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
+                <div className="flex gap-2 mb-2">
+                  {travelTypes.map((type) => (
+                    <button
+                      key={type.id}
+                      type="button"
+                      onClick={() =>
+                        setTravelType(travelType === type.id ? "" : type.id)
+                      }
+                      className={`p-1.5 rounded flex items-center justify-center transition-colors ${
+                        travelType === type.id
+                          ? "bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-300 border border-orange-300 dark:border-orange-700"
+                          : "bg-white dark:bg-stone-800 text-stone-500 dark:text-stone-400 border border-stone-200 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-700"
+                      }`}
+                      title={type.label}
+                    >
+                      <type.icon className="w-4 h-4" />
+                    </button>
+                  ))}
+                </div>
                 <div className="flex gap-2">
                   <button
                     type="submit"
@@ -493,6 +581,27 @@ export default function RouteMapPage({
                           onChange={(e) => setEditDate(e.target.value)}
                           className="w-full px-2 py-1.5 text-sm rounded border border-stone-200 dark:border-stone-700 dark:bg-stone-800 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
                         />
+                        <div className="flex gap-1.5 mb-1">
+                          {travelTypes.map((type) => (
+                            <button
+                              key={type.id}
+                              type="button"
+                              onClick={() =>
+                                setEditTravelType(
+                                  editTravelType === type.id ? "" : type.id,
+                                )
+                              }
+                              className={`p-1 rounded flex items-center justify-center transition-colors ${
+                                editTravelType === type.id
+                                  ? "bg-orange-100 text-orange-600 dark:bg-orange-900 dark:text-orange-300 border border-orange-300 dark:border-orange-700"
+                                  : "bg-white dark:bg-stone-800 text-stone-500 dark:text-stone-400 border border-stone-200 dark:border-stone-700 hover:bg-stone-50 dark:hover:bg-stone-700"
+                              }`}
+                              title={type.label}
+                            >
+                              <type.icon className="w-3.5 h-3.5" />
+                            </button>
+                          ))}
+                        </div>
                         <div className="flex gap-1 justify-end">
                           <button
                             onClick={() => handleUpdatePoint(point.id)}
@@ -527,37 +636,53 @@ export default function RouteMapPage({
                             </p>
                           )}
                         </div>
-                        <div className="flex items-center gap-1 ml-2">
-                          <button
-                            onClick={() => handleMovePoint(point.id, "up")}
-                            disabled={index === 0}
-                            className="text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 focus:outline-none disabled:opacity-30"
-                            title="Move up"
-                          >
-                            <ArrowUp className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => handleMovePoint(point.id, "down")}
-                            disabled={index === points.length - 1}
-                            className="text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 focus:outline-none disabled:opacity-30"
-                            title="Move down"
-                          >
-                            <ArrowDown className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => handleEditClick(point)}
-                            className="text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 focus:outline-none ml-1"
-                            title="Edit"
-                          >
-                            <Edit className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => handleDeletePoint(point.id)}
-                            className="text-stone-400 hover:text-red-500 focus:outline-none"
-                            title="Delete"
-                          >
-                            <Trash className="w-4 h-4" />
-                          </button>
+                        <div className="flex items-center gap-2">
+                          {point.travelType && (
+                            <div
+                              className="text-stone-400 dark:text-stone-500 bg-stone-100 dark:bg-stone-800 p-1 rounded-full shrink-0"
+                              title={point.travelType}
+                            >
+                              {(() => {
+                                const Icon =
+                                  travelTypes.find(
+                                    (t) => t.id === point.travelType,
+                                  )?.icon || MapPin;
+                                return <Icon className="w-4 h-4" />;
+                              })()}
+                            </div>
+                          )}
+                          <div className="flex items-center gap-1 ml-1 border-l border-stone-200 dark:border-stone-700 pl-2">
+                            <button
+                              onClick={() => handleMovePoint(point.id, "up")}
+                              disabled={index === 0}
+                              className="text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 focus:outline-none disabled:opacity-30"
+                              title="Move up"
+                            >
+                              <ArrowUp className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleMovePoint(point.id, "down")}
+                              disabled={index === points.length - 1}
+                              className="text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 focus:outline-none disabled:opacity-30"
+                              title="Move down"
+                            >
+                              <ArrowDown className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleEditClick(point)}
+                              className="text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 focus:outline-none ml-1"
+                              title="Edit"
+                            >
+                              <Edit className="w-4 h-4" />
+                            </button>
+                            <button
+                              onClick={() => handleDeletePoint(point.id)}
+                              className="text-stone-400 hover:text-red-500 focus:outline-none"
+                              title="Delete"
+                            >
+                              <Trash className="w-4 h-4" />
+                            </button>
+                          </div>
                         </div>
                       </>
                     )}

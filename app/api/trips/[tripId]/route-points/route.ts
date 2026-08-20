@@ -8,7 +8,7 @@ export async function POST(
   try {
     const { tripId } = await params;
     const body = await request.json();
-    const { location, latitude, longitude, date, order } = body;
+    const { location, latitude, longitude, date, order, travelType } = body;
 
     if (!location) {
       return NextResponse.json({ error: "Location is required" }, { status: 400 });
@@ -28,6 +28,7 @@ export async function POST(
         longitude,
         date: date ? new Date(date) : null,
         order: nextOrder,
+        travelType: travelType || null,
         tripId,
       },
     });

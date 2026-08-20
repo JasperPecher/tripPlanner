@@ -1422,6 +1422,7 @@ export const RoutePointScalarFieldEnum = {
   longitude: 'longitude',
   date: 'date',
   order: 'order',
+  travelType: 'travelType',
   tripId: 'tripId',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'

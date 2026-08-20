@@ -187,16 +187,17 @@ model PackingItem {
 }
 
 model RoutePoint {
-  id        String    @id @default(cuid())
-  location  String
-  latitude  Float?
-  longitude Float?
-  date      DateTime?
-  order     Int       @default(0)
-  tripId    String
-  trip      Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
-  createdAt DateTime  @default(now())
-  updatedAt DateTime  @updatedAt
+  id         String    @id @default(cuid())
+  location   String
+  latitude   Float?
+  longitude  Float?
+  date       DateTime?
+  order      Int       @default(0)
+  travelType String?
+  tripId     String
+  trip       Trip      @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   @@map("route_points")
 }

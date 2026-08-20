@@ -8,7 +8,7 @@ export async function PATCH(
   try {
     const { pointId } = await params;
     const body = await request.json();
-    const { location, latitude, longitude, date, order } = body;
+    const { location, latitude, longitude, date, order, travelType } = body;
 
     const updateData: any = {};
     if (location !== undefined) updateData.location = location;
@@ -16,6 +16,7 @@ export async function PATCH(
     if (longitude !== undefined) updateData.longitude = longitude;
     if (date !== undefined) updateData.date = date ? new Date(date) : null;
     if (order !== undefined) updateData.order = order;
+    if (travelType !== undefined) updateData.travelType = travelType;
 
     const routePoint = await prisma.routePoint.update({
       where: { id: pointId },
