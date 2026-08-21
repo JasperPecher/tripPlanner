@@ -90,7 +90,17 @@ export function NotesSection({ tripId, initialNotes }: NotesSectionProps) {
       ) : notes ? (
         //prose prose-sm dark:prose-invert
         <p className=" text-stone-700 dark:text-stone-300 whitespace-pre-wrap break-all">
-          {notes}
+          {notes.split(/((?:https?:\/\/|www\.)[^\s]+)/gi).map((part, i) => {
+            if (part.match(/^(?:https?:\/\/|www\.)/i)) {
+              const href = part.toLowerCase().startsWith('www.') ? `https://${part}` : part;
+              return (
+                <a key={i} href={href} target="_blank" rel="noopener noreferrer" className="text-orange-500 hover:underline">
+                  {part}
+                </a>
+              );
+            }
+            return part;
+          })}
         </p>
       ) : (
         <p className="text-stone-500 dark:text-stone-400 text-sm">
