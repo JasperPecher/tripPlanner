@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import {
   Plus,
@@ -8,7 +8,6 @@ import {
   ArrowRight,
   X,
   Loader2,
-  TrendingUp,
   Wallet,
   ExternalLink,
   CreditCard,
@@ -16,17 +15,11 @@ import {
   CheckCircle,
   Pencil,
   PieChart as PieChartIcon,
+  BadgeEuro,
 } from "lucide-react";
 import { formatCurrency, calculateBalances, simplifyDebts } from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
-import {
-  PieChart,
-  Pie,
-  Cell,
-  ResponsiveContainer,
-  Tooltip,
-  Legend,
-} from "recharts";
+import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 
 type Member = {
   id: string;
@@ -653,7 +646,7 @@ export function ExpenseTracker({
       {debts.length > 0 && (
         <div className="bg-amber-50 dark:bg-amber-900/20 border border-amber-200 dark:border-amber-800 rounded-xl p-5">
           <h3 className="font-semibold text-amber-800 dark:text-amber-400 mb-3 flex items-center gap-2">
-            <TrendingUp className="w-5 h-5" />
+            <BadgeEuro className="w-5 h-5" />
             {t.expenses.whoOwes}
           </h3>
           <div className="space-y-2">
@@ -808,7 +801,14 @@ export function ExpenseTracker({
                           dominantBaseline="central"
                           className="text-[10px] sm:text-xs font-medium dark:text-stone-300"
                         >
-                          {`${t.expenses.categories[name as keyof typeof t.expenses.categories] || name}: ${formatCurrency(value)}`}
+                          <tspan x={x} dy="-0.6em">
+                            {t.expenses.categories[
+                              name as keyof typeof t.expenses.categories
+                            ] || name}
+                          </tspan>
+                          <tspan x={x} dy="1.2em">
+                            {formatCurrency(value)}
+                          </tspan>
                         </text>
                       );
                     }}
