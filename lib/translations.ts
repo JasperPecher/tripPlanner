@@ -276,7 +276,7 @@ export const translations = {
     map: {
       title: "Route Map",
       clickToToggle:
-        "Klicke auf die Karte oder auf das Eingabefeldum einen Stop hinzuzufügen",
+        "Klicke auf die Karte oder auf das Eingabefeld, um einen Stop hinzuzufügen",
       noItems: "Noch keine Stops hinzugefügt.",
       addStop: "Stop hinzufügen",
       locationName: "Ortsname",
