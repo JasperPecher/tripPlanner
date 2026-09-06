@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2, Users, UserPlus, ChevronRight } from "lucide-react";
 import { useLocale } from "@/lib/LocaleContext";
+import { setTripMemberSession } from "@/lib/session";
 
 interface JoinTripFormProps {
   tripId: string;
@@ -19,10 +20,7 @@ export function JoinTripForm({ tripId, existingMembers }: JoinTripFormProps) {
   const [showNewMember, setShowNewMember] = useState(existingMembers.length === 0);
 
   const selectExistingMember = (member: { id: string; name: string }) => {
-    localStorage.setItem(
-      `trip_${tripId}_member`,
-      JSON.stringify({ id: member.id, name: member.name })
-    );
+    setTripMemberSession(tripId, { id: member.id, name: member.name });
     router.push(`/trip/${tripId}`);
   };
 
@@ -54,8 +52,7 @@ export function JoinTripForm({ tripId, existingMembers }: JoinTripFormProps) {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem(`trip_${tripId}_member`,
-          JSON.stringify({ id: data.member.id, name: trimmedName }));
+        setTripMemberSession(tripId, { id: data.member.id, name: trimmedName });
         router.push(`/trip/${tripId}`);
       } else {
         setError(data.error || t.common.error);

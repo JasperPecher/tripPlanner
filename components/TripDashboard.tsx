@@ -22,6 +22,7 @@ import {
 import { formatDate } from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
 import { useTheme } from "@/lib/ThemeContext";
+import { setTripMemberSession, getTripMemberFromLocalStorage } from "@/lib/session";
 import { ExpenseTracker } from "./ExpenseTracker";
 import { PhotoGallery } from "./PhotoGallery";
 import { NotesSection } from "./NotesSection";
@@ -128,6 +129,7 @@ type Trip = {
 interface TripDashboardProps {
   trip: Trip;
   shareUrl: string;
+  initialMember?: Member | null;
 }
 type Tab =
   | "overview"
@@ -142,6 +144,7 @@ type Tab =
 export function TripDashboard({
   trip: initialTrip,
   shareUrl,
+  initialMember,
 }: TripDashboardProps) {
   const [trip, setTrip] = useState(initialTrip);
   
@@ -151,7 +154,7 @@ export function TripDashboard({
 
   const [activeTab, setActiveTab] = useState<Tab>("overview");
   const [copied, setCopied] = useState(false);
-  const [currentMember, setCurrentMember] = useState<Member | null>(null);
+  const [currentMember, setCurrentMember] = useState<Member | null>(initialMember || null);
   const { t, locale, setLocale } = useLocale();
   const { theme, toggleTheme } = useTheme();
   const [isOpenMenu, setIsOpenMenu] = useState(false);
@@ -169,13 +172,20 @@ export function TripDashboard({
   }, [isOpenMenu]);
 
   useEffect(() => {
-    const stored = localStorage.getItem(`trip_${trip.id}_member`);
-    if (stored) {
-      const member = JSON.parse(stored);
-      const found = trip.members.find((m) => m.id === member.id);
-      if (found) setCurrentMember(found);
+    if (initialMember) {
+      setCurrentMember(initialMember);
+      setTripMemberSession(trip.id, { id: initialMember.id, name: initialMember.name });
+      return;
     }
-  }, [trip.id, trip.members]);
+    const stored = getTripMemberFromLocalStorage(trip.id);
+    if (stored) {
+      const found = trip.members.find((m) => m.id === stored.id);
+      if (found) {
+        setCurrentMember(found);
+        setTripMemberSession(trip.id, { id: found.id, name: found.name });
+      }
+    }
+  }, [trip.id, trip.members, initialMember]);
 
   const handleCopyLink = async () => {
     await navigator.clipboard.writeText(shareUrl);
@@ -185,6 +195,7 @@ export function TripDashboard({
 
   const handleMemberUpdated = (updated: Member) => {
     setCurrentMember(updated);
+    setTripMemberSession(trip.id, { id: updated.id, name: updated.name });
     setTrip({
       ...trip,
       members: trip.members.map((m) => (m.id === updated.id ? updated : m)),
@@ -648,6 +659,7 @@ export function TripDashboard({
         {activeTab === "user" && currentMember && (
           <UserSettings
             tripId={trip.id}
+            shareCode={trip.shareCode}
             currentMember={currentMember}
             onMemberUpdated={handleMemberUpdated}
           />

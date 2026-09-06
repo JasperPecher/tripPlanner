@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 import { generateShareCode } from "@/lib/utils";
+import { getTripMemberCookieName, SESSION_MAX_AGE_SECONDS } from "@/lib/session";
 
 export async function POST(request: NextRequest) {
   try {
@@ -12,9 +13,21 @@ export async function POST(request: NextRequest) {
       data: { name, description: description || null, shareCode, startDate: startDate ? new Date(startDate) : null, endDate: endDate ? new Date(endDate) : null, members: { create: { name: adminName } } },
       include: { members: true },
     });
-    return NextResponse.json({ trip, memberId: trip.members[0]?.id });
+    const memberId = trip.members[0]?.id;
+    const response = NextResponse.json({ trip, memberId });
+    if (memberId) {
+      response.cookies.set({
+        name: getTripMemberCookieName(trip.id),
+        value: encodeURIComponent(JSON.stringify({ id: memberId, name: adminName })),
+        maxAge: SESSION_MAX_AGE_SECONDS,
+        path: "/",
+        sameSite: "lax",
+      });
+    }
+    return response;
   } catch (error) {
     console.error("Error creating trip:", error);
     return NextResponse.json({ error: "Failed to create trip" }, { status: 500 });
   }
 }
+

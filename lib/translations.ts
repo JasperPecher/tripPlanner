@@ -243,6 +243,7 @@ export const translations = {
       testPaypal: "PayPal Link testen",
       save: "Profil speichern",
       saved: "Profil gespeichert!",
+      switchUser: "Nutzer wechseln / Abmelden",
     },
     dateVoting: {
       title: "Termine abstimmen",
@@ -522,6 +523,7 @@ export const translations = {
       testPaypal: "Test PayPal Link",
       save: "Save Profile",
       saved: "Profile saved!",
+      switchUser: "Switch User / Sign Out",
     },
     dateVoting: {
       title: "Vote on Dates",

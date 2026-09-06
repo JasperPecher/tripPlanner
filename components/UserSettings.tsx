@@ -1,18 +1,22 @@
 "use client";
 
 import { useState } from "react";
-import { User, CreditCard, Save, Loader2, ExternalLink } from "lucide-react";
+import { useRouter } from "next/navigation";
+import { User, CreditCard, Save, Loader2, ExternalLink, LogOut } from "lucide-react";
 import { useLocale } from "@/lib/LocaleContext";
+import { setTripMemberSession, clearTripMemberSession } from "@/lib/session";
 
 type Member = { id: string; name: string; joinedAt: string; paypalLink?: string | null };
 
 interface UserSettingsProps {
   tripId: string;
+  shareCode?: string;
   currentMember: Member;
   onMemberUpdated: (member: Member) => void;
 }
 
-export function UserSettings({ tripId, currentMember, onMemberUpdated }: UserSettingsProps) {
+export function UserSettings({ tripId, shareCode, currentMember, onMemberUpdated }: UserSettingsProps) {
+  const router = useRouter();
   const { t } = useLocale();
   const [name, setName] = useState(currentMember.name);
   const [paypalLink, setPaypalLink] = useState(currentMember.paypalLink || "");
@@ -46,10 +50,7 @@ export function UserSettings({ tripId, currentMember, onMemberUpdated }: UserSet
       if (response.ok) {
         const updated = data.member;
         onMemberUpdated(updated);
-        localStorage.setItem(
-          `trip_${tripId}_member`,
-          JSON.stringify({ id: updated.id, name: updated.name })
-        );
+        setTripMemberSession(tripId, { id: updated.id, name: updated.name });
         setMessage(t.userSettings.saved);
       } else {
         setMessage(data.error || t.common.error);
@@ -58,6 +59,15 @@ export function UserSettings({ tripId, currentMember, onMemberUpdated }: UserSet
       setMessage(t.common.error);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const handleSwitchUser = () => {
+    clearTripMemberSession(tripId);
+    if (shareCode) {
+      router.push(`/join/${shareCode}`);
+    } else {
+      router.push(`/`);
     }
   };
 
@@ -123,6 +133,24 @@ export function UserSettings({ tripId, currentMember, onMemberUpdated }: UserSet
             <span className="text-sm text-stone-600 dark:text-stone-400">{message}</span>
           )}
         </div>
+      </div>
+
+      <div className="bg-white dark:bg-stone-900 rounded-xl p-6 shadow-sm border border-stone-200 dark:border-stone-800 flex items-center justify-between">
+        <div>
+          <h3 className="text-sm font-semibold text-stone-900 dark:text-white">
+            {t.userSettings.switchUser}
+          </h3>
+          <p className="text-xs text-stone-500 dark:text-stone-400 mt-0.5">
+            {currentMember.name}
+          </p>
+        </div>
+        <button
+          onClick={handleSwitchUser}
+          className="flex items-center gap-1.5 px-3 py-2 text-sm font-medium text-stone-600 dark:text-stone-300 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-950/30 rounded-lg transition"
+        >
+          <LogOut className="w-4 h-4" />
+          {t.userSettings.switchUser}
+        </button>
       </div>
     </div>
   );

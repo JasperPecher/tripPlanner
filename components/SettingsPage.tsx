@@ -12,6 +12,7 @@ import {
   Info,
 } from "lucide-react";
 import { useLocale } from "@/lib/LocaleContext";
+import { clearTripMemberSession } from "@/lib/session";
 
 type Member = {
   id: string;
@@ -161,7 +162,7 @@ export function SettingsPage({
         method: "DELETE",
       });
       if (response.ok) {
-        localStorage.removeItem(`trip_${trip.id}_member`);
+        clearTripMemberSession(trip.id);
         alert(t.settings.tripDeleted);
         router.push("/");
       }

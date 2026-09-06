@@ -4,6 +4,7 @@ import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Loader2 } from "lucide-react";
 import { useLocale } from "@/lib/LocaleContext";
+import { setTripMemberSession } from "@/lib/session";
 
 export function CreateTripForm() {
   const router = useRouter();
@@ -31,10 +32,10 @@ export function CreateTripForm() {
       const data = await response.json();
 
       if (response.ok) {
-        localStorage.setItem(
-          `trip_${data.trip.id}_member`,
-          JSON.stringify({ id: data.memberId, name: formData.adminName }),
-        );
+        setTripMemberSession(data.trip.id, {
+          id: data.memberId,
+          name: formData.adminName,
+        });
         router.push(`/trip/${data.trip.id}`);
       } else {
         alert(data.error || t.common.error);

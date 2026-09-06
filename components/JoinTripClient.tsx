@@ -1,9 +1,12 @@
 "use client";
 
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
 import { JoinTripForm } from "@/components/JoinTripForm";
 import { useLocale } from "@/lib/LocaleContext";
 import { useTheme } from "@/lib/ThemeContext";
 import { Globe, Sun, Moon } from "lucide-react";
+import { getTripMemberFromLocalStorage, setTripMemberSession } from "@/lib/session";
 
 interface JoinTripClientProps {
   tripId: string;
@@ -18,8 +21,19 @@ export function JoinTripClient({
   tripDescription,
   existingMembers,
 }: JoinTripClientProps) {
+  const router = useRouter();
   const { t, locale, setLocale } = useLocale();
   const { theme, toggleTheme } = useTheme();
+  const [savedMember, setSavedMember] = useState<{ id: string; name: string } | null>(null);
+
+  useEffect(() => {
+    const stored = getTripMemberFromLocalStorage(tripId);
+    if (stored && existingMembers.some((m) => m.id === stored.id)) {
+      setTripMemberSession(tripId, stored);
+      setSavedMember(stored);
+      router.push(`/trip/${tripId}`);
+    }
+  }, [tripId, existingMembers, router]);
 
   return (
     <div className="min-h-screen bg-linear-to-br from-orange-500 to-amber-600 dark:from-orange-800 dark:to-stone-900 flex items-center justify-center p-4">
@@ -57,18 +71,21 @@ export function JoinTripClient({
           </p>
         </div>
         <JoinTripForm tripId={tripId} existingMembers={existingMembers} />
-        <div className="mt-6 pt-4 border-t border-stone-200 dark:border-stone-700">
-          <p className="text-xs text-stone-500 dark:text-stone-400 text-center">
-            {t.join.alreadyJoined}{" "}
-            <a
-              href={`/trip/${tripId}`}
-              className="text-orange-600 dark:text-orange-400 hover:underline"
-            >
-              {t.join.goToTrip}
-            </a>
-          </p>
-        </div>
+        {savedMember && (
+          <div className="mt-6 pt-4 border-t border-stone-200 dark:border-stone-700">
+            <p className="text-xs text-stone-500 dark:text-stone-400 text-center">
+              {t.join.alreadyJoined}{" "}
+              <a
+                href={`/trip/${tripId}`}
+                className="text-orange-600 dark:text-orange-400 hover:underline font-medium"
+              >
+                {t.join.goToTrip} ({savedMember.name})
+              </a>
+            </p>
+          </div>
+        )}
       </div>
     </div>
   );
 }
+

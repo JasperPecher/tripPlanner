@@ -1,6 +1,8 @@
 import { prisma } from "@/lib/prisma";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
+import { cookies } from "next/headers";
 import { TripDashboard } from "@/components/TripDashboard";
+import { getTripMemberCookieName, parseTripMemberCookie } from "@/lib/session";
 
 interface PageProps {
   params: Promise<{ tripId: string }>;
@@ -86,7 +88,30 @@ export default async function TripPage({ params }: PageProps) {
 
   if (!trip) notFound();
 
+  // Validate member session from cookies
+  const cookieStore = await cookies();
+  const sessionCookie = cookieStore.get(getTripMemberCookieName(tripId));
+  const memberSession = parseTripMemberCookie(sessionCookie?.value);
+
+  const currentMember = memberSession
+    ? trip.members.find((m) => m.id === memberSession.id)
+    : null;
+
+  if (!currentMember) {
+    redirect(`/join/${trip.shareCode}`);
+  }
+
   const shareUrl = `${process.env.NEXT_PUBLIC_BASE_URL || "http://localhost:3000"}/join/${trip.shareCode}`;
 
-  return <TripDashboard trip={serializeTrip(trip)} shareUrl={shareUrl} />;
+  return (
+    <TripDashboard
+      trip={serializeTrip(trip)}
+      shareUrl={shareUrl}
+      initialMember={{
+        ...currentMember,
+        joinedAt: currentMember.joinedAt.toISOString(),
+      }}
+    />
+  );
 }
+
