@@ -1305,6 +1305,7 @@ export const MemberScalarFieldEnum = {
   name: 'name',
   joinedAt: 'joinedAt',
   paypalLink: 'paypalLink',
+  weroNumber: 'weroNumber',
   tripId: 'tripId'
 } as const
 

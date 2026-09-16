@@ -2,11 +2,24 @@
 
 import { useState } from "react";
 import { useRouter } from "next/navigation";
-import { User, CreditCard, Save, Loader2, ExternalLink, LogOut } from "lucide-react";
+import {
+  User,
+  CreditCard,
+  Save,
+  Loader2,
+  ExternalLink,
+  LogOut,
+} from "lucide-react";
 import { useLocale } from "@/lib/LocaleContext";
 import { setTripMemberSession, clearTripMemberSession } from "@/lib/session";
 
-type Member = { id: string; name: string; joinedAt: string; paypalLink?: string | null };
+type Member = {
+  id: string;
+  name: string;
+  joinedAt: string;
+  paypalLink?: string | null;
+  weroNumber?: string | null;
+};
 
 interface UserSettingsProps {
   tripId: string;
@@ -15,24 +28,35 @@ interface UserSettingsProps {
   onMemberUpdated: (member: Member) => void;
 }
 
-export function UserSettings({ tripId, shareCode, currentMember, onMemberUpdated }: UserSettingsProps) {
+export function UserSettings({
+  tripId,
+  shareCode,
+  currentMember,
+  onMemberUpdated,
+}: UserSettingsProps) {
   const router = useRouter();
   const { t } = useLocale();
   const [name, setName] = useState(currentMember.name);
   const [paypalLink, setPaypalLink] = useState(currentMember.paypalLink || "");
+  const [weroNumber, setWeroNumber] = useState(currentMember.weroNumber || "");
   const [saving, setSaving] = useState(false);
   const [message, setMessage] = useState("");
 
   const inputClasses =
     "w-full px-4 py-2.5 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition";
-  const labelClasses = "block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1";
+  const labelClasses =
+    "block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1";
 
   const handleSave = async () => {
     setSaving(true);
     setMessage("");
 
     let normalizedPaypal = paypalLink.trim();
-    if (normalizedPaypal && !normalizedPaypal.startsWith("http://") && !normalizedPaypal.startsWith("https://")) {
+    if (
+      normalizedPaypal &&
+      !normalizedPaypal.startsWith("http://") &&
+      !normalizedPaypal.startsWith("https://")
+    ) {
       normalizedPaypal = "https://" + normalizedPaypal;
     }
 
@@ -44,6 +68,7 @@ export function UserSettings({ tripId, shareCode, currentMember, onMemberUpdated
           memberId: currentMember.id,
           name: name.trim(),
           paypalLink: normalizedPaypal,
+          weroNumber: weroNumber.trim(),
         }),
       });
       const data = await response.json();
@@ -92,7 +117,26 @@ export function UserSettings({ tripId, shareCode, currentMember, onMemberUpdated
         <div>
           <label className={labelClasses}>
             <span className="flex items-center gap-1.5">
-              <CreditCard className="w-4 h-4" />
+              <CreditCard className="w-4 h-4 text-orange-500" />
+              {t.userSettings.weroNumber}
+            </span>
+          </label>
+          <input
+            type="tel"
+            value={weroNumber}
+            onChange={(e) => setWeroNumber(e.target.value)}
+            className={inputClasses}
+            placeholder="+49 151 12345678"
+          />
+          <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
+            {t.userSettings.weroNumberDesc}
+          </p>
+        </div>
+
+        <div>
+          <label className={labelClasses}>
+            <span className="flex items-center gap-1.5">
+              <CreditCard className="w-4 h-4 text-blue-500" />
               {t.userSettings.paypalLink}
             </span>
           </label>
@@ -126,11 +170,17 @@ export function UserSettings({ tripId, shareCode, currentMember, onMemberUpdated
             disabled={saving}
             className="flex items-center gap-2 px-4 py-2.5 bg-orange-500 text-white rounded-lg hover:bg-orange-600 font-medium disabled:opacity-50"
           >
-            {saving ? <Loader2 className="w-4 h-4 animate-spin" /> : <Save className="w-4 h-4" />}
+            {saving ? (
+              <Loader2 className="w-4 h-4 animate-spin" />
+            ) : (
+              <Save className="w-4 h-4" />
+            )}
             {t.userSettings.save}
           </button>
           {message && (
-            <span className="text-sm text-stone-600 dark:text-stone-400">{message}</span>
+            <span className="text-sm text-stone-600 dark:text-stone-400">
+              {message}
+            </span>
           )}
         </div>
       </div>

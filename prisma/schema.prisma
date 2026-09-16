@@ -46,6 +46,7 @@ model Member {
   name       String
   joinedAt   DateTime @default(now())
   paypalLink String?
+  weroNumber String?
 
   tripId String
   trip   Trip   @relation(fields: [tripId], references: [id], onDelete: Cascade)

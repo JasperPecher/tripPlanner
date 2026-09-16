@@ -26,6 +26,7 @@ type Member = {
   name: string;
   joinedAt: string;
   paypalLink?: string | null;
+  weroNumber?: string | null;
 };
 type Expense = {
   id: string;
@@ -621,6 +622,19 @@ export function ExpenseTracker({
                       </span>
                     </div>
                   </div>
+                  {member.weroNumber && (
+                    <button
+                      onClick={() => {
+                        navigator.clipboard.writeText(member.weroNumber!);
+                        alert(t.common.copied);
+                      }}
+                      className="mt-1 flex items-center gap-1.5 text-xs text-orange-600 dark:text-orange-400 hover:underline "
+                    >
+                      <CreditCard className="w-3 h-3" />
+                      WERO: {member.weroNumber}
+                      <span className="opacity-70 ml-1">{t.common.copy}</span>
+                    </button>
+                  )}
                   {member.paypalLink && (
                     <a
                       href={member.paypalLink}
@@ -671,6 +685,18 @@ export function ExpenseTracker({
                     </span>
                   </div>
                   <div className="mt-1.5 flex items-center gap-3 flex-wrap">
+                    {to?.weroNumber && (
+                      <button
+                        onClick={() => {
+                          navigator.clipboard.writeText(to.weroNumber!);
+                          alert(t.common.copied);
+                        }}
+                        className="flex items-center gap-1.5 text-xs font-medium text-orange-600 dark:text-orange-400 hover:underline bg-orange-50 dark:bg-orange-900/30 px-2 py-1 rounded"
+                      >
+                        <CreditCard className="w-3 h-3" />
+                        {t.expenseSummary.payWero} (Empfohlen)
+                      </button>
+                    )}
                     {to?.paypalLink && (
                       <a
                         href={`${to.paypalLink.replace(/\/$/, "")}/${debt.amount}`}

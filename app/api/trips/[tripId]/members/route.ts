@@ -33,7 +33,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
   try {
     const { tripId } = await params;
     const body = await request.json();
-    const { memberId, name, paypalLink } = body;
+    const { memberId, name, paypalLink, weroNumber } = body;
 
     if (!memberId) {
       return NextResponse.json({ error: "Member ID is required" }, { status: 400 });
@@ -44,7 +44,7 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
       return NextResponse.json({ error: "Member not found" }, { status: 404 });
     }
 
-    const updateData: { name?: string; paypalLink?: string } = {};
+    const updateData: { name?: string; paypalLink?: string; weroNumber?: string } = {};
 
     if (name && name.trim() && name.trim() !== member.name) {
       const existing = await prisma.member.findFirst({
@@ -58,6 +58,10 @@ export async function PATCH(request: NextRequest, { params }: { params: Promise<
 
     if (paypalLink !== undefined) {
       updateData.paypalLink = paypalLink?.trim() || null;
+    }
+
+    if (weroNumber !== undefined) {
+      updateData.weroNumber = weroNumber?.trim() || null;
     }
 
     if (Object.keys(updateData).length === 0) {
