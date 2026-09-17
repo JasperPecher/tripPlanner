@@ -87,7 +87,6 @@ export function SettingsPage({
 
   const [savingTrip, setSavingTrip] = useState(false);
   const [savingStorage, setSavingStorage] = useState(false);
-  const [testingStorage, setTestingStorage] = useState(false);
   const [deleting, setDeleting] = useState(false);
   const [showDeleteConfirm, setShowDeleteConfirm] = useState(false);
 
@@ -133,25 +132,6 @@ export function SettingsPage({
       alert(t.common.error);
     } finally {
       setSavingStorage(false);
-    }
-  };
-
-  const handleTestStorage = async () => {
-    setTestingStorage(true);
-    try {
-      const response = await fetch(`/api/trips/${trip.id}/storage/test`, {
-        method: "POST",
-      });
-      const data = await response.json();
-      if (data.success) {
-        alert("Connection successful! " + (data.message || ""));
-      } else {
-        alert("Connection failed: " + (data.error || "Unknown error"));
-      }
-    } catch (error) {
-      alert(t.common.error);
-    } finally {
-      setTestingStorage(false);
     }
   };
 
@@ -432,20 +412,6 @@ export function SettingsPage({
                 )}
                 {t.settings.saveStorage}
               </button>
-              {trip.storageConfig && (
-                <button
-                  onClick={handleTestStorage}
-                  disabled={testingStorage}
-                  className="flex items-center gap-2 px-4 py-2.5 border border-stone-300 dark:border-stone-600 rounded-lg hover:bg-stone-50 dark:hover:bg-stone-800 font-medium disabled:opacity-50 text-stone-700 dark:text-stone-300"
-                >
-                  {testingStorage ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Server className="w-4 h-4" />
-                  )}
-                  Test Links
-                </button>
-              )}
             </div>
           </div>
         </div>
