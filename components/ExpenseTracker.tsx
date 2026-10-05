@@ -792,15 +792,15 @@ export function ExpenseTracker({
           </div>
 
           {pieChartData.length > 0 ? (
-            <div className="h-64 w-full">
+            <div className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart key={pieChartFilter}>
+                <PieChart key={pieChartFilter} margin={{ top: 20, right: 45, left: 45, bottom: 40 }}>
                   <Pie
                     data={pieChartData}
                     cx="50%"
-                    cy="50%"
-                    innerRadius={50}
-                    outerRadius={90}
+                    cy="42%"
+                    innerRadius={45}
+                    outerRadius={75}
                     paddingAngle={2}
                     dataKey="value"
                     animationDuration={1000}
