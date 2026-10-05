@@ -439,7 +439,7 @@ export function ExpenseTracker({
                     ))}
                   </select>
                 </div>
-                <div>
+                <div className="w-max">
                   <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
                     {t.expenses.category}
                   </label>
@@ -794,7 +794,10 @@ export function ExpenseTracker({
           {pieChartData.length > 0 ? (
             <div className="h-80 w-full">
               <ResponsiveContainer width="100%" height="100%">
-                <PieChart key={pieChartFilter} margin={{ top: 20, right: 45, left: 45, bottom: 40 }}>
+                <PieChart
+                  key={pieChartFilter}
+                  margin={{ top: 20, right: 45, left: 45, bottom: 40 }}
+                >
                   <Pie
                     data={pieChartData}
                     cx="50%"
