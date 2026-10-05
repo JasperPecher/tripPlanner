@@ -1,5 +1,5 @@
-const CACHE_NAME = "trip-planner-v2";
-const STATIC_ASSETS = ["/", "/manifest.json"];
+const CACHE_NAME = "trip-planner-v3";
+const STATIC_ASSETS = ["/", "/manifest.webmanifest"];
 
 self.addEventListener("install", (event) => {
   event.waitUntil(
