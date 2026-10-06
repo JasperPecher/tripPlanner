@@ -16,6 +16,8 @@ import {
   Pencil,
   PieChart as PieChartIcon,
   BadgeEuro,
+  Search,
+  Filter,
 } from "lucide-react";
 import { formatCurrency, calculateBalances, simplifyDebts } from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
@@ -57,6 +59,15 @@ interface ExpenseTrackerProps {
   currentMember: Member | null;
 }
 
+const CHART_COLORS = [
+  "#f97316",
+  "#3b82f6",
+  "#10b981",
+  "#8b5cf6",
+  "#ec4899",
+  "#64748b",
+];
+
 export function ExpenseTracker({
   tripId,
   members,
@@ -74,6 +85,19 @@ export function ExpenseTracker({
   const [pieChartFilter, setPieChartFilter] = useState<string>(
     currentMember?.id || "overall",
   );
+  const [filterPayerId, setFilterPayerId] = useState<string>("all");
+  const [filterSearchQuery, setFilterSearchQuery] = useState<string>("");
+
+  const filteredExpensesList = useMemo(() => {
+    return expenses.filter((expense) => {
+      const matchPayer =
+        filterPayerId === "all" || expense.paidById === filterPayerId;
+      const matchSearch = expense.description
+        .toLowerCase()
+        .includes(filterSearchQuery.toLowerCase());
+      return matchPayer && matchSearch;
+    });
+  }, [expenses, filterPayerId, filterSearchQuery]);
 
   const [formData, setFormData] = useState({
     description: "",
@@ -162,14 +186,86 @@ export function ExpenseTracker({
     return pieChartData.reduce((sum, item) => sum + item.value, 0);
   }, [pieChartData]);
 
-  const COLORS = [
-    "#f97316",
-    "#3b82f6",
-    "#10b981",
-    "#8b5cf6",
-    "#ec4899",
-    "#64748b",
-  ];
+  const chartMarkup = useMemo(() => {
+    if (pieChartData.length === 0) {
+      return (
+        <div className="h-64 w-full flex items-center justify-center text-sm text-stone-500 dark:text-stone-400">
+          Keine Ausgaben
+        </div>
+      );
+    }
+    return (
+      <div className="h-80 w-full">
+        <ResponsiveContainer width="100%" height="100%">
+          <PieChart
+            key={pieChartFilter}
+            margin={{ top: 20, right: 45, left: 45, bottom: 40 }}
+          >
+            <Pie
+              data={pieChartData}
+              cx="50%"
+              cy="42%"
+              innerRadius={45}
+              outerRadius={75}
+              paddingAngle={2}
+              dataKey="value"
+              animationDuration={1000}
+              label={({
+                cx,
+                cy,
+                midAngle,
+                innerRadius,
+                outerRadius,
+                value,
+                name,
+              }: any) => {
+                const RADIAN = Math.PI / 180;
+                const radius = outerRadius + 20;
+                const safeMidAngle = midAngle || 0;
+                const x = cx + radius * Math.cos(-safeMidAngle * RADIAN);
+                const y = cy + radius * Math.sin(-safeMidAngle * RADIAN);
+                return (
+                  <text
+                    x={x}
+                    y={y}
+                    fill="currentColor"
+                    textAnchor={x > cx ? "start" : "end"}
+                    dominantBaseline="central"
+                    className="text-[10px] sm:text-xs font-medium dark:text-stone-300"
+                  >
+                    <tspan x={x} dy="-0.6em">
+                      {t.expenses.categories[
+                        name as keyof typeof t.expenses.categories
+                      ] || name}
+                    </tspan>
+                    <tspan x={x} dy="1.2em">
+                      {formatCurrency(value)}
+                    </tspan>
+                  </text>
+                );
+              }}
+              labelLine={true}
+            >
+              {pieChartData.map((entry, index) => (
+                <Cell
+                  key={`cell-${index}`}
+                  fill={CHART_COLORS[index % CHART_COLORS.length]}
+                />
+              ))}
+            </Pie>
+            <Legend
+              formatter={(value) =>
+                t.expenses.categories[
+                  value as keyof typeof t.expenses.categories
+                ] || value
+              }
+            />
+          </PieChart>
+        </ResponsiveContainer>
+      </div>
+    );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [pieChartData, pieChartFilter]);
 
   const inputClasses =
     "w-full px-4 py-2 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none";
@@ -791,92 +887,50 @@ export function ExpenseTracker({
             </select>
           </div>
 
-          {pieChartData.length > 0 ? (
-            <div className="h-80 w-full">
-              <ResponsiveContainer width="100%" height="100%">
-                <PieChart
-                  key={pieChartFilter}
-                  margin={{ top: 20, right: 45, left: 45, bottom: 40 }}
-                >
-                  <Pie
-                    data={pieChartData}
-                    cx="50%"
-                    cy="42%"
-                    innerRadius={45}
-                    outerRadius={75}
-                    paddingAngle={2}
-                    dataKey="value"
-                    animationDuration={1000}
-                    label={({
-                      cx,
-                      cy,
-                      midAngle,
-                      innerRadius,
-                      outerRadius,
-                      value,
-                      name,
-                    }: any) => {
-                      const RADIAN = Math.PI / 180;
-                      const radius = outerRadius + 20;
-                      const safeMidAngle = midAngle || 0;
-                      const x = cx + radius * Math.cos(-safeMidAngle * RADIAN);
-                      const y = cy + radius * Math.sin(-safeMidAngle * RADIAN);
-                      return (
-                        <text
-                          x={x}
-                          y={y}
-                          fill="currentColor"
-                          textAnchor={x > cx ? "start" : "end"}
-                          dominantBaseline="central"
-                          className="text-[10px] sm:text-xs font-medium dark:text-stone-300"
-                        >
-                          <tspan x={x} dy="-0.6em">
-                            {t.expenses.categories[
-                              name as keyof typeof t.expenses.categories
-                            ] || name}
-                          </tspan>
-                          <tspan x={x} dy="1.2em">
-                            {formatCurrency(value)}
-                          </tspan>
-                        </text>
-                      );
-                    }}
-                    labelLine={true}
-                  >
-                    {pieChartData.map((entry, index) => (
-                      <Cell
-                        key={`cell-${index}`}
-                        fill={COLORS[index % COLORS.length]}
-                      />
-                    ))}
-                  </Pie>
-                  <Legend
-                    formatter={(value) =>
-                      t.expenses.categories[
-                        value as keyof typeof t.expenses.categories
-                      ] || value
-                    }
-                  />
-                </PieChart>
-              </ResponsiveContainer>
-            </div>
-          ) : (
-            <div className="h-64 w-full flex items-center justify-center text-sm text-stone-500 dark:text-stone-400">
-              Keine Ausgaben
-            </div>
-          )}
+          {chartMarkup}
         </div>
       )}
 
       <div className="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800">
-        {expenses.length === 0 ? (
+        <div className="p-4 border-b border-stone-200 dark:border-stone-800 flex flex-col sm:flex-row gap-4 justify-between items-center">
+          <div className="relative w-full sm:w-auto flex-1 max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+            <input
+              type="text"
+              placeholder={t.expenses.search}
+              value={filterSearchQuery}
+              onChange={(e) => setFilterSearchQuery(e.target.value)}
+              className="w-full pl-9 pr-4 py-2 text-sm border border-stone-300 dark:border-stone-600 rounded-lg bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-white outline-none focus:ring-2 focus:ring-orange-500"
+            />
+          </div>
+          <div className="flex items-center gap-2 w-full sm:w-auto">
+            <Filter className="w-4 h-4 text-stone-400" />
+            <select
+              value={filterPayerId}
+              onChange={(e) => setFilterPayerId(e.target.value)}
+              className="w-full sm:w-auto px-3 py-2 text-sm border border-stone-300 dark:border-stone-600 rounded-lg bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-white outline-none focus:ring-2 focus:ring-orange-500"
+            >
+              <option value="all">{t.expenses.allPayers}</option>
+              {members.map((m) => (
+                <option key={m.id} value={m.id}>
+                  {m.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
+        {filteredExpensesList.length === 0 ? (
           <div className="p-8 text-center text-stone-500 dark:text-stone-400">
             <Wallet className="w-12 h-12 mx-auto mb-3 text-stone-300 dark:text-stone-600" />
-            <p>{t.expenses.noExpenses}</p>
+            <p>
+              {expenses.length === 0
+                ? t.expenses.noExpenses
+                : "Keine Ausgaben gefunden"}
+            </p>
           </div>
         ) : (
           <div className="divide-y divide-stone-200 dark:divide-stone-800">
-            {expenses.map((expense) => (
+            {filteredExpensesList.map((expense) => (
               <div
                 key={expense.id}
                 className="p-4 hover:bg-stone-50 dark:hover:bg-stone-800/50 transition"

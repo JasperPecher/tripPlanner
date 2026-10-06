@@ -136,6 +136,8 @@ export const translations = {
       },
       paidBy: "Bezahlt von",
       splitBetween: "Aufgeteilt zwischen",
+      search: "Ausgabe suchen",
+      allPayers: "Alle Zahler",
     },
     photos: {
       title: "Fotos",
@@ -423,6 +425,8 @@ export const translations = {
       },
       paidBy: "Paid by",
       splitBetween: "Split between",
+      search: "Search expense",
+      allPayers: "All payers",
     },
     photos: {
       title: "Photos",
