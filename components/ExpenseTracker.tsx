@@ -878,7 +878,7 @@ export function ExpenseTracker({
               onChange={(e) => setPieChartFilter(e.target.value)}
               className="px-3 py-1.5 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-sm text-stone-900 dark:text-white outline-none focus:ring-2 focus:ring-orange-500 min-w-35"
             >
-              <option value="overall">Gesamt</option>
+              <option value="overall">{t.expenses.total}</option>
               {members.map((m) => (
                 <option key={m.id} value={m.id}>
                   {m.name}
