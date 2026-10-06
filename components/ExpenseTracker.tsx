@@ -866,7 +866,7 @@ export function ExpenseTracker({
                 {t.expenses.breakdown}
               </h3>
               <p className="text-sm text-stone-500 dark:text-stone-400 mt-1">
-                Gesamt:{" "}
+                {t.expenses.total}:{" "}
                 <span className="font-medium text-stone-700 dark:text-stone-300">
                   {formatCurrency(totalExpensesAmount)}
                 </span>

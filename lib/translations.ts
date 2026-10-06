@@ -138,6 +138,7 @@ export const translations = {
       splitBetween: "Aufgeteilt zwischen",
       search: "Ausgabe suchen",
       allPayers: "Alle Zahler",
+      total: "Gesamt",
     },
     photos: {
       title: "Fotos",
@@ -427,6 +428,7 @@ export const translations = {
       splitBetween: "Split between",
       search: "Search expense",
       allPayers: "All payers",
+      total: "Total",
     },
     photos: {
       title: "Photos",
