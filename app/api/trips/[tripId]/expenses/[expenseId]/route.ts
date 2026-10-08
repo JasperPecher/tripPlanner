@@ -19,7 +19,11 @@ export async function PUT(
   try {
     const { expenseId } = await params;
     const json = await request.json();
-    const { description, amount, paidById, splits, category } = json;
+    const { description, amount, paidById, splits, category, date } = json;
+
+    if (!description || !amount || !paidById || !splits || splits.length === 0 || !date) {
+      return NextResponse.json({ error: "All fields are required" }, { status: 400 });
+    }
 
     const updatedExpense = await prisma.$transaction(async (tx) => {
       await tx.splitMember.deleteMany({
@@ -33,6 +37,7 @@ export async function PUT(
           amount,
           paidById,
           category: category || "other",
+          date: new Date(date),
           splits: {
             create: splits.map((s: { amount: number; memberId: string }) => ({
               amount: s.amount,

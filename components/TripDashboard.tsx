@@ -63,6 +63,7 @@ type Expense = {
   currency: string;
   category: string;
   createdAt: string;
+  date: string;
   paidById: string;
   paidBy: Member;
   splits: { id: string; amount: number; memberId: string; member: Member }[];
@@ -87,11 +88,13 @@ type Photo = {
   caption: string | null;
   uploadedBy: string | null;
   createdAt: string;
+  date: string;
 };
 type Payment = {
   id: string;
   amount: number;
   createdAt: string;
+  date: string;
   fromId: string;
   toId: string;
   from: Member;
@@ -115,6 +118,7 @@ type Trip = {
   endDate: string | null;
   notes: string;
   createdAt: string;
+  date: string;
   updatedAt: string;
   members: Member[];
   expenses: Expense[];

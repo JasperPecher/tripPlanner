@@ -63,6 +63,7 @@ export async function POST(
           amount: parsedPrice,
           currency: currency || "EUR",
           category,
+          date: new Date(),
           tripId,
           paidById: body.paidById,
           splits: {

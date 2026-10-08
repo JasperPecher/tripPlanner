@@ -37,6 +37,7 @@ type Expense = {
   currency: string;
   category: string;
   createdAt: string;
+  date: string;
   paidById: string;
   paidBy: Member;
   splits: { id: string; amount: number; memberId: string; member: Member }[];
@@ -101,6 +102,7 @@ export function ExpenseTracker({
 
   const [formData, setFormData] = useState({
     description: "",
+    date: new Date().toISOString().split("T")[0],
     amount: "",
     category: "other",
     paidById: currentMember?.id || members[0]?.id || "",
@@ -313,6 +315,7 @@ export function ExpenseTracker({
     );
     setFormData({
       description: expense.description,
+      date: new Date(expense.date).toISOString().split("T")[0],
       amount: expense.amount.toString(),
       category: expense.category || "other",
       paidById: expense.paidById,
@@ -350,6 +353,7 @@ export function ExpenseTracker({
     setEditingExpenseId(null);
     setFormData({
       description: "",
+      date: new Date().toISOString().split("T")[0],
       amount: "",
       category: "other",
       paidById: currentMember?.id || members[0]?.id || "",
@@ -379,6 +383,12 @@ export function ExpenseTracker({
       const amount = parseFloat(formData.amount);
       if (isNaN(amount) || amount <= 0) {
         alert(t.common.error);
+        setLoading(false);
+        return;
+      }
+      if (!formData.date) {
+        alert(t.common.error);
+        setLoading(false);
         return;
       }
       const selectedMembers = members.filter((m) => formData.splits[m.id]);
@@ -434,6 +444,7 @@ export function ExpenseTracker({
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
           description: formData.description,
+          date: formData.date,
           amount,
           category: formData.category,
           paidById: formData.paidById,
@@ -563,20 +574,38 @@ export function ExpenseTracker({
               </button>
             </div>
             <form onSubmit={handleSubmitExpense} className="space-y-4">
-              <div>
-                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
-                  {t.expenses.form.description}
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                  className={inputClasses}
-                  placeholder={t.expenses.form.descriptionPlaceholder}
-                />
+              <div className="grid grid-cols-2 gap-4">
+                <div className="col-span-2 sm:col-span-1">
+                  <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
+                    {t.expenses.form.description}
+                  </label>
+                  <input
+                    type="text"
+                    required
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
+                    className={inputClasses}
+                    placeholder={t.expenses.form.descriptionPlaceholder}
+                  />
+                </div>
+                <div className="col-span-2 sm:col-span-1">
+                  <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
+                    {t.expenses.form.date || "Datum"}
+                  </label>
+                  <input
+                    type="date"
+                    required
+                    value={formData.date}
+                    onChange={(e) => {
+                      if (e.target.value) {
+                        setFormData({ ...formData, date: e.target.value });
+                      }
+                    }}
+                    className={`${inputClasses} [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:appearance-none`}
+                  />
+                </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div>
@@ -807,7 +836,7 @@ export function ExpenseTracker({
               </div>
               <button
                 type="submit"
-                disabled={loading || isCustomSplitInvalid}
+                disabled={loading || isCustomSplitInvalid || !formData.date}
                 className="w-full bg-orange-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-orange-600 disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {loading ? (
@@ -1113,7 +1142,7 @@ export function ExpenseTracker({
                       className="text-xs text-stone-400 dark:text-stone-500 mt-1"
                       suppressHydrationWarning
                     >
-                      {new Date(expense.createdAt).toLocaleDateString()}
+                      {new Date(expense.date).toLocaleDateString()}
                     </p>
                   </div>
                   <div className="flex items-center gap-1">

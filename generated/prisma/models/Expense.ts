@@ -40,6 +40,7 @@ export type ExpenseMinAggregateOutputType = {
   amount: number | null
   currency: string | null
   category: string | null
+  date: Date | null
   createdAt: Date | null
   tripId: string | null
   paidById: string | null
@@ -51,6 +52,7 @@ export type ExpenseMaxAggregateOutputType = {
   amount: number | null
   currency: string | null
   category: string | null
+  date: Date | null
   createdAt: Date | null
   tripId: string | null
   paidById: string | null
@@ -62,6 +64,7 @@ export type ExpenseCountAggregateOutputType = {
   amount: number
   currency: number
   category: number
+  date: number
   createdAt: number
   tripId: number
   paidById: number
@@ -83,6 +86,7 @@ export type ExpenseMinAggregateInputType = {
   amount?: true
   currency?: true
   category?: true
+  date?: true
   createdAt?: true
   tripId?: true
   paidById?: true
@@ -94,6 +98,7 @@ export type ExpenseMaxAggregateInputType = {
   amount?: true
   currency?: true
   category?: true
+  date?: true
   createdAt?: true
   tripId?: true
   paidById?: true
@@ -105,6 +110,7 @@ export type ExpenseCountAggregateInputType = {
   amount?: true
   currency?: true
   category?: true
+  date?: true
   createdAt?: true
   tripId?: true
   paidById?: true
@@ -203,6 +209,7 @@ export type ExpenseGroupByOutputType = {
   amount: number
   currency: string
   category: string
+  date: Date
   createdAt: Date
   tripId: string
   paidById: string
@@ -237,6 +244,7 @@ export type ExpenseWhereInput = {
   amount?: Prisma.FloatFilter<"Expense"> | number
   currency?: Prisma.StringFilter<"Expense"> | string
   category?: Prisma.StringFilter<"Expense"> | string
+  date?: Prisma.DateTimeFilter<"Expense"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   tripId?: Prisma.StringFilter<"Expense"> | string
   paidById?: Prisma.StringFilter<"Expense"> | string
@@ -251,6 +259,7 @@ export type ExpenseOrderByWithRelationInput = {
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  date?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   paidById?: Prisma.SortOrder
@@ -268,6 +277,7 @@ export type ExpenseWhereUniqueInput = Prisma.AtLeast<{
   amount?: Prisma.FloatFilter<"Expense"> | number
   currency?: Prisma.StringFilter<"Expense"> | string
   category?: Prisma.StringFilter<"Expense"> | string
+  date?: Prisma.DateTimeFilter<"Expense"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   tripId?: Prisma.StringFilter<"Expense"> | string
   paidById?: Prisma.StringFilter<"Expense"> | string
@@ -282,6 +292,7 @@ export type ExpenseOrderByWithAggregationInput = {
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  date?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   paidById?: Prisma.SortOrder
@@ -301,6 +312,7 @@ export type ExpenseScalarWhereWithAggregatesInput = {
   amount?: Prisma.FloatWithAggregatesFilter<"Expense"> | number
   currency?: Prisma.StringWithAggregatesFilter<"Expense"> | string
   category?: Prisma.StringWithAggregatesFilter<"Expense"> | string
+  date?: Prisma.DateTimeWithAggregatesFilter<"Expense"> | Date | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Expense"> | Date | string
   tripId?: Prisma.StringWithAggregatesFilter<"Expense"> | string
   paidById?: Prisma.StringWithAggregatesFilter<"Expense"> | string
@@ -312,6 +324,7 @@ export type ExpenseCreateInput = {
   amount: number
   currency?: string
   category?: string
+  date: Date | string
   createdAt?: Date | string
   trip: Prisma.TripCreateNestedOneWithoutExpensesInput
   paidBy: Prisma.MemberCreateNestedOneWithoutPaidExpensesInput
@@ -324,6 +337,7 @@ export type ExpenseUncheckedCreateInput = {
   amount: number
   currency?: string
   category?: string
+  date: Date | string
   createdAt?: Date | string
   tripId: string
   paidById: string
@@ -336,6 +350,7 @@ export type ExpenseUpdateInput = {
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trip?: Prisma.TripUpdateOneRequiredWithoutExpensesNestedInput
   paidBy?: Prisma.MemberUpdateOneRequiredWithoutPaidExpensesNestedInput
@@ -348,6 +363,7 @@ export type ExpenseUncheckedUpdateInput = {
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
   paidById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -360,6 +376,7 @@ export type ExpenseCreateManyInput = {
   amount: number
   currency?: string
   category?: string
+  date: Date | string
   createdAt?: Date | string
   tripId: string
   paidById: string
@@ -371,6 +388,7 @@ export type ExpenseUpdateManyMutationInput = {
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
 
@@ -380,6 +398,7 @@ export type ExpenseUncheckedUpdateManyInput = {
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
   paidById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -401,6 +420,7 @@ export type ExpenseCountOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  date?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   paidById?: Prisma.SortOrder
@@ -416,6 +436,7 @@ export type ExpenseMaxOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  date?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   paidById?: Prisma.SortOrder
@@ -427,6 +448,7 @@ export type ExpenseMinOrderByAggregateInput = {
   amount?: Prisma.SortOrder
   currency?: Prisma.SortOrder
   category?: Prisma.SortOrder
+  date?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
   paidById?: Prisma.SortOrder
@@ -553,6 +575,7 @@ export type ExpenseCreateWithoutTripInput = {
   amount: number
   currency?: string
   category?: string
+  date: Date | string
   createdAt?: Date | string
   paidBy: Prisma.MemberCreateNestedOneWithoutPaidExpensesInput
   splits?: Prisma.SplitMemberCreateNestedManyWithoutExpenseInput
@@ -564,6 +587,7 @@ export type ExpenseUncheckedCreateWithoutTripInput = {
   amount: number
   currency?: string
   category?: string
+  date: Date | string
   createdAt?: Date | string
   paidById: string
   splits?: Prisma.SplitMemberUncheckedCreateNestedManyWithoutExpenseInput
@@ -604,6 +628,7 @@ export type ExpenseScalarWhereInput = {
   amount?: Prisma.FloatFilter<"Expense"> | number
   currency?: Prisma.StringFilter<"Expense"> | string
   category?: Prisma.StringFilter<"Expense"> | string
+  date?: Prisma.DateTimeFilter<"Expense"> | Date | string
   createdAt?: Prisma.DateTimeFilter<"Expense"> | Date | string
   tripId?: Prisma.StringFilter<"Expense"> | string
   paidById?: Prisma.StringFilter<"Expense"> | string
@@ -615,6 +640,7 @@ export type ExpenseCreateWithoutPaidByInput = {
   amount: number
   currency?: string
   category?: string
+  date: Date | string
   createdAt?: Date | string
   trip: Prisma.TripCreateNestedOneWithoutExpensesInput
   splits?: Prisma.SplitMemberCreateNestedManyWithoutExpenseInput
@@ -626,6 +652,7 @@ export type ExpenseUncheckedCreateWithoutPaidByInput = {
   amount: number
   currency?: string
   category?: string
+  date: Date | string
   createdAt?: Date | string
   tripId: string
   splits?: Prisma.SplitMemberUncheckedCreateNestedManyWithoutExpenseInput
@@ -663,6 +690,7 @@ export type ExpenseCreateWithoutSplitsInput = {
   amount: number
   currency?: string
   category?: string
+  date: Date | string
   createdAt?: Date | string
   trip: Prisma.TripCreateNestedOneWithoutExpensesInput
   paidBy: Prisma.MemberCreateNestedOneWithoutPaidExpensesInput
@@ -674,6 +702,7 @@ export type ExpenseUncheckedCreateWithoutSplitsInput = {
   amount: number
   currency?: string
   category?: string
+  date: Date | string
   createdAt?: Date | string
   tripId: string
   paidById: string
@@ -701,6 +730,7 @@ export type ExpenseUpdateWithoutSplitsInput = {
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trip?: Prisma.TripUpdateOneRequiredWithoutExpensesNestedInput
   paidBy?: Prisma.MemberUpdateOneRequiredWithoutPaidExpensesNestedInput
@@ -712,6 +742,7 @@ export type ExpenseUncheckedUpdateWithoutSplitsInput = {
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
   paidById?: Prisma.StringFieldUpdateOperationsInput | string
@@ -723,6 +754,7 @@ export type ExpenseCreateManyTripInput = {
   amount: number
   currency?: string
   category?: string
+  date: Date | string
   createdAt?: Date | string
   paidById: string
 }
@@ -733,6 +765,7 @@ export type ExpenseUpdateWithoutTripInput = {
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paidBy?: Prisma.MemberUpdateOneRequiredWithoutPaidExpensesNestedInput
   splits?: Prisma.SplitMemberUpdateManyWithoutExpenseNestedInput
@@ -744,6 +777,7 @@ export type ExpenseUncheckedUpdateWithoutTripInput = {
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paidById?: Prisma.StringFieldUpdateOperationsInput | string
   splits?: Prisma.SplitMemberUncheckedUpdateManyWithoutExpenseNestedInput
@@ -755,6 +789,7 @@ export type ExpenseUncheckedUpdateManyWithoutTripInput = {
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paidById?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -765,6 +800,7 @@ export type ExpenseCreateManyPaidByInput = {
   amount: number
   currency?: string
   category?: string
+  date: Date | string
   createdAt?: Date | string
   tripId: string
 }
@@ -775,6 +811,7 @@ export type ExpenseUpdateWithoutPaidByInput = {
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trip?: Prisma.TripUpdateOneRequiredWithoutExpensesNestedInput
   splits?: Prisma.SplitMemberUpdateManyWithoutExpenseNestedInput
@@ -786,6 +823,7 @@ export type ExpenseUncheckedUpdateWithoutPaidByInput = {
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
   splits?: Prisma.SplitMemberUncheckedUpdateManyWithoutExpenseNestedInput
@@ -797,6 +835,7 @@ export type ExpenseUncheckedUpdateManyWithoutPaidByInput = {
   amount?: Prisma.FloatFieldUpdateOperationsInput | number
   currency?: Prisma.StringFieldUpdateOperationsInput | string
   category?: Prisma.StringFieldUpdateOperationsInput | string
+  date?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
 }
@@ -838,6 +877,7 @@ export type ExpenseSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   amount?: boolean
   currency?: boolean
   category?: boolean
+  date?: boolean
   createdAt?: boolean
   tripId?: boolean
   paidById?: boolean
@@ -853,6 +893,7 @@ export type ExpenseSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   amount?: boolean
   currency?: boolean
   category?: boolean
+  date?: boolean
   createdAt?: boolean
   tripId?: boolean
   paidById?: boolean
@@ -866,6 +907,7 @@ export type ExpenseSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   amount?: boolean
   currency?: boolean
   category?: boolean
+  date?: boolean
   createdAt?: boolean
   tripId?: boolean
   paidById?: boolean
@@ -879,12 +921,13 @@ export type ExpenseSelectScalar = {
   amount?: boolean
   currency?: boolean
   category?: boolean
+  date?: boolean
   createdAt?: boolean
   tripId?: boolean
   paidById?: boolean
 }
 
-export type ExpenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "description" | "amount" | "currency" | "category" | "createdAt" | "tripId" | "paidById", ExtArgs["result"]["expense"]>
+export type ExpenseOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "description" | "amount" | "currency" | "category" | "date" | "createdAt" | "tripId" | "paidById", ExtArgs["result"]["expense"]>
 export type ExpenseInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
   paidBy?: boolean | Prisma.MemberDefaultArgs<ExtArgs>
@@ -913,6 +956,7 @@ export type $ExpensePayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     amount: number
     currency: string
     category: string
+    date: Date
     createdAt: Date
     tripId: string
     paidById: string
@@ -1347,6 +1391,7 @@ export interface ExpenseFieldRefs {
   readonly amount: Prisma.FieldRef<"Expense", 'Float'>
   readonly currency: Prisma.FieldRef<"Expense", 'String'>
   readonly category: Prisma.FieldRef<"Expense", 'String'>
+  readonly date: Prisma.FieldRef<"Expense", 'DateTime'>
   readonly createdAt: Prisma.FieldRef<"Expense", 'DateTime'>
   readonly tripId: Prisma.FieldRef<"Expense", 'String'>
   readonly paidById: Prisma.FieldRef<"Expense", 'String'>
