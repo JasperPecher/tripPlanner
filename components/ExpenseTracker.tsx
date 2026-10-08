@@ -104,7 +104,7 @@ export function ExpenseTracker({
     amount: "",
     category: "other",
     paidById: currentMember?.id || members[0]?.id || "",
-    splitType: "equal" as "equal" | "custom",
+    splitType: "equal" as "equal" | "custom" | "percentage",
     splits: members.reduce(
       (acc, m) => ({ ...acc, [m.id]: true }),
       {} as Record<string, boolean>,
@@ -112,6 +112,10 @@ export function ExpenseTracker({
     customAmounts: members.reduce(
       (acc, m) => ({ ...acc, [m.id]: "" }),
       {} as Record<string, string>,
+    ),
+    customPercentages: members.reduce(
+      (acc, m) => ({ ...acc, [m.id]: members.length ? 100 / members.length : 0 }),
+      {} as Record<string, number>,
     ),
   });
 
@@ -270,6 +274,35 @@ export function ExpenseTracker({
   const inputClasses =
     "w-full px-4 py-2 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none";
 
+  const handlePercentageChange = (memberId: string, newValue: number) => {
+    // Only consider selected members
+    const selectedMembers = members.filter((m) => formData.splits[m.id]);
+    const memberIndex = selectedMembers.findIndex((m) => m.id === memberId);
+    if (memberIndex === -1) return;
+
+    const newPercentages = { ...formData.customPercentages };
+
+    let sumBefore = 0;
+    for (let i = 0; i < memberIndex; i++) {
+      sumBefore += newPercentages[selectedMembers[i].id];
+    }
+
+    const clampedValue = Math.min(newValue, 100 - sumBefore);
+    newPercentages[memberId] = clampedValue;
+
+    const remaining = 100 - sumBefore - clampedValue;
+    const remainingMembers = selectedMembers.length - 1 - memberIndex;
+
+    if (remainingMembers > 0) {
+      const splitPercentage = remaining / remainingMembers;
+      for (let i = memberIndex + 1; i < selectedMembers.length; i++) {
+        newPercentages[selectedMembers[i].id] = splitPercentage;
+      }
+    }
+
+    setFormData({ ...formData, customPercentages: newPercentages });
+  };
+
   const openEditForm = (expense: Expense) => {
     setEditingExpenseId(expense.id);
     const isEqual = expense.splits.every(
@@ -295,6 +328,13 @@ export function ExpenseTracker({
         },
         {} as Record<string, string>,
       ),
+      customPercentages: members.reduce(
+        (acc, m) => {
+          const split = expense.splits.find((s) => s.memberId === m.id);
+          return { ...acc, [m.id]: split ? (split.amount / expense.amount) * 100 : 0 };
+        },
+        {} as Record<string, number>,
+      ),
     });
     setShowForm(true);
   };
@@ -315,6 +355,10 @@ export function ExpenseTracker({
       customAmounts: members.reduce(
         (acc, m) => ({ ...acc, [m.id]: "" }),
         {} as Record<string, string>,
+      ),
+      customPercentages: members.reduce(
+        (acc, m) => ({ ...acc, [m.id]: members.length ? 100 / members.length : 0 }),
+        {} as Record<string, number>,
       ),
     });
   };
@@ -340,6 +384,19 @@ export function ExpenseTracker({
           memberId: m.id,
           amount: Math.round(splitAmount * 100) / 100,
         }));
+      } else if (formData.splitType === "percentage") {
+        splits = selectedMembers.map((m) => ({
+          memberId: m.id,
+          amount: Math.round(((formData.customPercentages[m.id] || 0) / 100) * amount * 100) / 100,
+        }));
+        
+        const totalCustom = splits.reduce((sum, s) => sum + s.amount, 0);
+        if (Math.abs(totalCustom - amount) > 0.02) {
+          // Fix rounding issues by adjusting the first member's split
+          if (splits.length > 0) {
+            splits[0].amount = Math.round((splits[0].amount + (amount - totalCustom)) * 100) / 100;
+          }
+        }
       } else {
         splits = selectedMembers.map((m) => ({
           memberId: m.id,
@@ -596,6 +653,20 @@ export function ExpenseTracker({
                       {t.expenses.form.customAmounts}
                     </span>
                   </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="splitType"
+                      checked={formData.splitType === "percentage"}
+                      onChange={() =>
+                        setFormData({ ...formData, splitType: "percentage" })
+                      }
+                      className="text-orange-500 focus:ring-orange-500"
+                    />
+                    <span className="text-sm dark:text-stone-300">
+                      {t.expenses.form.percentageSplit || "Percentage"}
+                    </span>
+                  </label>
                 </div>
               </div>
               <div>
@@ -611,15 +682,25 @@ export function ExpenseTracker({
                       <input
                         type="checkbox"
                         checked={formData.splits[member.id]}
-                        onChange={(e) =>
+                        onChange={(e) => {
+                          const newSplits = {
+                            ...formData.splits,
+                            [member.id]: e.target.checked,
+                          };
+                          const selected = members.filter((m) => newSplits[m.id]);
+                          const newPercentages = { ...formData.customPercentages };
+                          if (selected.length > 0) {
+                            const pct = 100 / selected.length;
+                            selected.forEach(m => {
+                              newPercentages[m.id] = pct;
+                            });
+                          }
                           setFormData({
                             ...formData,
-                            splits: {
-                              ...formData.splits,
-                              [member.id]: e.target.checked,
-                            },
-                          })
-                        }
+                            splits: newSplits,
+                            customPercentages: newPercentages,
+                          });
+                        }}
                         className="text-orange-500 focus:ring-orange-500 rounded"
                       />
                       <span className="flex-1 text-sm font-medium dark:text-white">
@@ -655,6 +736,25 @@ export function ExpenseTracker({
                                   .length,
                             )}
                           </span>
+                        )}
+                      {formData.splitType === "percentage" &&
+                        formData.splits[member.id] && (
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="range"
+                              min="0"
+                              max="100"
+                              step="1"
+                              value={formData.customPercentages[member.id] || 0}
+                              onChange={(e) =>
+                                handlePercentageChange(member.id, parseFloat(e.target.value))
+                              }
+                              className="w-24 accent-orange-500"
+                            />
+                            <span className="text-sm w-12 text-right dark:text-stone-300">
+                              {Math.round(formData.customPercentages[member.id] || 0)}%
+                            </span>
+                          </div>
                         )}
                     </div>
                   ))}
