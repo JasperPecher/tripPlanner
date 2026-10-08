@@ -521,6 +521,14 @@ export function ExpenseTracker({
     }
   };
 
+  const parsedAmount = parseFloat(formData.amount) || 0;
+  const customTotal = members
+    .filter((m) => formData.splits[m.id])
+    .reduce((sum, m) => sum + (parseFloat(formData.customAmounts[m.id]) || 0), 0);
+  const customSplitDiff = parsedAmount - customTotal;
+  const isCustomSplitInvalid =
+    formData.splitType === "custom" && Math.abs(customSplitDiff) > 0.01;
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -783,10 +791,23 @@ export function ExpenseTracker({
                     </div>
                   ))}
                 </div>
+                {isCustomSplitInvalid && (
+                  <div
+                    className={`text-sm mt-3 font-medium ${
+                      customSplitDiff > 0
+                        ? "text-amber-600 dark:text-amber-400"
+                        : "text-red-600 dark:text-red-400"
+                    }`}
+                  >
+                    {customSplitDiff > 0
+                      ? `${t.expenses.form.missingAmount || "Missing:"} ${formatCurrency(customSplitDiff)}`
+                      : `${t.expenses.form.overAmount || "Over by:"} ${formatCurrency(Math.abs(customSplitDiff))}`}
+                  </div>
+                )}
               </div>
               <button
                 type="submit"
-                disabled={loading}
+                disabled={loading || isCustomSplitInvalid}
                 className="w-full bg-orange-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-orange-600 disabled:opacity-50 flex items-center justify-center gap-2"
               >
                 {loading ? (
