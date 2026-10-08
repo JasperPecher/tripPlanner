@@ -15,6 +15,7 @@ export const translations = {
       back: "Zurück",
       copied: "Kopiert!",
       notSet: "Nicht festgelegt",
+      setDefaultView: "Als Standardansicht speichern",
     },
     home: {
       title: "Reiseplaner",
@@ -307,6 +308,7 @@ export const translations = {
       back: "Back",
       copied: "Copied!",
       notSet: "Not set",
+      setDefaultView: "Set Default View",
     },
     home: {
       title: "Trip Planner",

@@ -23,7 +23,10 @@ import {
 import { formatDate } from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
 import { useTheme } from "@/lib/ThemeContext";
-import { setTripMemberSession, getTripMemberFromLocalStorage } from "@/lib/session";
+import {
+  setTripMemberSession,
+  getTripMemberFromLocalStorage,
+} from "@/lib/session";
 import { ExpenseTracker } from "./ExpenseTracker";
 import { PhotoGallery } from "./PhotoGallery";
 import { NotesSection } from "./NotesSection";
@@ -149,16 +152,18 @@ export function TripDashboard({
   initialMember,
 }: TripDashboardProps) {
   const [trip, setTrip] = useState(initialTrip);
-  
+
   useEffect(() => {
     setTrip(initialTrip);
   }, [initialTrip]);
 
   const [activeTab, setActiveTab] = useState<Tab>(
-    (initialMember?.defaultTab as Tab) || "overview"
+    (initialMember?.defaultTab as Tab) || "overview",
   );
   const [copied, setCopied] = useState(false);
-  const [currentMember, setCurrentMember] = useState<Member | null>(initialMember || null);
+  const [currentMember, setCurrentMember] = useState<Member | null>(
+    initialMember || null,
+  );
   const { t, locale, setLocale } = useLocale();
   const { theme, toggleTheme } = useTheme();
   const [isOpenMenu, setIsOpenMenu] = useState(false);
@@ -178,7 +183,10 @@ export function TripDashboard({
   useEffect(() => {
     if (initialMember) {
       setCurrentMember(initialMember);
-      setTripMemberSession(trip.id, { id: initialMember.id, name: initialMember.name });
+      setTripMemberSession(trip.id, {
+        id: initialMember.id,
+        name: initialMember.name,
+      });
       return;
     }
     const stored = getTripMemberFromLocalStorage(trip.id);
@@ -319,12 +327,51 @@ export function TripDashboard({
               </button>
               <button
                 onClick={toggleTheme}
-                className="p-1.5 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition"
+                className="flex items-center gap-1.5 px-1 py-1.5 sm:px-3 sm:py-2 text-stone-500 hover:text-stone-700 dark:text-stone-400 dark:hover:text-stone-200 rounded-lg hover:bg-stone-100 dark:hover:bg-stone-800 transition"
               >
                 {theme === "dark" ? (
                   <Moon className="w-5 h-5" />
                 ) : (
                   <Sun className="w-5 h-5" />
+                )}
+              </button>
+
+              <button
+                onClick={handleSetDefaultTab}
+                disabled={isSettingDefaultTab}
+                className={`flex items-center gap-1.5 px-1 py-1.5 sm:px-3 sm:py-2 rounded-lg transition text-sm font-medium ${
+                  currentMember?.defaultTab === activeTab
+                    ? " text-yellow-700  dark:text-yellow-400"
+                    : " text-stone-600 hover:bg-stone-200  dark:text-stone-300 dark:hover:bg-stone-700"
+                }`}
+                title="Set current view as default"
+              >
+                <Star
+                  className={`w-4 h-4 ${currentMember?.defaultTab === activeTab ? "fill-current" : ""}`}
+                />
+                {/* <span className="hidden sm:inline" suppressHydrationWarning>
+                  {currentMember?.defaultTab === activeTab
+                    ? ""
+                    : t.common.setDefaultView}
+                </span> */}
+              </button>
+
+              <button
+                onClick={handleCopyLink}
+                className="flex items-center gap-1.5 px-3 py-1.5 sm:px-3 sm:py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition text-sm font-medium"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-4 h-4" />
+                    <span className="hidden sm:inline">{t.common.copied}</span>
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="w-4 h-4" />
+                    {/* <span className="hidden sm:inline">
+                      {t.dashboard.shareLink}
+                    </span> */}
+                  </>
                 )}
               </button>
               <div className="text-right hidden sm:block">
@@ -340,41 +387,6 @@ export function TripDashboard({
                   </span>
                 )}
               </div>
-              <button
-                onClick={handleSetDefaultTab}
-                disabled={isSettingDefaultTab}
-                className={`flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg transition text-sm font-medium ${
-                  currentMember?.defaultTab === activeTab
-                    ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400"
-                    : "bg-stone-100 text-stone-600 hover:bg-stone-200 dark:bg-stone-800 dark:text-stone-300 dark:hover:bg-stone-700"
-                }`}
-                title="Set current view as default"
-              >
-                <Star
-                  className={`w-4 h-4 ${currentMember?.defaultTab === activeTab ? "fill-current" : ""}`}
-                />
-                <span className="hidden sm:inline" suppressHydrationWarning>
-                  {currentMember?.defaultTab === activeTab ? "Default View" : "Set Default"}
-                </span>
-              </button>
-              <button
-                onClick={handleCopyLink}
-                className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition text-sm font-medium"
-              >
-                {copied ? (
-                  <>
-                    <Check className="w-4 h-4" />
-                    <span className="hidden sm:inline">{t.common.copied}</span>
-                  </>
-                ) : (
-                  <>
-                    <Share2 className="w-4 h-4" />
-                    <span className="hidden sm:inline">
-                      {t.dashboard.shareLink}
-                    </span>
-                  </>
-                )}
-              </button>
             </div>
           </div>
           <div className="flex gap-0.5 sm:gap-1 mt-3 -mb-px overflow-x-auto scrollbar-hide">
@@ -416,18 +428,7 @@ export function TripDashboard({
                 className={`w-4 h-4 ${currentMember?.defaultTab === activeTab ? "fill-current" : ""}`}
               />
             </button>
-            {/* Quick Share Link */}
-            <button
-              onClick={handleCopyLink}
-              className="w-10 h-10 flex items-center justify-center bg-stone-50 dark:bg-stone-800/50 border border-stone-200/50 dark:border-stone-700/50 text-stone-600 dark:text-stone-300 rounded-xl hover:bg-stone-100 dark:hover:bg-stone-800 transition"
-              aria-label="Share trip"
-            >
-              {copied ? (
-                <Check className="w-4 h-4 text-green-500" />
-              ) : (
-                <Share2 className="w-4 h-4" />
-              )}
-            </button>
+            {/* Quick Share Link moved to sidebar */}
 
             {/* Compact Hamburger Button */}
             <button
@@ -543,6 +544,22 @@ export function TripDashboard({
 
             {/* Bottom Utilities Footer */}
             <div className="pt-4 border-t border-stone-100 dark:border-stone-800 space-y-4 shrink-0">
+              <button
+                onClick={handleCopyLink}
+                className="w-full flex items-center justify-center gap-2 py-2.5 px-3 bg-stone-50 dark:bg-stone-800/40 hover:bg-stone-100 dark:hover:bg-stone-800 text-stone-600 dark:text-stone-300 rounded-xl text-sm font-semibold border border-stone-200/20 dark:border-stone-700/20 transition"
+              >
+                {copied ? (
+                  <>
+                    <Check className="w-4 h-4 text-green-500" />
+                    <span>{t.common.copied}</span>
+                  </>
+                ) : (
+                  <>
+                    <Share2 className="w-4 h-4" />
+                    <span>{t.dashboard.shareLink}</span>
+                  </>
+                )}
+              </button>
               <div className="grid grid-cols-2 gap-2">
                 {/* Locale Toggle */}
                 <button
@@ -601,7 +618,10 @@ export function TripDashboard({
                     <span className="text-sm text-stone-500 dark:text-stone-400">
                       {t.overview.startDate}
                     </span>
-                    <p className="font-medium dark:text-white" suppressHydrationWarning>
+                    <p
+                      className="font-medium dark:text-white"
+                      suppressHydrationWarning
+                    >
                       {formatDate(trip.startDate)}
                     </p>
                   </div>
@@ -609,7 +629,10 @@ export function TripDashboard({
                     <span className="text-sm text-stone-500 dark:text-stone-400">
                       {t.overview.endDate}
                     </span>
-                    <p className="font-medium dark:text-white" suppressHydrationWarning>
+                    <p
+                      className="font-medium dark:text-white"
+                      suppressHydrationWarning
+                    >
                       {formatDate(trip.endDate)}
                     </p>
                   </div>
