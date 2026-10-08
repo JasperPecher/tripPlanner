@@ -369,7 +369,7 @@ export function SettingsPage({
                       })
                     }
                     className={inputClasses}
-                    placeholder="https://nas.quickconnect.to/sharing/XXXXX"
+                    placeholder="https://your-nas.xy/sharing/XXXXX"
                   />
                   <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
                     {t.settings.synologyShareLinkDesc}
@@ -390,7 +390,7 @@ export function SettingsPage({
                       })
                     }
                     className={inputClasses}
-                    placeholder="https://your-nas:5000/sharing/XXXXX"
+                    placeholder="https://your-nas.xy/sharing/XXXXX"
                   />
                   <p className="text-xs text-stone-500 dark:text-stone-400 mt-1">
                     {t.settings.synologyRequestLinkDesc}
