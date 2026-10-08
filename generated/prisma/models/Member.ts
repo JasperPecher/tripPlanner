@@ -31,6 +31,7 @@ export type MemberMinAggregateOutputType = {
   paypalLink: string | null
   weroNumber: string | null
   tripId: string | null
+  defaultTab: string | null
 }
 
 export type MemberMaxAggregateOutputType = {
@@ -40,6 +41,7 @@ export type MemberMaxAggregateOutputType = {
   paypalLink: string | null
   weroNumber: string | null
   tripId: string | null
+  defaultTab: string | null
 }
 
 export type MemberCountAggregateOutputType = {
@@ -49,6 +51,7 @@ export type MemberCountAggregateOutputType = {
   paypalLink: number
   weroNumber: number
   tripId: number
+  defaultTab: number
   _all: number
 }
 
@@ -60,6 +63,7 @@ export type MemberMinAggregateInputType = {
   paypalLink?: true
   weroNumber?: true
   tripId?: true
+  defaultTab?: true
 }
 
 export type MemberMaxAggregateInputType = {
@@ -69,6 +73,7 @@ export type MemberMaxAggregateInputType = {
   paypalLink?: true
   weroNumber?: true
   tripId?: true
+  defaultTab?: true
 }
 
 export type MemberCountAggregateInputType = {
@@ -78,6 +83,7 @@ export type MemberCountAggregateInputType = {
   paypalLink?: true
   weroNumber?: true
   tripId?: true
+  defaultTab?: true
   _all?: true
 }
 
@@ -160,6 +166,7 @@ export type MemberGroupByOutputType = {
   paypalLink: string | null
   weroNumber: string | null
   tripId: string
+  defaultTab: string
   _count: MemberCountAggregateOutputType | null
   _min: MemberMinAggregateOutputType | null
   _max: MemberMaxAggregateOutputType | null
@@ -190,6 +197,7 @@ export type MemberWhereInput = {
   paypalLink?: Prisma.StringNullableFilter<"Member"> | string | null
   weroNumber?: Prisma.StringNullableFilter<"Member"> | string | null
   tripId?: Prisma.StringFilter<"Member"> | string
+  defaultTab?: Prisma.StringFilter<"Member"> | string
   trip?: Prisma.XOR<Prisma.TripScalarRelationFilter, Prisma.TripWhereInput>
   paidExpenses?: Prisma.ExpenseListRelationFilter
   splitMembers?: Prisma.SplitMemberListRelationFilter
@@ -206,6 +214,7 @@ export type MemberOrderByWithRelationInput = {
   paypalLink?: Prisma.SortOrderInput | Prisma.SortOrder
   weroNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   tripId?: Prisma.SortOrder
+  defaultTab?: Prisma.SortOrder
   trip?: Prisma.TripOrderByWithRelationInput
   paidExpenses?: Prisma.ExpenseOrderByRelationAggregateInput
   splitMembers?: Prisma.SplitMemberOrderByRelationAggregateInput
@@ -226,6 +235,7 @@ export type MemberWhereUniqueInput = Prisma.AtLeast<{
   paypalLink?: Prisma.StringNullableFilter<"Member"> | string | null
   weroNumber?: Prisma.StringNullableFilter<"Member"> | string | null
   tripId?: Prisma.StringFilter<"Member"> | string
+  defaultTab?: Prisma.StringFilter<"Member"> | string
   trip?: Prisma.XOR<Prisma.TripScalarRelationFilter, Prisma.TripWhereInput>
   paidExpenses?: Prisma.ExpenseListRelationFilter
   splitMembers?: Prisma.SplitMemberListRelationFilter
@@ -242,6 +252,7 @@ export type MemberOrderByWithAggregationInput = {
   paypalLink?: Prisma.SortOrderInput | Prisma.SortOrder
   weroNumber?: Prisma.SortOrderInput | Prisma.SortOrder
   tripId?: Prisma.SortOrder
+  defaultTab?: Prisma.SortOrder
   _count?: Prisma.MemberCountOrderByAggregateInput
   _max?: Prisma.MemberMaxOrderByAggregateInput
   _min?: Prisma.MemberMinOrderByAggregateInput
@@ -257,6 +268,7 @@ export type MemberScalarWhereWithAggregatesInput = {
   paypalLink?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
   weroNumber?: Prisma.StringNullableWithAggregatesFilter<"Member"> | string | null
   tripId?: Prisma.StringWithAggregatesFilter<"Member"> | string
+  defaultTab?: Prisma.StringWithAggregatesFilter<"Member"> | string
 }
 
 export type MemberCreateInput = {
@@ -265,6 +277,7 @@ export type MemberCreateInput = {
   joinedAt?: Date | string
   paypalLink?: string | null
   weroNumber?: string | null
+  defaultTab?: string
   trip: Prisma.TripCreateNestedOneWithoutMembersInput
   paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByInput
   splitMembers?: Prisma.SplitMemberCreateNestedManyWithoutMemberInput
@@ -281,6 +294,7 @@ export type MemberUncheckedCreateInput = {
   paypalLink?: string | null
   weroNumber?: string | null
   tripId: string
+  defaultTab?: string
   paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByInput
   splitMembers?: Prisma.SplitMemberUncheckedCreateNestedManyWithoutMemberInput
   paymentsFrom?: Prisma.PaymentUncheckedCreateNestedManyWithoutFromInput
@@ -295,6 +309,7 @@ export type MemberUpdateInput = {
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
   trip?: Prisma.TripUpdateOneRequiredWithoutMembersNestedInput
   paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByNestedInput
   splitMembers?: Prisma.SplitMemberUpdateManyWithoutMemberNestedInput
@@ -311,6 +326,7 @@ export type MemberUncheckedUpdateInput = {
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
   paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByNestedInput
   splitMembers?: Prisma.SplitMemberUncheckedUpdateManyWithoutMemberNestedInput
   paymentsFrom?: Prisma.PaymentUncheckedUpdateManyWithoutFromNestedInput
@@ -326,6 +342,7 @@ export type MemberCreateManyInput = {
   paypalLink?: string | null
   weroNumber?: string | null
   tripId: string
+  defaultTab?: string
 }
 
 export type MemberUpdateManyMutationInput = {
@@ -334,6 +351,7 @@ export type MemberUpdateManyMutationInput = {
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type MemberUncheckedUpdateManyInput = {
@@ -343,6 +361,7 @@ export type MemberUncheckedUpdateManyInput = {
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type MemberListRelationFilter = {
@@ -367,6 +386,7 @@ export type MemberCountOrderByAggregateInput = {
   paypalLink?: Prisma.SortOrder
   weroNumber?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
+  defaultTab?: Prisma.SortOrder
 }
 
 export type MemberMaxOrderByAggregateInput = {
@@ -376,6 +396,7 @@ export type MemberMaxOrderByAggregateInput = {
   paypalLink?: Prisma.SortOrder
   weroNumber?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
+  defaultTab?: Prisma.SortOrder
 }
 
 export type MemberMinOrderByAggregateInput = {
@@ -385,6 +406,7 @@ export type MemberMinOrderByAggregateInput = {
   paypalLink?: Prisma.SortOrder
   weroNumber?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
+  defaultTab?: Prisma.SortOrder
 }
 
 export type MemberScalarRelationFilter = {
@@ -531,6 +553,7 @@ export type MemberCreateWithoutTripInput = {
   joinedAt?: Date | string
   paypalLink?: string | null
   weroNumber?: string | null
+  defaultTab?: string
   paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByInput
   splitMembers?: Prisma.SplitMemberCreateNestedManyWithoutMemberInput
   paymentsFrom?: Prisma.PaymentCreateNestedManyWithoutFromInput
@@ -545,6 +568,7 @@ export type MemberUncheckedCreateWithoutTripInput = {
   joinedAt?: Date | string
   paypalLink?: string | null
   weroNumber?: string | null
+  defaultTab?: string
   paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByInput
   splitMembers?: Prisma.SplitMemberUncheckedCreateNestedManyWithoutMemberInput
   paymentsFrom?: Prisma.PaymentUncheckedCreateNestedManyWithoutFromInput
@@ -589,6 +613,7 @@ export type MemberScalarWhereInput = {
   paypalLink?: Prisma.StringNullableFilter<"Member"> | string | null
   weroNumber?: Prisma.StringNullableFilter<"Member"> | string | null
   tripId?: Prisma.StringFilter<"Member"> | string
+  defaultTab?: Prisma.StringFilter<"Member"> | string
 }
 
 export type MemberCreateWithoutPaidExpensesInput = {
@@ -597,6 +622,7 @@ export type MemberCreateWithoutPaidExpensesInput = {
   joinedAt?: Date | string
   paypalLink?: string | null
   weroNumber?: string | null
+  defaultTab?: string
   trip: Prisma.TripCreateNestedOneWithoutMembersInput
   splitMembers?: Prisma.SplitMemberCreateNestedManyWithoutMemberInput
   paymentsFrom?: Prisma.PaymentCreateNestedManyWithoutFromInput
@@ -612,6 +638,7 @@ export type MemberUncheckedCreateWithoutPaidExpensesInput = {
   paypalLink?: string | null
   weroNumber?: string | null
   tripId: string
+  defaultTab?: string
   splitMembers?: Prisma.SplitMemberUncheckedCreateNestedManyWithoutMemberInput
   paymentsFrom?: Prisma.PaymentUncheckedCreateNestedManyWithoutFromInput
   paymentsTo?: Prisma.PaymentUncheckedCreateNestedManyWithoutToInput
@@ -641,6 +668,7 @@ export type MemberUpdateWithoutPaidExpensesInput = {
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
   trip?: Prisma.TripUpdateOneRequiredWithoutMembersNestedInput
   splitMembers?: Prisma.SplitMemberUpdateManyWithoutMemberNestedInput
   paymentsFrom?: Prisma.PaymentUpdateManyWithoutFromNestedInput
@@ -656,6 +684,7 @@ export type MemberUncheckedUpdateWithoutPaidExpensesInput = {
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
   splitMembers?: Prisma.SplitMemberUncheckedUpdateManyWithoutMemberNestedInput
   paymentsFrom?: Prisma.PaymentUncheckedUpdateManyWithoutFromNestedInput
   paymentsTo?: Prisma.PaymentUncheckedUpdateManyWithoutToNestedInput
@@ -669,6 +698,7 @@ export type MemberCreateWithoutSplitMembersInput = {
   joinedAt?: Date | string
   paypalLink?: string | null
   weroNumber?: string | null
+  defaultTab?: string
   trip: Prisma.TripCreateNestedOneWithoutMembersInput
   paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByInput
   paymentsFrom?: Prisma.PaymentCreateNestedManyWithoutFromInput
@@ -684,6 +714,7 @@ export type MemberUncheckedCreateWithoutSplitMembersInput = {
   paypalLink?: string | null
   weroNumber?: string | null
   tripId: string
+  defaultTab?: string
   paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByInput
   paymentsFrom?: Prisma.PaymentUncheckedCreateNestedManyWithoutFromInput
   paymentsTo?: Prisma.PaymentUncheckedCreateNestedManyWithoutToInput
@@ -713,6 +744,7 @@ export type MemberUpdateWithoutSplitMembersInput = {
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
   trip?: Prisma.TripUpdateOneRequiredWithoutMembersNestedInput
   paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByNestedInput
   paymentsFrom?: Prisma.PaymentUpdateManyWithoutFromNestedInput
@@ -728,6 +760,7 @@ export type MemberUncheckedUpdateWithoutSplitMembersInput = {
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
   paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByNestedInput
   paymentsFrom?: Prisma.PaymentUncheckedUpdateManyWithoutFromNestedInput
   paymentsTo?: Prisma.PaymentUncheckedUpdateManyWithoutToNestedInput
@@ -741,6 +774,7 @@ export type MemberCreateWithoutPaymentsFromInput = {
   joinedAt?: Date | string
   paypalLink?: string | null
   weroNumber?: string | null
+  defaultTab?: string
   trip: Prisma.TripCreateNestedOneWithoutMembersInput
   paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByInput
   splitMembers?: Prisma.SplitMemberCreateNestedManyWithoutMemberInput
@@ -756,6 +790,7 @@ export type MemberUncheckedCreateWithoutPaymentsFromInput = {
   paypalLink?: string | null
   weroNumber?: string | null
   tripId: string
+  defaultTab?: string
   paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByInput
   splitMembers?: Prisma.SplitMemberUncheckedCreateNestedManyWithoutMemberInput
   paymentsTo?: Prisma.PaymentUncheckedCreateNestedManyWithoutToInput
@@ -774,6 +809,7 @@ export type MemberCreateWithoutPaymentsToInput = {
   joinedAt?: Date | string
   paypalLink?: string | null
   weroNumber?: string | null
+  defaultTab?: string
   trip: Prisma.TripCreateNestedOneWithoutMembersInput
   paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByInput
   splitMembers?: Prisma.SplitMemberCreateNestedManyWithoutMemberInput
@@ -789,6 +825,7 @@ export type MemberUncheckedCreateWithoutPaymentsToInput = {
   paypalLink?: string | null
   weroNumber?: string | null
   tripId: string
+  defaultTab?: string
   paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByInput
   splitMembers?: Prisma.SplitMemberUncheckedCreateNestedManyWithoutMemberInput
   paymentsFrom?: Prisma.PaymentUncheckedCreateNestedManyWithoutFromInput
@@ -818,6 +855,7 @@ export type MemberUpdateWithoutPaymentsFromInput = {
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
   trip?: Prisma.TripUpdateOneRequiredWithoutMembersNestedInput
   paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByNestedInput
   splitMembers?: Prisma.SplitMemberUpdateManyWithoutMemberNestedInput
@@ -833,6 +871,7 @@ export type MemberUncheckedUpdateWithoutPaymentsFromInput = {
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
   paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByNestedInput
   splitMembers?: Prisma.SplitMemberUncheckedUpdateManyWithoutMemberNestedInput
   paymentsTo?: Prisma.PaymentUncheckedUpdateManyWithoutToNestedInput
@@ -857,6 +896,7 @@ export type MemberUpdateWithoutPaymentsToInput = {
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
   trip?: Prisma.TripUpdateOneRequiredWithoutMembersNestedInput
   paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByNestedInput
   splitMembers?: Prisma.SplitMemberUpdateManyWithoutMemberNestedInput
@@ -872,6 +912,7 @@ export type MemberUncheckedUpdateWithoutPaymentsToInput = {
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
   paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByNestedInput
   splitMembers?: Prisma.SplitMemberUncheckedUpdateManyWithoutMemberNestedInput
   paymentsFrom?: Prisma.PaymentUncheckedUpdateManyWithoutFromNestedInput
@@ -885,6 +926,7 @@ export type MemberCreateWithoutDateVotesInput = {
   joinedAt?: Date | string
   paypalLink?: string | null
   weroNumber?: string | null
+  defaultTab?: string
   trip: Prisma.TripCreateNestedOneWithoutMembersInput
   paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByInput
   splitMembers?: Prisma.SplitMemberCreateNestedManyWithoutMemberInput
@@ -900,6 +942,7 @@ export type MemberUncheckedCreateWithoutDateVotesInput = {
   paypalLink?: string | null
   weroNumber?: string | null
   tripId: string
+  defaultTab?: string
   paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByInput
   splitMembers?: Prisma.SplitMemberUncheckedCreateNestedManyWithoutMemberInput
   paymentsFrom?: Prisma.PaymentUncheckedCreateNestedManyWithoutFromInput
@@ -929,6 +972,7 @@ export type MemberUpdateWithoutDateVotesInput = {
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
   trip?: Prisma.TripUpdateOneRequiredWithoutMembersNestedInput
   paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByNestedInput
   splitMembers?: Prisma.SplitMemberUpdateManyWithoutMemberNestedInput
@@ -944,6 +988,7 @@ export type MemberUncheckedUpdateWithoutDateVotesInput = {
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
   paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByNestedInput
   splitMembers?: Prisma.SplitMemberUncheckedUpdateManyWithoutMemberNestedInput
   paymentsFrom?: Prisma.PaymentUncheckedUpdateManyWithoutFromNestedInput
@@ -957,6 +1002,7 @@ export type MemberCreateWithoutAssignedPackingItemsInput = {
   joinedAt?: Date | string
   paypalLink?: string | null
   weroNumber?: string | null
+  defaultTab?: string
   trip: Prisma.TripCreateNestedOneWithoutMembersInput
   paidExpenses?: Prisma.ExpenseCreateNestedManyWithoutPaidByInput
   splitMembers?: Prisma.SplitMemberCreateNestedManyWithoutMemberInput
@@ -972,6 +1018,7 @@ export type MemberUncheckedCreateWithoutAssignedPackingItemsInput = {
   paypalLink?: string | null
   weroNumber?: string | null
   tripId: string
+  defaultTab?: string
   paidExpenses?: Prisma.ExpenseUncheckedCreateNestedManyWithoutPaidByInput
   splitMembers?: Prisma.SplitMemberUncheckedCreateNestedManyWithoutMemberInput
   paymentsFrom?: Prisma.PaymentUncheckedCreateNestedManyWithoutFromInput
@@ -1001,6 +1048,7 @@ export type MemberUpdateWithoutAssignedPackingItemsInput = {
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
   trip?: Prisma.TripUpdateOneRequiredWithoutMembersNestedInput
   paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByNestedInput
   splitMembers?: Prisma.SplitMemberUpdateManyWithoutMemberNestedInput
@@ -1016,6 +1064,7 @@ export type MemberUncheckedUpdateWithoutAssignedPackingItemsInput = {
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
   paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByNestedInput
   splitMembers?: Prisma.SplitMemberUncheckedUpdateManyWithoutMemberNestedInput
   paymentsFrom?: Prisma.PaymentUncheckedUpdateManyWithoutFromNestedInput
@@ -1029,6 +1078,7 @@ export type MemberCreateManyTripInput = {
   joinedAt?: Date | string
   paypalLink?: string | null
   weroNumber?: string | null
+  defaultTab?: string
 }
 
 export type MemberUpdateWithoutTripInput = {
@@ -1037,6 +1087,7 @@ export type MemberUpdateWithoutTripInput = {
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
   paidExpenses?: Prisma.ExpenseUpdateManyWithoutPaidByNestedInput
   splitMembers?: Prisma.SplitMemberUpdateManyWithoutMemberNestedInput
   paymentsFrom?: Prisma.PaymentUpdateManyWithoutFromNestedInput
@@ -1051,6 +1102,7 @@ export type MemberUncheckedUpdateWithoutTripInput = {
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
   paidExpenses?: Prisma.ExpenseUncheckedUpdateManyWithoutPaidByNestedInput
   splitMembers?: Prisma.SplitMemberUncheckedUpdateManyWithoutMemberNestedInput
   paymentsFrom?: Prisma.PaymentUncheckedUpdateManyWithoutFromNestedInput
@@ -1065,6 +1117,7 @@ export type MemberUncheckedUpdateManyWithoutTripInput = {
   joinedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   paypalLink?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   weroNumber?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+  defaultTab?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -1150,6 +1203,7 @@ export type MemberSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   paypalLink?: boolean
   weroNumber?: boolean
   tripId?: boolean
+  defaultTab?: boolean
   trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
   paidExpenses?: boolean | Prisma.Member$paidExpensesArgs<ExtArgs>
   splitMembers?: boolean | Prisma.Member$splitMembersArgs<ExtArgs>
@@ -1167,6 +1221,7 @@ export type MemberSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extens
   paypalLink?: boolean
   weroNumber?: boolean
   tripId?: boolean
+  defaultTab?: boolean
   trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["member"]>
 
@@ -1177,6 +1232,7 @@ export type MemberSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extens
   paypalLink?: boolean
   weroNumber?: boolean
   tripId?: boolean
+  defaultTab?: boolean
   trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["member"]>
 
@@ -1187,9 +1243,10 @@ export type MemberSelectScalar = {
   paypalLink?: boolean
   weroNumber?: boolean
   tripId?: boolean
+  defaultTab?: boolean
 }
 
-export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "joinedAt" | "paypalLink" | "weroNumber" | "tripId", ExtArgs["result"]["member"]>
+export type MemberOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "name" | "joinedAt" | "paypalLink" | "weroNumber" | "tripId" | "defaultTab", ExtArgs["result"]["member"]>
 export type MemberInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
   paidExpenses?: boolean | Prisma.Member$paidExpensesArgs<ExtArgs>
@@ -1225,6 +1282,7 @@ export type $MemberPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs
     paypalLink: string | null
     weroNumber: string | null
     tripId: string
+    defaultTab: string
   }, ExtArgs["result"]["member"]>
   composites: {}
 }
@@ -1661,6 +1719,7 @@ export interface MemberFieldRefs {
   readonly paypalLink: Prisma.FieldRef<"Member", 'String'>
   readonly weroNumber: Prisma.FieldRef<"Member", 'String'>
   readonly tripId: Prisma.FieldRef<"Member", 'String'>
+  readonly defaultTab: Prisma.FieldRef<"Member", 'String'>
 }
     
 

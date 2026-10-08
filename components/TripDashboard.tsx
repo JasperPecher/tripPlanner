@@ -16,6 +16,7 @@ import {
   Sun,
   Moon,
   Globe,
+  Star,
   User,
   Briefcase,
 } from "lucide-react";
@@ -50,6 +51,7 @@ type Member = {
   name: string;
   joinedAt: string;
   paypalLink?: string | null;
+  defaultTab?: string;
 };
 type Expense = {
   id: string;
@@ -152,7 +154,9 @@ export function TripDashboard({
     setTrip(initialTrip);
   }, [initialTrip]);
 
-  const [activeTab, setActiveTab] = useState<Tab>("overview");
+  const [activeTab, setActiveTab] = useState<Tab>(
+    (initialMember?.defaultTab as Tab) || "overview"
+  );
   const [copied, setCopied] = useState(false);
   const [currentMember, setCurrentMember] = useState<Member | null>(initialMember || null);
   const { t, locale, setLocale } = useLocale();
@@ -191,6 +195,31 @@ export function TripDashboard({
     await navigator.clipboard.writeText(shareUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  };
+
+  const [isSettingDefaultTab, setIsSettingDefaultTab] = useState(false);
+
+  const handleSetDefaultTab = async () => {
+    if (!currentMember) return;
+    setIsSettingDefaultTab(true);
+    try {
+      const res = await fetch("/api/member/default-tab", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          memberId: currentMember.id,
+          defaultTab: activeTab,
+        }),
+      });
+      if (res.ok) {
+        const updated = await res.json();
+        setCurrentMember({ ...currentMember, defaultTab: updated.defaultTab });
+      }
+    } catch (e) {
+      console.error(e);
+    } finally {
+      setIsSettingDefaultTab(false);
+    }
   };
 
   const handleMemberUpdated = (updated: Member) => {
@@ -312,6 +341,23 @@ export function TripDashboard({
                 )}
               </div>
               <button
+                onClick={handleSetDefaultTab}
+                disabled={isSettingDefaultTab}
+                className={`flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 rounded-lg transition text-sm font-medium ${
+                  currentMember?.defaultTab === activeTab
+                    ? "bg-yellow-100 text-yellow-700 dark:bg-yellow-900/40 dark:text-yellow-400"
+                    : "bg-stone-100 text-stone-600 hover:bg-stone-200 dark:bg-stone-800 dark:text-stone-300 dark:hover:bg-stone-700"
+                }`}
+                title="Set current view as default"
+              >
+                <Star
+                  className={`w-4 h-4 ${currentMember?.defaultTab === activeTab ? "fill-current" : ""}`}
+                />
+                <span className="hidden sm:inline" suppressHydrationWarning>
+                  {currentMember?.defaultTab === activeTab ? "Default View" : "Set Default"}
+                </span>
+              </button>
+              <button
                 onClick={handleCopyLink}
                 className="flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition text-sm font-medium"
               >
@@ -356,6 +402,20 @@ export function TripDashboard({
           </div>
 
           <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={handleSetDefaultTab}
+              disabled={isSettingDefaultTab}
+              className={`w-10 h-10 flex items-center justify-center rounded-xl transition border ${
+                currentMember?.defaultTab === activeTab
+                  ? "bg-yellow-100 text-yellow-700 border-yellow-200 dark:bg-yellow-900/40 dark:text-yellow-400 dark:border-yellow-800/50"
+                  : "bg-stone-50 dark:bg-stone-800/50 border-stone-200/50 dark:border-stone-700/50 text-stone-600 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-800"
+              }`}
+              aria-label="Set default view"
+            >
+              <Star
+                className={`w-4 h-4 ${currentMember?.defaultTab === activeTab ? "fill-current" : ""}`}
+              />
+            </button>
             {/* Quick Share Link */}
             <button
               onClick={handleCopyLink}
@@ -541,7 +601,7 @@ export function TripDashboard({
                     <span className="text-sm text-stone-500 dark:text-stone-400">
                       {t.overview.startDate}
                     </span>
-                    <p className="font-medium dark:text-white">
+                    <p className="font-medium dark:text-white" suppressHydrationWarning>
                       {formatDate(trip.startDate)}
                     </p>
                   </div>
@@ -549,7 +609,7 @@ export function TripDashboard({
                     <span className="text-sm text-stone-500 dark:text-stone-400">
                       {t.overview.endDate}
                     </span>
-                    <p className="font-medium dark:text-white">
+                    <p className="font-medium dark:text-white" suppressHydrationWarning>
                       {formatDate(trip.endDate)}
                     </p>
                   </div>

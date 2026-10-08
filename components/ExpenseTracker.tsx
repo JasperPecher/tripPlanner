@@ -842,7 +842,7 @@ export function ExpenseTracker({
                 <span className="ml-auto font-semibold text-green-700 dark:text-green-400">
                   {formatCurrency(payment.amount)}
                 </span>
-                <span className="text-xs text-stone-400">
+                <span className="text-xs text-stone-400" suppressHydrationWarning>
                   {new Date(payment.createdAt).toLocaleDateString()}
                 </span>
                 <button
@@ -961,7 +961,7 @@ export function ExpenseTracker({
                       &middot; {t.expenses.splitBetween}{" "}
                       {expense.splits.map((s) => s.member.name).join(", ")}
                     </p>
-                    <p className="text-xs text-stone-400 dark:text-stone-500 mt-1">
+                    <p className="text-xs text-stone-400 dark:text-stone-500 mt-1" suppressHydrationWarning>
                       {new Date(expense.createdAt).toLocaleDateString()}
                     </p>
                   </div>

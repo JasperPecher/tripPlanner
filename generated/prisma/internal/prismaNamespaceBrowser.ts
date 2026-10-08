@@ -106,7 +106,8 @@ export const MemberScalarFieldEnum = {
   joinedAt: 'joinedAt',
   paypalLink: 'paypalLink',
   weroNumber: 'weroNumber',
-  tripId: 'tripId'
+  tripId: 'tripId',
+  defaultTab: 'defaultTab'
 } as const
 
 export type MemberScalarFieldEnum = (typeof MemberScalarFieldEnum)[keyof typeof MemberScalarFieldEnum]

@@ -379,13 +379,13 @@ export default function RouteMapPage({
                         {point.location}
                       </p>
                       {point.date && (
-                        <p className="text-xs text-stone-500 mt-1 flex items-center gap-1">
+                        <p className="text-xs text-stone-500 mt-1 flex items-center gap-1" suppressHydrationWarning>
                           <Calendar className="w-3 h-3" />
                           {formatDate(point.date)}
                         </p>
                       )}
                       {point.travelType && (
-                        <p className="text-xs text-stone-500 mt-1 flex items-center gap-1">
+                        <p className="text-xs text-stone-500 mt-1 flex items-center gap-1" suppressHydrationWarning>
                           {(() => {
                             const Icon =
                               travelTypes.find((t) => t.id === point.travelType)
@@ -630,7 +630,7 @@ export default function RouteMapPage({
                             {point.location}
                           </p>
                           {point.date && (
-                            <p className="text-xs text-stone-500 dark:text-stone-400 flex items-center gap-1 mt-0.5">
+                            <p className="text-xs text-stone-500 dark:text-stone-400 flex items-center gap-1 mt-0.5" suppressHydrationWarning>
                               <Calendar className="w-3 h-3" />
                               {formatDate(point.date)}
                             </p>

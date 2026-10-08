@@ -58,6 +58,8 @@ model Member {
   dateVotes            DateVote[]
   assignedPackingItems PackingItem[]
 
+  defaultTab String @default("overview")
+
   @@unique([tripId, name])
   @@map("members")
 }
