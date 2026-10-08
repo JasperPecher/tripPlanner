@@ -114,7 +114,10 @@ export function ExpenseTracker({
       {} as Record<string, string>,
     ),
     customPercentages: members.reduce(
-      (acc, m) => ({ ...acc, [m.id]: members.length ? 100 / members.length : 0 }),
+      (acc, m) => ({
+        ...acc,
+        [m.id]: members.length ? 100 / members.length : 0,
+      }),
       {} as Record<string, number>,
     ),
   });
@@ -331,7 +334,10 @@ export function ExpenseTracker({
       customPercentages: members.reduce(
         (acc, m) => {
           const split = expense.splits.find((s) => s.memberId === m.id);
-          return { ...acc, [m.id]: split ? (split.amount / expense.amount) * 100 : 0 };
+          return {
+            ...acc,
+            [m.id]: split ? (split.amount / expense.amount) * 100 : 0,
+          };
         },
         {} as Record<string, number>,
       ),
@@ -357,7 +363,10 @@ export function ExpenseTracker({
         {} as Record<string, string>,
       ),
       customPercentages: members.reduce(
-        (acc, m) => ({ ...acc, [m.id]: members.length ? 100 / members.length : 0 }),
+        (acc, m) => ({
+          ...acc,
+          [m.id]: members.length ? 100 / members.length : 0,
+        }),
         {} as Record<string, number>,
       ),
     });
@@ -387,14 +396,19 @@ export function ExpenseTracker({
       } else if (formData.splitType === "percentage") {
         splits = selectedMembers.map((m) => ({
           memberId: m.id,
-          amount: Math.round(((formData.customPercentages[m.id] || 0) / 100) * amount * 100) / 100,
+          amount:
+            Math.round(
+              ((formData.customPercentages[m.id] || 0) / 100) * amount * 100,
+            ) / 100,
         }));
-        
+
         const totalCustom = splits.reduce((sum, s) => sum + s.amount, 0);
         if (Math.abs(totalCustom - amount) > 0.02) {
           // Fix rounding issues by adjusting the first member's split
           if (splits.length > 0) {
-            splits[0].amount = Math.round((splits[0].amount + (amount - totalCustom)) * 100) / 100;
+            splits[0].amount =
+              Math.round((splits[0].amount + (amount - totalCustom)) * 100) /
+              100;
           }
         }
       } else {
@@ -643,20 +657,6 @@ export function ExpenseTracker({
                     <input
                       type="radio"
                       name="splitType"
-                      checked={formData.splitType === "custom"}
-                      onChange={() =>
-                        setFormData({ ...formData, splitType: "custom" })
-                      }
-                      className="text-orange-500 focus:ring-orange-500"
-                    />
-                    <span className="text-sm dark:text-stone-300">
-                      {t.expenses.form.customAmounts}
-                    </span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="splitType"
                       checked={formData.splitType === "percentage"}
                       onChange={() =>
                         setFormData({ ...formData, splitType: "percentage" })
@@ -665,6 +665,20 @@ export function ExpenseTracker({
                     />
                     <span className="text-sm dark:text-stone-300">
                       {t.expenses.form.percentageSplit || "Percentage"}
+                    </span>
+                  </label>
+                  <label className="flex items-center gap-2 cursor-pointer">
+                    <input
+                      type="radio"
+                      name="splitType"
+                      checked={formData.splitType === "custom"}
+                      onChange={() =>
+                        setFormData({ ...formData, splitType: "custom" })
+                      }
+                      className="text-orange-500 focus:ring-orange-500"
+                    />
+                    <span className="text-sm dark:text-stone-300">
+                      {t.expenses.form.customAmounts}
                     </span>
                   </label>
                 </div>
@@ -687,11 +701,15 @@ export function ExpenseTracker({
                             ...formData.splits,
                             [member.id]: e.target.checked,
                           };
-                          const selected = members.filter((m) => newSplits[m.id]);
-                          const newPercentages = { ...formData.customPercentages };
+                          const selected = members.filter(
+                            (m) => newSplits[m.id],
+                          );
+                          const newPercentages = {
+                            ...formData.customPercentages,
+                          };
                           if (selected.length > 0) {
                             const pct = 100 / selected.length;
-                            selected.forEach(m => {
+                            selected.forEach((m) => {
                               newPercentages[m.id] = pct;
                             });
                           }
@@ -747,12 +765,18 @@ export function ExpenseTracker({
                               step="1"
                               value={formData.customPercentages[member.id] || 0}
                               onChange={(e) =>
-                                handlePercentageChange(member.id, parseFloat(e.target.value))
+                                handlePercentageChange(
+                                  member.id,
+                                  parseFloat(e.target.value),
+                                )
                               }
                               className="w-24 accent-orange-500"
                             />
                             <span className="text-sm w-12 text-right dark:text-stone-300">
-                              {Math.round(formData.customPercentages[member.id] || 0)}%
+                              {Math.round(
+                                formData.customPercentages[member.id] || 0,
+                              )}
+                              %
                             </span>
                           </div>
                         )}
@@ -942,7 +966,10 @@ export function ExpenseTracker({
                 <span className="ml-auto font-semibold text-green-700 dark:text-green-400">
                   {formatCurrency(payment.amount)}
                 </span>
-                <span className="text-xs text-stone-400" suppressHydrationWarning>
+                <span
+                  className="text-xs text-stone-400"
+                  suppressHydrationWarning
+                >
                   {new Date(payment.createdAt).toLocaleDateString()}
                 </span>
                 <button
@@ -1061,7 +1088,10 @@ export function ExpenseTracker({
                       &middot; {t.expenses.splitBetween}{" "}
                       {expense.splits.map((s) => s.member.name).join(", ")}
                     </p>
-                    <p className="text-xs text-stone-400 dark:text-stone-500 mt-1" suppressHydrationWarning>
+                    <p
+                      className="text-xs text-stone-400 dark:text-stone-500 mt-1"
+                      suppressHydrationWarning
+                    >
                       {new Date(expense.createdAt).toLocaleDateString()}
                     </p>
                   </div>
