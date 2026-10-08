@@ -152,18 +152,6 @@ export function UserSettings({
           </p>
         </div>
 
-        {paypalLink && (
-          <a
-            href={paypalLink}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 text-sm text-blue-600 dark:text-blue-400 hover:underline"
-          >
-            <ExternalLink className="w-3.5 h-3.5" />
-            {t.userSettings.testPaypal}
-          </a>
-        )}
-
         <div className="flex items-center gap-3 pt-2">
           <button
             onClick={handleSave}
