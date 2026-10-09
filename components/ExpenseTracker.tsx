@@ -89,6 +89,17 @@ export function ExpenseTracker({
   const [filterPayerId, setFilterPayerId] = useState<string>("all");
   const [filterSearchQuery, setFilterSearchQuery] = useState<string>("");
 
+  useEffect(() => {
+    if (showForm) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showForm]);
+
   const filteredExpensesList = useMemo(() => {
     return expenses.filter((expense) => {
       const matchPayer =

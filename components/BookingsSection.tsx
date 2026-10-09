@@ -90,6 +90,17 @@ export function BookingsSection({
     }
   }, [currentMember, showForm, formData.id, formData.paidById]);
 
+  useEffect(() => {
+    if (showForm) {
+      document.body.style.overflow = "hidden";
+    } else {
+      document.body.style.overflow = "";
+    }
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [showForm]);
+
   const bookingTypes = [
     { value: "hotel", label: t.bookings.types.hotel, icon: Hotel },
     { value: "flight", label: t.bookings.types.flight, icon: Plane },
