@@ -563,9 +563,9 @@ export function ExpenseTracker({
       </div>
 
       {showForm && (
-        <div className="fixed inset-0 z-70 flex sm:items-center justify-center sm:p-4 bg-black/50">
-          <div className="bg-white dark:bg-stone-900 w-full h-full sm:h-auto sm:max-h-[90vh] sm:max-w-lg sm:rounded-xl overflow-y-auto p-4 sm:p-6 pb-12 sm:pb-6">
-            <div className="flex items-center justify-between mb-4">
+        <div className="fixed inset-0 z-200 sm:p-4 bg-black/50 flex sm:items-center justify-center">
+          <div className="absolute inset-0 sm:relative sm:inset-auto bg-white dark:bg-stone-900 w-full sm:max-h-[90vh] sm:max-w-lg sm:rounded-xl overflow-y-auto p-4 sm:p-6 pb-[calc(2rem+env(safe-area-inset-bottom))] sm:pb-6">
+            <div className="flex items-center justify-between mb-4 pt-safe sm:pt-0">
               <h3 className="text-lg font-semibold dark:text-white">
                 {editingExpenseId ? "Edit Expense" : t.expenses.form.addTitle}
               </h3>
@@ -576,9 +576,9 @@ export function ExpenseTracker({
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <form onSubmit={handleSubmitExpense} className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2 sm:col-span-1 min-w-0">
+            <form onSubmit={handleSubmitExpense} className="space-y-4 w-full">
+              <div className="flex flex-col gap-4">
+                <div className="w-full min-w-0">
                   <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
                     {t.expenses.form.description}
                   </label>
@@ -593,7 +593,7 @@ export function ExpenseTracker({
                     placeholder={t.expenses.form.descriptionPlaceholder}
                   />
                 </div>
-                <div className="col-span-2 sm:col-span-1 min-w-0">
+                <div className="w-full min-w-0">
                   <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
                     {t.expenses.form.date || "Datum"}
                   </label>
@@ -606,12 +606,18 @@ export function ExpenseTracker({
                         setFormData({ ...formData, date: e.target.value });
                       }
                     }}
+                    style={{
+                      WebkitAppearance: "none",
+                      width: "100%",
+                      maxWidth: "100%",
+                      display: "block",
+                    }}
                     className={`${inputClasses} [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:appearance-none min-w-0`}
                   />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div className="min-w-0">
+                <div className="min-w-0 w-full">
                   <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
                     {t.expenses.form.amount}
                   </label>
