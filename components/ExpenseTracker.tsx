@@ -560,8 +560,8 @@ export function ExpenseTracker({
       </div>
 
       {showForm && (
-        <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-70 p-4">
-          <div className="bg-white dark:bg-stone-900 rounded-xl p-6 w-full max-w-lg max-h-[90vh] overflow-y-auto">
+        <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-[70] sm:p-4">
+          <div className="bg-white dark:bg-stone-900 rounded-t-xl sm:rounded-xl p-4 sm:p-6 w-full max-w-lg max-h-[90dvh] sm:max-h-[90vh] overflow-y-auto pb-8 sm:pb-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold dark:text-white">
                 {editingExpenseId ? "Edit Expense" : t.expenses.form.addTitle}
@@ -575,7 +575,7 @@ export function ExpenseTracker({
             </div>
             <form onSubmit={handleSubmitExpense} className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
-                <div className="col-span-2 sm:col-span-1">
+                <div className="col-span-2 sm:col-span-1 min-w-0">
                   <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
                     {t.expenses.form.description}
                   </label>
@@ -590,7 +590,7 @@ export function ExpenseTracker({
                     placeholder={t.expenses.form.descriptionPlaceholder}
                   />
                 </div>
-                <div className="col-span-2 sm:col-span-1">
+                <div className="col-span-2 sm:col-span-1 min-w-0">
                   <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
                     {t.expenses.form.date || "Datum"}
                   </label>
@@ -603,12 +603,12 @@ export function ExpenseTracker({
                         setFormData({ ...formData, date: e.target.value });
                       }
                     }}
-                    className={`${inputClasses} [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:appearance-none`}
+                    className={`${inputClasses} [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:appearance-none min-w-0`}
                   />
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
-                <div>
+                <div className="min-w-0">
                   <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
                     {t.expenses.form.amount}
                   </label>
@@ -625,7 +625,7 @@ export function ExpenseTracker({
                     placeholder="0.00"
                   />
                 </div>
-                <div>
+                <div className="min-w-0">
                   <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
                     {t.expenses.form.paidBy}
                   </label>
@@ -643,7 +643,7 @@ export function ExpenseTracker({
                     ))}
                   </select>
                 </div>
-                <div className="w-max">
+                <div className="col-span-2 sm:col-span-1 min-w-0">
                   <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
                     {t.expenses.category}
                   </label>
