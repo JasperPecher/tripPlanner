@@ -241,8 +241,8 @@ export function BookingsSection({
         </button>
       </div>
       {showForm && (
-        <div className="fixed inset-0 z-200 sm:p-4 bg-black/50 flex sm:items-center justify-center">
-          <div className="absolute inset-0 sm:relative sm:inset-auto bg-white dark:bg-stone-900 w-full sm:max-h-[90vh] sm:max-w-lg sm:rounded-xl overflow-y-auto p-4 sm:p-6 pb-[calc(2rem+env(safe-area-inset-bottom))] sm:pb-6">
+        <div className="fixed inset-0 z-200 sm:p-4 bg-black/50 flex flex-col sm:items-center justify-center">
+          <div className="bg-white dark:bg-stone-900 w-full h-dvh sm:h-auto sm:max-h-[90vh] sm:max-w-lg sm:rounded-xl overflow-y-auto p-4 sm:p-6 pb-[calc(2rem+env(safe-area-inset-bottom))] sm:pb-6">
             <div className="flex items-center justify-between mb-4 pt-safe sm:pt-0">
               <h3 className="text-lg font-semibold dark:text-white">
                 {t.bookings.form.addTitle}
