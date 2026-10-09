@@ -535,7 +535,10 @@ export function ExpenseTracker({
   const parsedAmount = parseFloat(formData.amount) || 0;
   const customTotal = members
     .filter((m) => formData.splits[m.id])
-    .reduce((sum, m) => sum + (parseFloat(formData.customAmounts[m.id]) || 0), 0);
+    .reduce(
+      (sum, m) => sum + (parseFloat(formData.customAmounts[m.id]) || 0),
+      0,
+    );
   const customSplitDiff = parsedAmount - customTotal;
   const isCustomSplitInvalid =
     formData.splitType === "custom" && Math.abs(customSplitDiff) > 0.01;
@@ -560,8 +563,8 @@ export function ExpenseTracker({
       </div>
 
       {showForm && (
-        <div className="fixed inset-0 bg-black/50 flex items-end sm:items-center justify-center z-[70] sm:p-4">
-          <div className="bg-white dark:bg-stone-900 rounded-t-xl sm:rounded-xl p-4 sm:p-6 w-full max-w-lg max-h-[90dvh] sm:max-h-[90vh] overflow-y-auto pb-8 sm:pb-6">
+        <div className="fixed inset-0 z-70 flex sm:items-center justify-center sm:p-4 bg-black/50">
+          <div className="bg-white dark:bg-stone-900 w-full h-full sm:h-auto sm:max-h-[90vh] sm:max-w-lg sm:rounded-xl overflow-y-auto p-4 sm:p-6 pb-12 sm:pb-6">
             <div className="flex items-center justify-between mb-4">
               <h3 className="text-lg font-semibold dark:text-white">
                 {editingExpenseId ? "Edit Expense" : t.expenses.form.addTitle}
@@ -675,7 +678,7 @@ export function ExpenseTracker({
                 <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-2">
                   {t.expenses.form.splitType}
                 </label>
-                <div className="flex gap-4">
+                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
                   <label className="flex items-center gap-2 cursor-pointer">
                     <input
                       type="radio"
