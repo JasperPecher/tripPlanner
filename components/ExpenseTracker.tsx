@@ -34,7 +34,6 @@ type Expense = {
   id: string;
   description: string;
   amount: number;
-  currency: string;
   category: string;
   createdAt: string;
   date: string;
@@ -1128,7 +1127,7 @@ export function ExpenseTracker({
                         {expense.description}
                       </h4>
                       <span className="text-lg font-semibold text-stone-900 dark:text-white">
-                        {formatCurrency(expense.amount, expense.currency)}
+                        {formatCurrency(expense.amount)}
                       </span>
                     </div>
                     <div className="flex items-center gap-2 mt-1">

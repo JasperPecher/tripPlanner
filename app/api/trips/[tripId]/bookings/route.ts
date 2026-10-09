@@ -17,7 +17,6 @@ export async function POST(
       checkOut,
       location,
       price,
-      currency,
     } = body;
     if (!title)
       return NextResponse.json({ error: "Title is required" }, { status: 400 });
@@ -34,7 +33,6 @@ export async function POST(
         checkOut: checkOut || null,
         location: location || null,
         price: parsedPrice,
-        currency: currency || "EUR",
         tripId,
       },
     });
@@ -61,7 +59,6 @@ export async function POST(
         data: {
           description: `Booking: ${title}`,
           amount: parsedPrice,
-          currency: currency || "EUR",
           category,
           date: new Date(),
           tripId,

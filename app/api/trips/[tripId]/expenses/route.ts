@@ -5,13 +5,13 @@ export async function POST(request: NextRequest, { params }: { params: Promise<{
   try {
     const { tripId } = await params;
     const body = await request.json();
-    const { description, amount, paidById, splits, currency, category, date } = body;
+    const { description, amount, paidById, splits, category, date } = body;
     if (!description || !amount || !paidById || !splits || splits.length === 0 || !date)
       return NextResponse.json({ error: "All fields are required" }, { status: 400 });
     const member = await prisma.member.findFirst({ where: { id: paidById, tripId } });
     if (!member) return NextResponse.json({ error: "Invalid member" }, { status: 400 });
     const expense = await prisma.expense.create({
-      data: { description, amount: parseFloat(amount), currency: currency || "EUR", category: category || "other", date: new Date(date), tripId, paidById, splits: { create: splits.map((s: { memberId: string; amount: number }) => ({ memberId: s.memberId, amount: s.amount })) } },
+      data: { description, amount: parseFloat(amount), category: category || "other", date: new Date(date), tripId, paidById, splits: { create: splits.map((s: { memberId: string; amount: number }) => ({ memberId: s.memberId, amount: s.amount })) } },
       include: { paidBy: true, splits: { include: { member: true } } },
     });
     return NextResponse.json(expense);

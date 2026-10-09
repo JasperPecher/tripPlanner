@@ -44,7 +44,6 @@ export type BookingMinAggregateOutputType = {
   checkOut: string | null
   location: string | null
   price: number | null
-  currency: string | null
   createdAt: Date | null
   updatedAt: Date | null
   tripId: string | null
@@ -60,7 +59,6 @@ export type BookingMaxAggregateOutputType = {
   checkOut: string | null
   location: string | null
   price: number | null
-  currency: string | null
   createdAt: Date | null
   updatedAt: Date | null
   tripId: string | null
@@ -76,7 +74,6 @@ export type BookingCountAggregateOutputType = {
   checkOut: number
   location: number
   price: number
-  currency: number
   createdAt: number
   updatedAt: number
   tripId: number
@@ -102,7 +99,6 @@ export type BookingMinAggregateInputType = {
   checkOut?: true
   location?: true
   price?: true
-  currency?: true
   createdAt?: true
   updatedAt?: true
   tripId?: true
@@ -118,7 +114,6 @@ export type BookingMaxAggregateInputType = {
   checkOut?: true
   location?: true
   price?: true
-  currency?: true
   createdAt?: true
   updatedAt?: true
   tripId?: true
@@ -134,7 +129,6 @@ export type BookingCountAggregateInputType = {
   checkOut?: true
   location?: true
   price?: true
-  currency?: true
   createdAt?: true
   updatedAt?: true
   tripId?: true
@@ -237,7 +231,6 @@ export type BookingGroupByOutputType = {
   checkOut: string | null
   location: string | null
   price: number | null
-  currency: string
   createdAt: Date
   updatedAt: Date
   tripId: string
@@ -276,7 +269,6 @@ export type BookingWhereInput = {
   checkOut?: Prisma.StringNullableFilter<"Booking"> | string | null
   location?: Prisma.StringNullableFilter<"Booking"> | string | null
   price?: Prisma.FloatNullableFilter<"Booking"> | number | null
-  currency?: Prisma.StringFilter<"Booking"> | string
   createdAt?: Prisma.DateTimeFilter<"Booking"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Booking"> | Date | string
   tripId?: Prisma.StringFilter<"Booking"> | string
@@ -293,7 +285,6 @@ export type BookingOrderByWithRelationInput = {
   checkOut?: Prisma.SortOrderInput | Prisma.SortOrder
   location?: Prisma.SortOrderInput | Prisma.SortOrder
   price?: Prisma.SortOrderInput | Prisma.SortOrder
-  currency?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
@@ -313,7 +304,6 @@ export type BookingWhereUniqueInput = Prisma.AtLeast<{
   checkOut?: Prisma.StringNullableFilter<"Booking"> | string | null
   location?: Prisma.StringNullableFilter<"Booking"> | string | null
   price?: Prisma.FloatNullableFilter<"Booking"> | number | null
-  currency?: Prisma.StringFilter<"Booking"> | string
   createdAt?: Prisma.DateTimeFilter<"Booking"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Booking"> | Date | string
   tripId?: Prisma.StringFilter<"Booking"> | string
@@ -330,7 +320,6 @@ export type BookingOrderByWithAggregationInput = {
   checkOut?: Prisma.SortOrderInput | Prisma.SortOrder
   location?: Prisma.SortOrderInput | Prisma.SortOrder
   price?: Prisma.SortOrderInput | Prisma.SortOrder
-  currency?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
@@ -354,7 +343,6 @@ export type BookingScalarWhereWithAggregatesInput = {
   checkOut?: Prisma.StringNullableWithAggregatesFilter<"Booking"> | string | null
   location?: Prisma.StringNullableWithAggregatesFilter<"Booking"> | string | null
   price?: Prisma.FloatNullableWithAggregatesFilter<"Booking"> | number | null
-  currency?: Prisma.StringWithAggregatesFilter<"Booking"> | string
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"Booking"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"Booking"> | Date | string
   tripId?: Prisma.StringWithAggregatesFilter<"Booking"> | string
@@ -370,7 +358,6 @@ export type BookingCreateInput = {
   checkOut?: string | null
   location?: string | null
   price?: number | null
-  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   trip: Prisma.TripCreateNestedOneWithoutBookingsInput
@@ -386,7 +373,6 @@ export type BookingUncheckedCreateInput = {
   checkOut?: string | null
   location?: string | null
   price?: number | null
-  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   tripId: string
@@ -402,7 +388,6 @@ export type BookingUpdateInput = {
   checkOut?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   trip?: Prisma.TripUpdateOneRequiredWithoutBookingsNestedInput
@@ -418,7 +403,6 @@ export type BookingUncheckedUpdateInput = {
   checkOut?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -434,7 +418,6 @@ export type BookingCreateManyInput = {
   checkOut?: string | null
   location?: string | null
   price?: number | null
-  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
   tripId: string
@@ -450,7 +433,6 @@ export type BookingUpdateManyMutationInput = {
   checkOut?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -465,7 +447,6 @@ export type BookingUncheckedUpdateManyInput = {
   checkOut?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   tripId?: Prisma.StringFieldUpdateOperationsInput | string
@@ -491,7 +472,6 @@ export type BookingCountOrderByAggregateInput = {
   checkOut?: Prisma.SortOrder
   location?: Prisma.SortOrder
   price?: Prisma.SortOrder
-  currency?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
@@ -511,7 +491,6 @@ export type BookingMaxOrderByAggregateInput = {
   checkOut?: Prisma.SortOrder
   location?: Prisma.SortOrder
   price?: Prisma.SortOrder
-  currency?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
@@ -527,7 +506,6 @@ export type BookingMinOrderByAggregateInput = {
   checkOut?: Prisma.SortOrder
   location?: Prisma.SortOrder
   price?: Prisma.SortOrder
-  currency?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   tripId?: Prisma.SortOrder
@@ -597,7 +575,6 @@ export type BookingCreateWithoutTripInput = {
   checkOut?: string | null
   location?: string | null
   price?: number | null
-  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -612,7 +589,6 @@ export type BookingUncheckedCreateWithoutTripInput = {
   checkOut?: string | null
   location?: string | null
   price?: number | null
-  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -656,7 +632,6 @@ export type BookingScalarWhereInput = {
   checkOut?: Prisma.StringNullableFilter<"Booking"> | string | null
   location?: Prisma.StringNullableFilter<"Booking"> | string | null
   price?: Prisma.FloatNullableFilter<"Booking"> | number | null
-  currency?: Prisma.StringFilter<"Booking"> | string
   createdAt?: Prisma.DateTimeFilter<"Booking"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"Booking"> | Date | string
   tripId?: Prisma.StringFilter<"Booking"> | string
@@ -672,7 +647,6 @@ export type BookingCreateManyTripInput = {
   checkOut?: string | null
   location?: string | null
   price?: number | null
-  currency?: string
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -687,7 +661,6 @@ export type BookingUpdateWithoutTripInput = {
   checkOut?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -702,7 +675,6 @@ export type BookingUncheckedUpdateWithoutTripInput = {
   checkOut?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -717,7 +689,6 @@ export type BookingUncheckedUpdateManyWithoutTripInput = {
   checkOut?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   location?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   price?: Prisma.NullableFloatFieldUpdateOperationsInput | number | null
-  currency?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -734,7 +705,6 @@ export type BookingSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs 
   checkOut?: boolean
   location?: boolean
   price?: boolean
-  currency?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tripId?: boolean
@@ -751,7 +721,6 @@ export type BookingSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exten
   checkOut?: boolean
   location?: boolean
   price?: boolean
-  currency?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tripId?: boolean
@@ -768,7 +737,6 @@ export type BookingSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exten
   checkOut?: boolean
   location?: boolean
   price?: boolean
-  currency?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tripId?: boolean
@@ -785,13 +753,12 @@ export type BookingSelectScalar = {
   checkOut?: boolean
   location?: boolean
   price?: boolean
-  currency?: boolean
   createdAt?: boolean
   updatedAt?: boolean
   tripId?: boolean
 }
 
-export type BookingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "type" | "reference" | "checkIn" | "checkOut" | "location" | "price" | "currency" | "createdAt" | "updatedAt" | "tripId", ExtArgs["result"]["booking"]>
+export type BookingOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "title" | "description" | "type" | "reference" | "checkIn" | "checkOut" | "location" | "price" | "createdAt" | "updatedAt" | "tripId", ExtArgs["result"]["booking"]>
 export type BookingInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   trip?: boolean | Prisma.TripDefaultArgs<ExtArgs>
 }
@@ -817,7 +784,6 @@ export type $BookingPayload<ExtArgs extends runtime.Types.Extensions.InternalArg
     checkOut: string | null
     location: string | null
     price: number | null
-    currency: string
     createdAt: Date
     updatedAt: Date
     tripId: string
@@ -1254,7 +1220,6 @@ export interface BookingFieldRefs {
   readonly checkOut: Prisma.FieldRef<"Booking", 'String'>
   readonly location: Prisma.FieldRef<"Booking", 'String'>
   readonly price: Prisma.FieldRef<"Booking", 'Float'>
-  readonly currency: Prisma.FieldRef<"Booking", 'String'>
   readonly createdAt: Prisma.FieldRef<"Booking", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"Booking", 'DateTime'>
   readonly tripId: Prisma.FieldRef<"Booking", 'String'>

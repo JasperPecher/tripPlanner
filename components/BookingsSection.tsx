@@ -28,7 +28,6 @@ type Booking = {
   checkOut: string | null;
   location: string | null;
   price: number | null;
-  currency: string;
 };
 type Member = {
   id: string;
@@ -74,7 +73,6 @@ export function BookingsSection({
     checkOut: "",
     location: "",
     price: "",
-    currency: "EUR",
     addAsExpense: false,
     paidById: currentMember?.id || "",
   });
@@ -133,7 +131,6 @@ export function BookingsSection({
           checkOut: "",
           location: "",
           price: "",
-          currency: "EUR",
           addAsExpense: false,
           paidById: currentMember?.id || "",
         });
@@ -177,7 +174,6 @@ export function BookingsSection({
           checkOut: "",
           location: "",
           price: "",
-          currency: "EUR",
           addAsExpense: false,
           paidById: currentMember?.id || "",
         });
@@ -226,7 +222,6 @@ export function BookingsSection({
                 checkOut: "",
                 location: "",
                 price: "",
-                currency: "EUR",
                 addAsExpense: false,
                 paidById: currentMember?.id || "",
               });
@@ -356,38 +351,21 @@ export function BookingsSection({
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div>
-                  <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
-                    {t.bookings.form.price}
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    value={formData.price}
-                    onChange={(e) =>
-                      setFormData({ ...formData, price: e.target.value })
-                    }
-                    className={inputClasses}
-                    placeholder="0.00"
-                  />
-                </div>
-                <div>
-                  <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
-                    {t.bookings.form.currency}
-                  </label>
-                  <select
-                    value={formData.currency}
-                    onChange={(e) =>
-                      setFormData({ ...formData, currency: e.target.value })
-                    }
-                    className={inputClasses}
-                  >
-                    <option value="EUR">EUR</option>
-                    <option value="USD">USD</option>
-                  </select>
-                </div>
+              <div>
+                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
+                  {t.bookings.form.price}
+                </label>
+                <input
+                  type="number"
+                  step="0.01"
+                  min="0"
+                  value={formData.price}
+                  onChange={(e) =>
+                    setFormData({ ...formData, price: e.target.value })
+                  }
+                  className={inputClasses}
+                  placeholder="0.00"
+                />
               </div>
               {formData.id === "new" &&
                 members.length > 0 &&
@@ -520,7 +498,7 @@ export function BookingsSection({
                     )}
                     {booking.price && (
                       <span className="font-medium text-stone-700 dark:text-stone-300">
-                        {formatCurrency(booking.price, booking.currency)}
+                        {formatCurrency(booking.price)}
                       </span>
                     )}
                   </div>
@@ -545,7 +523,6 @@ export function BookingsSection({
                           checkOut: booking.checkOut || "",
                           location: booking.location || "",
                           price: String(booking.price) || "",
-                          currency: booking.currency,
                           addAsExpense: false,
                           paidById: currentMember?.id || "",
                         }));

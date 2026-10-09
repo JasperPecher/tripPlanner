@@ -60,7 +60,6 @@ type Expense = {
   id: string;
   description: string;
   amount: number;
-  currency: string;
   category: string;
   createdAt: string;
   date: string;
@@ -78,7 +77,6 @@ type Booking = {
   checkOut: string | null;
   location: string | null;
   price: number | null;
-  currency: string;
 };
 type Photo = {
   id: string;

@@ -34,7 +34,6 @@ export async function PATCH(
       checkOut,
       location,
       price,
-      currency,
     } = body;
 
     if (!title)
@@ -50,7 +49,6 @@ export async function PATCH(
         checkOut: checkOut || null,
         location: location || null,
         price: price ? parseFloat(price) : null,
-        currency: currency || "EUR",
       },
     });
     return NextResponse.json(booking);

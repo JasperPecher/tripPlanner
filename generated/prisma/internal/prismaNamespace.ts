@@ -1317,7 +1317,6 @@ export const ExpenseScalarFieldEnum = {
   id: 'id',
   description: 'description',
   amount: 'amount',
-  currency: 'currency',
   category: 'category',
   date: 'date',
   createdAt: 'createdAt',
@@ -1348,7 +1347,6 @@ export const BookingScalarFieldEnum = {
   checkOut: 'checkOut',
   location: 'location',
   price: 'price',
-  currency: 'currency',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   tripId: 'tripId'
