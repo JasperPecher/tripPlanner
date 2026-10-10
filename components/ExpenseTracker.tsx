@@ -972,7 +972,7 @@ export function ExpenseTracker({
                         className="flex items-center gap-1.5 text-xs font-medium text-orange-600 dark:text-orange-400 hover:underline bg-orange-50 dark:bg-orange-900/30 px-2 py-1 rounded"
                       >
                         <CreditCard className="w-3 h-3" />
-                        {t.expenseSummary.payWero} (Empfohlen)
+                        {t.expenseSummary.payWero}
                       </button>
                     )}
                     {to?.paypalLink && (
