@@ -6,12 +6,12 @@ export function generateShareCode(): string {
 
 export function formatDate(date: Date | string | null): string {
   if (!date) return "Not set";
-  return new Date(date).toLocaleDateString("de-DE", {
-    weekday: "short",
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  });
+  const d = new Date(date);
+  if (isNaN(d.getTime())) return "Not set";
+  const day = String(d.getDate()).padStart(2, "0");
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const year = d.getFullYear();
+  return `${day}.${month}.${year}`;
 }
 
 export function formatDateTime(date: Date | string | null): string {

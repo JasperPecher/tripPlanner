@@ -19,7 +19,7 @@ import {
   Search,
   Filter,
 } from "lucide-react";
-import { formatCurrency, calculateBalances, simplifyDebts } from "@/lib/utils";
+import { formatDate, formatCurrency, calculateBalances, simplifyDebts } from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 
@@ -1028,7 +1028,7 @@ export function ExpenseTracker({
                   className="text-xs text-stone-400"
                   suppressHydrationWarning
                 >
-                  {new Date(payment.createdAt).toLocaleDateString()}
+                  {formatDate(payment.createdAt)}
                 </span>
                 <button
                   onClick={() => handleDeletePayment(payment.id)}
@@ -1150,7 +1150,7 @@ export function ExpenseTracker({
                       className="text-xs text-stone-400 dark:text-stone-500 mt-1"
                       suppressHydrationWarning
                     >
-                      {new Date(expense.date).toLocaleDateString()}
+                      {formatDate(expense.date)}
                     </p>
                   </div>
                   <div className="flex items-center gap-1">
