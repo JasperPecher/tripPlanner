@@ -19,7 +19,12 @@ import {
   Search,
   Filter,
 } from "lucide-react";
-import { formatDate, formatCurrency, calculateBalances, simplifyDebts } from "@/lib/utils";
+import {
+  formatDate,
+  formatCurrency,
+  calculateBalances,
+  simplifyDebts,
+} from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
 import { PieChart, Pie, Cell, ResponsiveContainer, Legend } from "recharts";
 
@@ -87,6 +92,7 @@ export function ExpenseTracker({
   );
   const [filterPayerId, setFilterPayerId] = useState<string>("all");
   const [filterSearchQuery, setFilterSearchQuery] = useState<string>("");
+  const [payingDebtKey, setPayingDebtKey] = useState<string | null>(null);
 
   const filteredExpensesList = useMemo(() => {
     return expenses.filter((expense) => {
@@ -493,6 +499,8 @@ export function ExpenseTracker({
     to: string;
     amount: number;
   }) => {
+    const debtKey = `${debt.from}-${debt.to}`;
+    setPayingDebtKey(debtKey);
     try {
       const response = await fetch(`/api/trips/${tripId}/payments`, {
         method: "POST",
@@ -510,6 +518,8 @@ export function ExpenseTracker({
       }
     } catch (error) {
       console.error("Failed to record payment:", error);
+    } finally {
+      setPayingDebtKey(null);
     }
   };
 
@@ -945,6 +955,9 @@ export function ExpenseTracker({
             {debts.map((debt, idx) => {
               const from = members.find((m) => m.id === debt.from);
               const to = members.find((m) => m.id === debt.to);
+              const debtKey = `${debt.from}-${debt.to}`;
+              const isPayingThisDebt = payingDebtKey === debtKey;
+
               return (
                 <div
                   key={idx}
@@ -989,9 +1002,14 @@ export function ExpenseTracker({
                     )}
                     <button
                       onClick={() => handlePayDebt(debt)}
-                      className="flex items-center gap-1.5 text-xs text-green-600 dark:text-green-400 hover:underline"
+                      disabled={Boolean(payingDebtKey)}
+                      className="flex items-center gap-1.5 text-xs text-green-600 dark:text-green-400 hover:underline disabled:opacity-50 disabled:no-underline disabled:cursor-not-allowed cursor-pointer"
                     >
-                      <CheckCircle className="w-3 h-3" />
+                      {isPayingThisDebt ? (
+                        <Loader2 className="w-3 h-3 animate-spin" />
+                      ) : (
+                        <CheckCircle className="w-3 h-3" />
+                      )}
                       {t.expenseSummary.markAsPaid}
                     </button>
                   </div>
