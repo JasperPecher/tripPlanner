@@ -776,7 +776,7 @@ export function VegasSlotMachine({
           <div className="space-y-4">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <span className="text-xs sm:text-sm text-stone-500 dark:text-stone-400">
-                Choose who participates in the duty wheel:
+                {t.casino.participantsExplanation}
               </span>
               <div className="flex gap-2">
                 <button
