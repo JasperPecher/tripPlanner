@@ -5,8 +5,6 @@ import {
   Users,
   ListTodo,
   History,
-  Volume2,
-  VolumeX,
   Plus,
   Trash2,
   RotateCcw,
@@ -18,7 +16,6 @@ import {
   Dices,
 } from "lucide-react";
 import { useLocale } from "@/lib/LocaleContext";
-import { vegasAudio } from "@/lib/vegasAudio";
 
 type Member = {
   id: string;
@@ -73,9 +70,6 @@ export function VegasSlotMachine({
     "players" | "tasks" | "history"
   >("players");
 
-  // Audio state
-  const [isMuted, setIsMuted] = useState<boolean>(false);
-
   // Participating players
   const [selectedMemberIds, setSelectedMemberIds] = useState<string[]>([]);
 
@@ -112,8 +106,6 @@ export function VegasSlotMachine({
 
   // Load from database on mount
   useEffect(() => {
-    setIsMuted(vegasAudio.isMute());
-
     if (members.length > 0) {
       setSelectedMemberIds(members.map((m) => m.id));
     }
@@ -191,12 +183,6 @@ export function VegasSlotMachine({
     currentTaskIndex,
     isSpinning,
   ]);
-
-  // Toggle audio
-  const handleToggleMute = () => {
-    const next = vegasAudio.toggleMute();
-    setIsMuted(next);
-  };
 
   // Add custom duty to database
   const handleAddTask = async (e: React.FormEvent) => {
@@ -408,11 +394,6 @@ export function VegasSlotMachine({
     setWhoTransition("none");
     setTaskTransition("none");
 
-    // Audio ticking while wheels are spinning
-    const tickInterval = setInterval(() => {
-      vegasAudio.playTick(1 + Math.random() * 0.25);
-    }, 110);
-
     // Trigger smooth physical deceleration roll on next frame
     requestAnimationFrame(() => {
       requestAnimationFrame(() => {
@@ -428,7 +409,6 @@ export function VegasSlotMachine({
 
     // Reel 1 Stops at 2.1s
     setTimeout(() => {
-      vegasAudio.playReelLock(0);
       if (typeof navigator !== "undefined" && navigator.vibrate) {
         try {
           navigator.vibrate(25);
@@ -438,9 +418,6 @@ export function VegasSlotMachine({
 
     // Reel 2 Stops & Finale at 2.8s
     setTimeout(() => {
-      clearInterval(tickInterval);
-      vegasAudio.playReelLock(1);
-
       setCurrentWhoIndex(targetWhoIdx);
       setCurrentTaskIndex(targetTaskIdx);
       setIsSpinning(false);
@@ -485,8 +462,7 @@ export function VegasSlotMachine({
           console.error("Error saving spin to database:", err);
         });
 
-      // Victory Fanfare & Coin Burst!
-      vegasAudio.playFanfare();
+      // Celebration Confetti & Coin Burst!
       fireConfetti();
 
       if (typeof navigator !== "undefined" && navigator.vibrate) {
@@ -550,24 +526,11 @@ export function VegasSlotMachine({
 
         {/* Vintage Vegas Signboard Header */}
         <div className="relative mb-3 sm:mb-5 pt-2 text-center">
-          <div className="flex items-center justify-between px-2 mb-1">
+          <div className="flex items-center justify-center px-2 mb-1">
             <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-amber-400">
               <Crown className="w-4 h-4 text-amber-400 animate-bounce" />
               <span>GIG - Gambling ist Geil!</span>
             </div>
-
-            {/* Sound Toggle */}
-            <button
-              onClick={handleToggleMute}
-              className="p-1.5 sm:p-2 rounded-xl bg-stone-800/80 border border-amber-500/30 text-amber-300 hover:text-white hover:bg-stone-700 transition active:scale-95"
-              aria-label={isMuted ? "Unmute Sound" : "Mute Sound"}
-            >
-              {isMuted ? (
-                <VolumeX className="w-4 h-4 text-stone-400" />
-              ) : (
-                <Volume2 className="w-4 h-4 text-amber-400" />
-              )}
-            </button>
           </div>
 
           {/* Glowing Vegas Neon Sign */}
