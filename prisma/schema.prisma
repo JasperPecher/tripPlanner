@@ -27,6 +27,7 @@ model Trip {
   hasDateVoting  Boolean @default(true)
   hasPackingList Boolean @default(true)
   hasMap         Boolean @default(true)
+  hasCasino      Boolean @default(true)
 
   members       Member[]
   expenses      Expense[]
@@ -37,6 +38,8 @@ model Trip {
   dateVotes     DateVote[]
   packingItems  PackingItem[]
   routePoints   RoutePoint[]
+  casinoTasks   CasinoTask[]
+  casinoSpins   CasinoSpin[]
 
   @@map("trips")
 }
@@ -57,6 +60,7 @@ model Member {
   paymentsTo           Payment[]     @relation("PaymentTo")
   dateVotes            DateVote[]
   assignedPackingItems PackingItem[]
+  casinoSpins          CasinoSpin[]
 
   defaultTab String @default("overview")
 
@@ -202,4 +206,32 @@ model RoutePoint {
   updatedAt  DateTime  @updatedAt
 
   @@map("route_points")
+}
+
+model CasinoTask {
+  id        String   @id @default(cuid())
+  text      String
+  icon      String   @default("🍳")
+  tripId    String
+  trip      Trip     @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+
+  spins CasinoSpin[]
+
+  @@map("casino_tasks")
+}
+
+model CasinoSpin {
+  id        String      @id @default(cuid())
+  tripId    String
+  trip      Trip        @relation(fields: [tripId], references: [id], onDelete: Cascade)
+  memberId  String
+  member    Member      @relation(fields: [memberId], references: [id], onDelete: Cascade)
+  taskId    String?
+  task      CasinoTask? @relation(fields: [taskId], references: [id], onDelete: SetNull)
+  taskText  String
+  taskIcon  String      @default("🍳")
+  createdAt DateTime    @default(now())
+
+  @@map("casino_spins")
 }

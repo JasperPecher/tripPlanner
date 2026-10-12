@@ -25,6 +25,14 @@ export async function GET(
         routePoints: {
           orderBy: [{ date: "asc" }, { order: "asc" }],
         },
+        casinoTasks: {
+          orderBy: { createdAt: "asc" },
+        },
+        casinoSpins: {
+          include: { member: true },
+          orderBy: { createdAt: "desc" },
+          take: 50,
+        },
       },
     });
     if (!trip)
@@ -65,6 +73,15 @@ export async function GET(
         ...p,
         createdAt: p.createdAt.toISOString(),
       })),
+      casinoTasks: trip.casinoTasks.map((t) => ({
+        ...t,
+        createdAt: t.createdAt.toISOString(),
+      })),
+      casinoSpins: trip.casinoSpins.map((s) => ({
+        ...s,
+        createdAt: s.createdAt.toISOString(),
+        member: { ...s.member, joinedAt: s.member.joinedAt.toISOString() },
+      })),
     };
     return NextResponse.json(serialized);
   } catch (error) {
@@ -83,7 +100,7 @@ export async function PATCH(
   try {
     const { tripId } = await params;
     const body = await request.json();
-    const { name, description, startDate, endDate, hasExpenses, hasPhotos, hasDateVoting, hasPackingList, hasMap } = body;
+    const { name, description, startDate, endDate, hasExpenses, hasPhotos, hasDateVoting, hasPackingList, hasMap, hasCasino } = body;
     const updateData: any = {};
     if (name !== undefined) updateData.name = name;
     if (description !== undefined) updateData.description = description;
@@ -96,6 +113,7 @@ export async function PATCH(
     if (hasDateVoting !== undefined) updateData.hasDateVoting = hasDateVoting;
     if (hasPackingList !== undefined) updateData.hasPackingList = hasPackingList;
     if (hasMap !== undefined) updateData.hasMap = hasMap;
+    if (hasCasino !== undefined) updateData.hasCasino = hasCasino;
     const trip = await prisma.trip.update({
       where: { id: tripId },
       data: updateData,

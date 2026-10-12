@@ -96,3 +96,13 @@ export type PackingItem = Prisma.PackingItemModel
  * 
  */
 export type RoutePoint = Prisma.RoutePointModel
+/**
+ * Model CasinoTask
+ * 
+ */
+export type CasinoTask = Prisma.CasinoTaskModel
+/**
+ * Model CasinoSpin
+ * 
+ */
+export type CasinoSpin = Prisma.CasinoSpinModel

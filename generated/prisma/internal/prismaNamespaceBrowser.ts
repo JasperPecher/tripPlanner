@@ -61,7 +61,9 @@ export const ModelName = {
   Payment: 'Payment',
   DateVote: 'DateVote',
   PackingItem: 'PackingItem',
-  RoutePoint: 'RoutePoint'
+  RoutePoint: 'RoutePoint',
+  CasinoTask: 'CasinoTask',
+  CasinoSpin: 'CasinoSpin'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -94,7 +96,8 @@ export const TripScalarFieldEnum = {
   hasPhotos: 'hasPhotos',
   hasDateVoting: 'hasDateVoting',
   hasPackingList: 'hasPackingList',
-  hasMap: 'hasMap'
+  hasMap: 'hasMap',
+  hasCasino: 'hasCasino'
 } as const
 
 export type TripScalarFieldEnum = (typeof TripScalarFieldEnum)[keyof typeof TripScalarFieldEnum]
@@ -230,6 +233,30 @@ export const RoutePointScalarFieldEnum = {
 } as const
 
 export type RoutePointScalarFieldEnum = (typeof RoutePointScalarFieldEnum)[keyof typeof RoutePointScalarFieldEnum]
+
+
+export const CasinoTaskScalarFieldEnum = {
+  id: 'id',
+  text: 'text',
+  icon: 'icon',
+  tripId: 'tripId',
+  createdAt: 'createdAt'
+} as const
+
+export type CasinoTaskScalarFieldEnum = (typeof CasinoTaskScalarFieldEnum)[keyof typeof CasinoTaskScalarFieldEnum]
+
+
+export const CasinoSpinScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  memberId: 'memberId',
+  taskId: 'taskId',
+  taskText: 'taskText',
+  taskIcon: 'taskIcon',
+  createdAt: 'createdAt'
+} as const
+
+export type CasinoSpinScalarFieldEnum = (typeof CasinoSpinScalarFieldEnum)[keyof typeof CasinoSpinScalarFieldEnum]
 
 
 export const SortOrder = {

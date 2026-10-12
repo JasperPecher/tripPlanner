@@ -19,6 +19,7 @@ import {
   Star,
   User,
   Briefcase,
+  Dices,
 } from "lucide-react";
 import { formatDate } from "@/lib/utils";
 import { useLocale } from "@/lib/LocaleContext";
@@ -35,6 +36,7 @@ import { SettingsPage } from "./SettingsPage";
 import { UserSettings } from "./UserSettings";
 import { DateVoteCalendar } from "./DateVoteCalendar";
 import PackingListPage from "./PackingListPage";
+import { VegasSlotMachine } from "./VegasSlotMachine";
 const RouteMapPage = dynamic<RouteMapPageProps>(
   () => import("./RouteMapPage"),
   { ssr: false },
@@ -131,6 +133,15 @@ type Trip = {
   hasDateVoting: boolean;
   hasPackingList: boolean;
   hasMap: boolean;
+  hasCasino?: boolean;
+  casinoTasks?: { id: string; text: string; icon: string; createdAt: string }[];
+  casinoSpins?: {
+    id: string;
+    who: string;
+    task: string;
+    timestamp: string;
+    createdAt: string;
+  }[];
 };
 
 interface TripDashboardProps {
@@ -145,6 +156,7 @@ type Tab =
   | "calendar"
   | "packing"
   | "map"
+  | "casino"
   | "user"
   | "settings";
 
@@ -158,6 +170,20 @@ export function TripDashboard({
   useEffect(() => {
     setTrip(initialTrip);
   }, [initialTrip]);
+
+  const [hasCasino, setHasCasino] = useState<boolean>(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem(`trip_${initialTrip.id}_hasCasino`);
+      if (stored !== null) return stored === "true";
+    }
+    return initialTrip.hasCasino ?? true;
+  });
+
+  useEffect(() => {
+    if (trip.hasCasino !== undefined) {
+      setHasCasino(trip.hasCasino);
+    }
+  }, [trip.hasCasino]);
 
   const [activeTab, setActiveTab] = useState<Tab>(
     (initialMember?.defaultTab as Tab) || "overview",
@@ -289,6 +315,15 @@ export function TripDashboard({
             id: "map" as Tab,
             label: t.dashboard.tabs.map || "Map",
             icon: <Globe className="w-4 h-4" />,
+          },
+        ]
+      : []),
+    ...(hasCasino
+      ? [
+          {
+            id: "casino" as Tab,
+            label: t.dashboard.tabs.casino || "Vegas Slots",
+            icon: <Dices className="w-4 h-4 text-amber-500" />,
           },
         ]
       : []),
@@ -641,6 +676,38 @@ export function TripDashboard({
                 </div>
               </div>
 
+              {/* Vegas Slot Machine Banner */}
+              {hasCasino && (
+                <div className="relative overflow-hidden bg-gradient-to-r from-red-950 via-stone-900 to-amber-950 rounded-2xl p-4 sm:p-5 border-2 border-amber-500/70 shadow-lg text-white flex flex-col sm:flex-row items-center justify-between gap-4">
+                  <div className="flex items-center gap-3 w-full sm:w-auto">
+                    <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-400 flex items-center justify-center text-2xl shadow-inner shrink-0">
+                      🎰
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-extrabold text-sm sm:text-base text-amber-300 truncate">
+                          {t.casino?.title || "Vegas Duty Slots"}
+                        </h3>
+                        <span className="px-1.5 py-0.5 rounded text-[10px] font-black bg-red-600 text-white tracking-wider uppercase">
+                          777
+                        </span>
+                      </div>
+                      <p className="text-xs text-amber-100/80 line-clamp-1">
+                        {t.casino?.subtitle || "Spin the reels & decide who takes on the duty!"}
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    onClick={() => setActiveTab("casino")}
+                    className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 text-stone-950 font-black rounded-xl text-xs uppercase tracking-wider hover:brightness-110 active:scale-95 transition shadow-[0_0_15px_rgba(245,158,11,0.5)] shrink-0 flex items-center justify-center gap-1.5 cursor-pointer"
+                  >
+                    <Dices className="w-4 h-4" />
+                    <span>{t.casino?.spinButton || "SPIN"}</span>
+                  </button>
+                </div>
+              )}
+
               <BookingsSection
                 tripId={trip.id}
                 bookings={trip.bookings}
@@ -741,6 +808,15 @@ export function TripDashboard({
             onTripUpdated={setTrip}
           />
         )}
+        {activeTab === "casino" && (
+          <VegasSlotMachine
+            tripId={trip.id}
+            members={trip.members}
+            currentMember={currentMember}
+            initialTasks={trip.casinoTasks}
+            initialHistory={trip.casinoSpins}
+          />
+        )}
         {activeTab === "user" && currentMember && (
           <UserSettings
             tripId={trip.id}
@@ -753,7 +829,12 @@ export function TripDashboard({
           <SettingsPage
             trip={trip}
             currentMember={currentMember}
-            onTripUpdated={(updated) => setTrip({ ...trip, ...updated })}
+            onTripUpdated={(updated) => {
+              if (updated.hasCasino !== undefined) {
+                setHasCasino(updated.hasCasino);
+              }
+              setTrip({ ...trip, ...updated });
+            }}
           />
         )}
       </div>

@@ -407,7 +407,9 @@ export const ModelName = {
   Payment: 'Payment',
   DateVote: 'DateVote',
   PackingItem: 'PackingItem',
-  RoutePoint: 'RoutePoint'
+  RoutePoint: 'RoutePoint',
+  CasinoTask: 'CasinoTask',
+  CasinoSpin: 'CasinoSpin'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -423,7 +425,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "trip" | "member" | "expense" | "splitMember" | "booking" | "photo" | "storageConfig" | "payment" | "dateVote" | "packingItem" | "routePoint"
+    modelProps: "trip" | "member" | "expense" | "splitMember" | "booking" | "photo" | "storageConfig" | "payment" | "dateVote" | "packingItem" | "routePoint" | "casinoTask" | "casinoSpin"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1241,6 +1243,154 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    CasinoTask: {
+      payload: Prisma.$CasinoTaskPayload<ExtArgs>
+      fields: Prisma.CasinoTaskFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CasinoTaskFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoTaskPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CasinoTaskFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoTaskPayload>
+        }
+        findFirst: {
+          args: Prisma.CasinoTaskFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoTaskPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CasinoTaskFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoTaskPayload>
+        }
+        findMany: {
+          args: Prisma.CasinoTaskFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoTaskPayload>[]
+        }
+        create: {
+          args: Prisma.CasinoTaskCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoTaskPayload>
+        }
+        createMany: {
+          args: Prisma.CasinoTaskCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CasinoTaskCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoTaskPayload>[]
+        }
+        delete: {
+          args: Prisma.CasinoTaskDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoTaskPayload>
+        }
+        update: {
+          args: Prisma.CasinoTaskUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoTaskPayload>
+        }
+        deleteMany: {
+          args: Prisma.CasinoTaskDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CasinoTaskUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CasinoTaskUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoTaskPayload>[]
+        }
+        upsert: {
+          args: Prisma.CasinoTaskUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoTaskPayload>
+        }
+        aggregate: {
+          args: Prisma.CasinoTaskAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCasinoTask>
+        }
+        groupBy: {
+          args: Prisma.CasinoTaskGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CasinoTaskGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CasinoTaskCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CasinoTaskCountAggregateOutputType> | number
+        }
+      }
+    }
+    CasinoSpin: {
+      payload: Prisma.$CasinoSpinPayload<ExtArgs>
+      fields: Prisma.CasinoSpinFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.CasinoSpinFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoSpinPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.CasinoSpinFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoSpinPayload>
+        }
+        findFirst: {
+          args: Prisma.CasinoSpinFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoSpinPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.CasinoSpinFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoSpinPayload>
+        }
+        findMany: {
+          args: Prisma.CasinoSpinFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoSpinPayload>[]
+        }
+        create: {
+          args: Prisma.CasinoSpinCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoSpinPayload>
+        }
+        createMany: {
+          args: Prisma.CasinoSpinCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.CasinoSpinCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoSpinPayload>[]
+        }
+        delete: {
+          args: Prisma.CasinoSpinDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoSpinPayload>
+        }
+        update: {
+          args: Prisma.CasinoSpinUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoSpinPayload>
+        }
+        deleteMany: {
+          args: Prisma.CasinoSpinDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.CasinoSpinUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.CasinoSpinUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoSpinPayload>[]
+        }
+        upsert: {
+          args: Prisma.CasinoSpinUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$CasinoSpinPayload>
+        }
+        aggregate: {
+          args: Prisma.CasinoSpinAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateCasinoSpin>
+        }
+        groupBy: {
+          args: Prisma.CasinoSpinGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CasinoSpinGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.CasinoSpinCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.CasinoSpinCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -1294,7 +1444,8 @@ export const TripScalarFieldEnum = {
   hasPhotos: 'hasPhotos',
   hasDateVoting: 'hasDateVoting',
   hasPackingList: 'hasPackingList',
-  hasMap: 'hasMap'
+  hasMap: 'hasMap',
+  hasCasino: 'hasCasino'
 } as const
 
 export type TripScalarFieldEnum = (typeof TripScalarFieldEnum)[keyof typeof TripScalarFieldEnum]
@@ -1430,6 +1581,30 @@ export const RoutePointScalarFieldEnum = {
 } as const
 
 export type RoutePointScalarFieldEnum = (typeof RoutePointScalarFieldEnum)[keyof typeof RoutePointScalarFieldEnum]
+
+
+export const CasinoTaskScalarFieldEnum = {
+  id: 'id',
+  text: 'text',
+  icon: 'icon',
+  tripId: 'tripId',
+  createdAt: 'createdAt'
+} as const
+
+export type CasinoTaskScalarFieldEnum = (typeof CasinoTaskScalarFieldEnum)[keyof typeof CasinoTaskScalarFieldEnum]
+
+
+export const CasinoSpinScalarFieldEnum = {
+  id: 'id',
+  tripId: 'tripId',
+  memberId: 'memberId',
+  taskId: 'taskId',
+  taskText: 'taskText',
+  taskIcon: 'taskIcon',
+  createdAt: 'createdAt'
+} as const
+
+export type CasinoSpinScalarFieldEnum = (typeof CasinoSpinScalarFieldEnum)[keyof typeof CasinoSpinScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -1686,6 +1861,8 @@ export type GlobalOmitConfig = {
   dateVote?: Prisma.DateVoteOmit
   packingItem?: Prisma.PackingItemOmit
   routePoint?: Prisma.RoutePointOmit
+  casinoTask?: Prisma.CasinoTaskOmit
+  casinoSpin?: Prisma.CasinoSpinOmit
 }
 
 /* Types for Logging */

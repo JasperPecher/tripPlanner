@@ -35,6 +35,7 @@ type Trip = {
   hasDateVoting: boolean;
   hasPackingList: boolean;
   hasMap: boolean;
+  hasCasino?: boolean;
 };
 
 interface SettingsPageProps {
@@ -61,6 +62,12 @@ export function SettingsPage({
     hasDateVoting: trip.hasDateVoting ?? true,
     hasPackingList: trip.hasPackingList ?? true,
     hasMap: trip.hasMap ?? true,
+    hasCasino:
+      trip.hasCasino ??
+      (typeof window !== "undefined" &&
+      localStorage.getItem(`trip_${trip.id}_hasCasino`) !== null
+        ? localStorage.getItem(`trip_${trip.id}_hasCasino`) === "true"
+        : true),
   });
 
   const [storage, setStorage] = useState({
@@ -107,7 +114,13 @@ export function SettingsPage({
       });
       if (response.ok) {
         const data = await response.json();
-        onTripUpdated(data.trip);
+        if (typeof window !== "undefined") {
+          localStorage.setItem(
+            `trip_${trip.id}_hasCasino`,
+            String(tripInfo.hasCasino)
+          );
+        }
+        onTripUpdated({ ...data.trip, hasCasino: tripInfo.hasCasino });
         alert(t.settings.tripUpdated);
       }
     } catch (error) {
@@ -278,6 +291,19 @@ export function SettingsPage({
                   checked={tripInfo.hasMap}
                   onChange={(e) =>
                     setTripInfo({ ...tripInfo, hasMap: e.target.checked })
+                  }
+                  className="w-5 h-5 accent-orange-500"
+                />
+              </div>
+              <div className="flex items-center justify-between">
+                <span className="text-sm text-stone-600 dark:text-stone-400">
+                  {t.dashboard.tabs.casino || "Vegas Slots"}
+                </span>
+                <input
+                  type="checkbox"
+                  checked={tripInfo.hasCasino}
+                  onChange={(e) =>
+                    setTripInfo({ ...tripInfo, hasCasino: e.target.checked })
                   }
                   className="w-5 h-5 accent-orange-500"
                 />
