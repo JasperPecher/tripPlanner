@@ -602,7 +602,7 @@ export function VegasSlotMachine({
             style={{ height: `${REEL_ITEM_HEIGHT}px` }}
             className="relative grid grid-cols-2 gap-2 sm:gap-4 bg-neutral-950 rounded-xl overflow-hidden border-2 border-stone-800"
           >
-            {/* Cylinder 3D Depth Shadows (Top & Bottom gradients) */}
+            {/* Cylinder 3D Depth Shadows (Top & Bottom linears) */}
             <div className="absolute inset-x-0 top-0 h-12 sm:h-16 bg-linear-to-b from-black via-black/80 to-transparent pointer-events-none z-20" />
             <div className="absolute inset-x-0 bottom-0 h-12 sm:h-16 bg-linear-to-t from-black via-black/80 to-transparent pointer-events-none z-20" />
 

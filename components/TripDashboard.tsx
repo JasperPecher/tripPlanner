@@ -322,8 +322,8 @@ export function TripDashboard({
       ? [
           {
             id: "casino" as Tab,
-            label: t.dashboard.tabs.casino || "Vegas Slots",
-            icon: <Dices className="w-4 h-4 text-amber-500" />,
+            label: t.dashboard.tabs.casino || "Slots",
+            icon: <Dices className="w-4 h-4" />,
           },
         ]
       : []),
@@ -678,7 +678,7 @@ export function TripDashboard({
 
               {/* Vegas Slot Machine Banner */}
               {hasCasino && (
-                <div className="relative overflow-hidden bg-gradient-to-r from-red-950 via-stone-900 to-amber-950 rounded-2xl p-4 sm:p-5 border-2 border-amber-500/70 shadow-lg text-white flex flex-col sm:flex-row items-center justify-between gap-4">
+                <div className="relative overflow-hidden bg-linear-to-r from-red-950 via-stone-900 to-amber-950 rounded-2xl p-4 sm:p-5 border-2 border-amber-500/70 shadow-lg text-white flex flex-col sm:flex-row items-center justify-between gap-4">
                   <div className="flex items-center gap-3 w-full sm:w-auto">
                     <div className="w-12 h-12 rounded-2xl bg-amber-500/20 border border-amber-400 flex items-center justify-center text-2xl shadow-inner shrink-0">
                       🎰
@@ -693,14 +693,15 @@ export function TripDashboard({
                         </span>
                       </div>
                       <p className="text-xs text-amber-100/80 line-clamp-1">
-                        {t.casino?.subtitle || "Spin the reels & decide who takes on the duty!"}
+                        {t.casino?.subtitle ||
+                          "Spin the reels & decide who takes on the duty!"}
                       </p>
                     </div>
                   </div>
 
                   <button
                     onClick={() => setActiveTab("casino")}
-                    className="w-full sm:w-auto px-4 py-2.5 bg-gradient-to-r from-amber-500 via-yellow-400 to-amber-600 text-stone-950 font-black rounded-xl text-xs uppercase tracking-wider hover:brightness-110 active:scale-95 transition shadow-[0_0_15px_rgba(245,158,11,0.5)] shrink-0 flex items-center justify-center gap-1.5 cursor-pointer"
+                    className="w-full sm:w-auto px-4 py-2.5 bg-linear-to-r from-amber-500 via-yellow-400 to-amber-600 text-stone-950 font-black rounded-xl text-xs uppercase tracking-wider hover:brightness-110 active:scale-95 transition shadow-[0_0_15px_rgba(245,158,11,0.5)] shrink-0 flex items-center justify-center gap-1.5 cursor-pointer"
                   >
                     <Dices className="w-4 h-4" />
                     <span>{t.casino?.spinButton || "SPIN"}</span>

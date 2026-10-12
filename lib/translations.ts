@@ -58,7 +58,7 @@ export const translations = {
         settings: "Einstellungen",
         packingList: "Packliste",
         map: "Karte",
-        casino: "Vegas Slots",
+        casino: "Slots",
       },
     },
     overview: {
@@ -385,7 +385,7 @@ export const translations = {
         settings: "Settings",
         packingList: "Packing List",
         map: "Map",
-        casino: "Vegas Slots",
+        casino: "Slots",
       },
     },
     overview: {
@@ -619,7 +619,7 @@ export const translations = {
       deleteConfirm: "Are you sure?",
     },
     casino: {
-      title: "Vegas Duty Slots",
+      title: "Duty Slots",
       subtitle: "Spin the reels & decide who takes on the duty!",
       spinButton: "SPIN",
       spinning: "SPINNING...",
