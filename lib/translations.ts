@@ -635,7 +635,7 @@ export const translations = {
       selectAll: "Select All",
       deselectAll: "Deselect All",
       addTask: "Add Duty",
-      taskPlaceholder: "e.g. Morning Pancakes 🥞",
+      taskPlaceholder: "e.g. Shut up 🤫",
       deleteTask: "Delete",
       resetDefaults: "Reset Defaults",
       noParticipants: "Please select at least one player!",
