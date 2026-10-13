@@ -185,7 +185,7 @@ export type SplitMemberGroupByOutputType = {
   _max: SplitMemberMaxAggregateOutputType | null
 }
 
-export type GetSplitMemberGroupByPayload<T extends SplitMemberGroupByArgs> = Prisma.PrismaPromise<
+type GetSplitMemberGroupByPayload<T extends SplitMemberGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<SplitMemberGroupByOutputType, T['by']> &
       {
@@ -1245,11 +1245,6 @@ export type SplitMemberFindManyArgs<ExtArgs extends runtime.Types.Extensions.Int
    * Skip the first `n` SplitMembers.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of SplitMembers.
-   */
   distinct?: Prisma.SplitMemberScalarFieldEnum | Prisma.SplitMemberScalarFieldEnum[]
 }
 

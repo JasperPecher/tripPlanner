@@ -158,7 +158,7 @@ export type CasinoTaskGroupByOutputType = {
   _max: CasinoTaskMaxAggregateOutputType | null
 }
 
-export type GetCasinoTaskGroupByPayload<T extends CasinoTaskGroupByArgs> = Prisma.PrismaPromise<
+type GetCasinoTaskGroupByPayload<T extends CasinoTaskGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<CasinoTaskGroupByOutputType, T['by']> &
       {
@@ -1237,11 +1237,6 @@ export type CasinoTaskFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Skip the first `n` CasinoTasks.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of CasinoTasks.
-   */
   distinct?: Prisma.CasinoTaskScalarFieldEnum | Prisma.CasinoTaskScalarFieldEnum[]
 }
 

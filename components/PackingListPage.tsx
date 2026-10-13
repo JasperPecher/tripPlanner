@@ -161,13 +161,13 @@ export default function PackingListPage({
             value={newItemName}
             onChange={(e) => setNewItemName(e.target.value)}
             placeholder={t.packing.addItemPlaceholder}
-            className="flex-1 px-4 py-2 rounded-lg border border-stone-200 dark:border-stone-700 dark:bg-stone-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
+            className="flex-1 min-w-0 px-4 py-2 rounded-lg border border-stone-200 dark:border-stone-700 dark:bg-stone-900 dark:text-white focus:outline-none focus:ring-2 focus:ring-orange-500"
             disabled={adding}
           />
           <button
             type="submit"
             disabled={adding || !newItemName.trim()}
-            className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50 flex items-center gap-2"
+            className="px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 focus:outline-none focus:ring-2 focus:ring-orange-500 disabled:opacity-50 flex items-center gap-2 shrink-0"
           >
             {adding ? <Loader2 className="w-4 h-4 animate-spin" /> : <Plus className="w-4 h-4" />}
             {t.packing.add}

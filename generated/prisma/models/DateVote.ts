@@ -158,7 +158,7 @@ export type DateVoteGroupByOutputType = {
   _max: DateVoteMaxAggregateOutputType | null
 }
 
-export type GetDateVoteGroupByPayload<T extends DateVoteGroupByArgs> = Prisma.PrismaPromise<
+type GetDateVoteGroupByPayload<T extends DateVoteGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<DateVoteGroupByOutputType, T['by']> &
       {
@@ -1249,11 +1249,6 @@ export type DateVoteFindManyArgs<ExtArgs extends runtime.Types.Extensions.Intern
    * Skip the first `n` DateVotes.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of DateVotes.
-   */
   distinct?: Prisma.DateVoteScalarFieldEnum | Prisma.DateVoteScalarFieldEnum[]
 }
 

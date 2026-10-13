@@ -151,7 +151,7 @@ export type StorageConfigGroupByOutputType = {
   _max: StorageConfigMaxAggregateOutputType | null
 }
 
-export type GetStorageConfigGroupByPayload<T extends StorageConfigGroupByArgs> = Prisma.PrismaPromise<
+type GetStorageConfigGroupByPayload<T extends StorageConfigGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<StorageConfigGroupByOutputType, T['by']> &
       {
@@ -1040,11 +1040,6 @@ export type StorageConfigFindManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Skip the first `n` StorageConfigs.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of StorageConfigs.
-   */
   distinct?: Prisma.StorageConfigScalarFieldEnum | Prisma.StorageConfigScalarFieldEnum[]
 }
 

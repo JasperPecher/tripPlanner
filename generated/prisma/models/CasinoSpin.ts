@@ -172,7 +172,7 @@ export type CasinoSpinGroupByOutputType = {
   _max: CasinoSpinMaxAggregateOutputType | null
 }
 
-export type GetCasinoSpinGroupByPayload<T extends CasinoSpinGroupByArgs> = Prisma.PrismaPromise<
+type GetCasinoSpinGroupByPayload<T extends CasinoSpinGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<CasinoSpinGroupByOutputType, T['by']> &
       {
@@ -1456,11 +1456,6 @@ export type CasinoSpinFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Skip the first `n` CasinoSpins.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of CasinoSpins.
-   */
   distinct?: Prisma.CasinoSpinScalarFieldEnum | Prisma.CasinoSpinScalarFieldEnum[]
 }
 

@@ -235,7 +235,7 @@ export type RoutePointGroupByOutputType = {
   _max: RoutePointMaxAggregateOutputType | null
 }
 
-export type GetRoutePointGroupByPayload<T extends RoutePointGroupByArgs> = Prisma.PrismaPromise<
+type GetRoutePointGroupByPayload<T extends RoutePointGroupByArgs> = Prisma.PrismaPromise<
   Array<
     Prisma.PickEnumerable<RoutePointGroupByOutputType, T['by']> &
       {
@@ -1361,11 +1361,6 @@ export type RoutePointFindManyArgs<ExtArgs extends runtime.Types.Extensions.Inte
    * Skip the first `n` RoutePoints.
    */
   skip?: number
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/distinct Distinct Docs}
-   * 
-   * Filter by unique combinations of RoutePoints.
-   */
   distinct?: Prisma.RoutePointScalarFieldEnum | Prisma.RoutePointScalarFieldEnum[]
 }
 
