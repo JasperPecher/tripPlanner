@@ -16,6 +16,7 @@ import {
   Dices,
 } from "lucide-react";
 import { useLocale } from "@/lib/LocaleContext";
+import { getRandomSlotHeading, SLOT_HEADINGS } from "@/lib/slotHeadings";
 
 type Member = {
   id: string;
@@ -103,6 +104,15 @@ export function VegasSlotMachine({
 
   // Confetti Canvas ref
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  // Randomized Slot Heading
+  const [slotHeading, setSlotHeading] = useState<string>(
+    SLOT_HEADINGS[0] || "GIG - Gambling ist Geil!",
+  );
+
+  useEffect(() => {
+    setSlotHeading(getRandomSlotHeading());
+  }, []);
 
   // Load from database on mount
   useEffect(() => {
@@ -526,13 +536,6 @@ export function VegasSlotMachine({
 
         {/* Vintage Vegas Signboard Header */}
         <div className="relative mb-3 sm:mb-5 pt-2 text-center">
-          <div className="flex items-center justify-center px-2 mb-1">
-            <div className="flex items-center gap-1.5 text-xs font-black uppercase tracking-widest text-amber-400">
-              <Crown className="w-4 h-4 text-amber-400 animate-bounce" />
-              <span>GIG - Gambling ist Geil!</span>
-            </div>
-          </div>
-
           {/* Glowing Vegas Neon Sign */}
           <div className="inline-block relative px-5 sm:px-10 py-2 rounded-2xl bg-linear-to-r from-red-950 via-red-900 to-red-950 border-2 border-amber-400 shadow-[0_0_25px_rgba(239,68,68,0.5)]">
             <div className="text-[10px] sm:text-xs font-bold tracking-widest text-amber-300 uppercase">
