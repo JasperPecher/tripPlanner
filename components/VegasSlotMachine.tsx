@@ -951,9 +951,6 @@ export function VegasSlotMachine({
         {activeSubTab === "history" && (
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="text-xs sm:text-sm text-stone-500 dark:text-stone-400">
-                Official Vegas Ledger (Proof of past spins):
-              </span>
               {history.length > 0 && (
                 <button
                   onClick={handleClearHistory}
