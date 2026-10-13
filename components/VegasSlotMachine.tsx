@@ -882,15 +882,16 @@ export function VegasSlotMachine({
                       key={task.id}
                       className="flex items-center justify-between p-2.5 rounded-xl bg-stone-50 dark:bg-stone-800/40 border border-stone-200 dark:border-stone-800 text-sm"
                     >
-                      <div className="flex items-center gap-2">
-                        <span className="text-lg">{task.icon}</span>
-                        <span className="font-semibold text-stone-800 dark:text-stone-200">
+                      <div className="flex items-center gap-2 min-w-0 flex-1 mr-2">
+                        <span className="text-lg shrink-0">{task.icon}</span>
+                        <span className="font-semibold text-stone-800 dark:text-stone-200 truncate">
                           {task.text}
                         </span>
                       </div>
                       <button
                         onClick={() => handleDeleteTask(task.id)}
-                        className="text-stone-400 hover:text-red-500 p-1 rounded transition"
+                        className="text-stone-400 hover:text-red-500 p-1 rounded transition shrink-0"
+                        title={t.casino?.deleteTask || "Delete"}
                       >
                         <Trash2 className="w-4 h-4" />
                       </button>
@@ -899,37 +900,42 @@ export function VegasSlotMachine({
                 </div>
 
                 {/* Add New Duty Form */}
-                <form onSubmit={handleAddTask} className="flex gap-2 pt-2">
-                  <select
-                    value={newTaskIcon}
-                    onChange={(e) => setNewTaskIcon(e.target.value)}
-                    className="text-base px-2 py-2 border border-stone-300 dark:border-stone-700 rounded-xl bg-stone-50 dark:bg-stone-800"
-                  >
-                    <option value="🤑">🤑 Money</option>
-                    <option value="🍳">🍳 Cooking</option>
-                    <option value="🧼">🧼 Dishes</option>
-                    <option value="🍻">🍻 Drinks</option>
-                    <option value="🥞">🥞 Breakfast</option>
-                    <option value="🛒">🛒 Grocery</option>
-                    <option value="🚗">🚗 Driver</option>
-                    <option value="🗑️">🗑️ Trash</option>
-                    <option value="🧹">🧹 Cleaning</option>
-                    <option value="🍹">🍹 Cocktails</option>
-                    <option value="🔥">🔥 Barbecue</option>
-                    <option value="☕">☕ Coffee</option>
-                  </select>
-                  <input
-                    type="text"
-                    placeholder={t.casino?.taskPlaceholder}
-                    value={newTaskInput}
-                    onChange={(e) => setNewTaskInput(e.target.value)}
-                    className="flex-1 text-sm px-3 py-2 border border-stone-300 dark:border-stone-700 rounded-xl bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-white focus:outline-orange-500"
-                  />
+                <form
+                  onSubmit={handleAddTask}
+                  className="flex flex-col sm:flex-row gap-2 pt-2"
+                >
+                  <div className="flex gap-2 flex-1 min-w-0">
+                    <select
+                      value={newTaskIcon}
+                      onChange={(e) => setNewTaskIcon(e.target.value)}
+                      className="text-base px-2.5 py-2 border border-stone-300 dark:border-stone-700 rounded-xl bg-stone-50 dark:bg-stone-800 shrink-0 cursor-pointer"
+                    >
+                      <option value="🤑">🤑</option>
+                      <option value="🍳">🍳</option>
+                      <option value="🧼">🧼</option>
+                      <option value="🍻">🍻</option>
+                      <option value="🛒">🛒</option>
+                      <option value="🚗">🚗</option>
+                      <option value="🗑️">🗑️</option>
+                      <option value="🧹">🧹</option>
+                      <option value="🍹">🍹</option>
+                      <option value="🔥">🔥</option>
+                      <option value="☕">☕</option>
+                    </select>
+                    <input
+                      type="text"
+                      placeholder={t.casino?.taskPlaceholder}
+                      value={newTaskInput}
+                      onChange={(e) => setNewTaskInput(e.target.value)}
+                      className="flex-1 min-w-0 text-sm px-3 py-2 border border-stone-300 dark:border-stone-700 rounded-xl bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-white focus:outline-orange-500"
+                    />
+                  </div>
                   <button
                     type="submit"
-                    className="px-4 py-2 bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 font-bold rounded-xl text-sm transition hover:opacity-90 flex items-center gap-1.5 shrink-0"
+                    disabled={!newTaskInput.trim()}
+                    className="w-full sm:w-auto px-4 py-2.5 sm:py-2 bg-stone-900 dark:bg-stone-100 text-white dark:text-stone-900 font-bold rounded-xl text-sm transition hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-1.5 shrink-0"
                   >
-                    <Plus className="w-4 h-4" />
+                    <Plus className="w-4 h-4 shrink-0" />
                     <span>{t.casino?.addTask || "Add Duty"}</span>
                   </button>
                 </form>
