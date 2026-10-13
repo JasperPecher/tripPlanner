@@ -7,8 +7,12 @@ export const SLOT_HEADINGS: string[] = [
   "Alge, Alge, Alge!",
   "G steht für Gönnen!",
   "Kohle, Kohle, Kohle",
-  "Hier wird die Kuh gemolken",
   "Habicht hat zwei H!",
+  "Ich bin doch nicht blöd!",
+  "Alles auf blau!",
+  "Das Glück ist mit den Dummen",
+  "Schach->Matt",
+  "Setzen, lachen, verlieren",
 ];
 
 /**
