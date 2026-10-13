@@ -538,11 +538,11 @@ export function VegasSlotMachine({
         <div className="relative mb-3 sm:mb-5 pt-2 text-center">
           {/* Glowing Vegas Neon Sign */}
           <div className="inline-block relative px-5 sm:px-10 py-2 rounded-2xl bg-linear-to-r from-red-950 via-red-900 to-red-950 border-2 border-amber-400 shadow-[0_0_25px_rgba(239,68,68,0.5)]">
-            <div className="text-[10px] sm:text-xs font-bold tracking-widest text-amber-300 uppercase">
-              ★ WELCOME TO FABULOUS ★
-            </div>
-            <h1 className="text-xl sm:text-3xl font-black tracking-wider text-transparent bg-clip-text bg-linear-to-b from-yellow-200 via-amber-300 to-yellow-600 drop-shadow-[0_2px_8px_rgba(245,158,11,0.8)]">
-              {t.casino?.title || "VEGAS DUTY SLOTS"}
+            <h1 className="text-md sm:text-2xl items-center bg-clip-text bg-linear-to-b from-yellow-200 via-amber-300 to-yellow-600 drop-shadow-[0_2px_8px_rgba(245,158,11,0.8)]">
+              <div className="flex items-center justify-center gap-1.5 text-xs font-black uppercase tracking-widest text-amber-400">
+                <Crown className="w-4 h-4 animate-bounce shrink-0" />
+                <span>{slotHeading}</span>
+              </div>
             </h1>
             <p className="text-[10px] sm:text-xs text-amber-200/90 font-medium">
               {t.casino?.subtitle ||

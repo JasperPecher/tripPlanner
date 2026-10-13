@@ -4,8 +4,11 @@
  */
 export const SLOT_HEADINGS: string[] = [
   "GIG - Gambling ist Geil!",
-  "GIG - Gemeinsam ins Glück!",
-  "GIG - Grenzenlos Irre Gewinne!",
+  "Alge, Alge, Alge!",
+  "G steht für Gönnen!",
+  "Kohle, Kohle, Kohle",
+  "Hier wird die Kuh gemolken",
+  "Habicht hat zwei H!",
 ];
 
 /**
