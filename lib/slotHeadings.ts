@@ -13,6 +13,8 @@ export const SLOT_HEADINGS: string[] = [
   "Das Glück ist mit den Dummen",
   "Schach->Matt",
   "Setzen, lachen, verlieren",
+  "…und wir gehen rein",
+  "Tims Gamblingparadies",
 ];
 
 /**
