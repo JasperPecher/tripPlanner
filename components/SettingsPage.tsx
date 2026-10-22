@@ -195,8 +195,8 @@ export function SettingsPage({
               rows={3}
             />
           </div>
-          <div className="grid grid-cols-2 gap-4">
-            <div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <div className="w-full min-w-0">
               <label className={labelClasses}>{t.settings.startDate}</label>
               <input
                 type="date"
@@ -204,10 +204,16 @@ export function SettingsPage({
                 onChange={(e) =>
                   setTripInfo({ ...tripInfo, startDate: e.target.value })
                 }
-                className={inputClasses}
+                style={{
+                  WebkitAppearance: "none",
+                  width: "100%",
+                  maxWidth: "100%",
+                  display: "block",
+                }}
+                className={`${inputClasses} min-w-0`}
               />
             </div>
-            <div>
+            <div className="w-full min-w-0">
               <label className={labelClasses}>{t.settings.endDate}</label>
               <input
                 type="date"
@@ -215,7 +221,13 @@ export function SettingsPage({
                 onChange={(e) =>
                   setTripInfo({ ...tripInfo, endDate: e.target.value })
                 }
-                className={inputClasses}
+                style={{
+                  WebkitAppearance: "none",
+                  width: "100%",
+                  maxWidth: "100%",
+                  display: "block",
+                }}
+                className={`${inputClasses} min-w-0`}
               />
             </div>
           </div>

@@ -31,6 +31,13 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+input[type="date"],
+input[type="datetime-local"] {
+  -webkit-appearance: none;
+  max-width: 100%;
+}
+
+
 .scrollbar-hide {
   -ms-overflow-style: none;
   scrollbar-width: none;
