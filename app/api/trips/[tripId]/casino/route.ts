@@ -1,9 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/prisma";
 
-const DEFAULT_TASKS = [
-  { text: "Jaspers weltberühmten Nudelsalat zaubern", icon: "🍝" },
-];
+const DEFAULT_TASKS = [{ text: "Nudelsalat kochen", icon: "🍝" }];
 
 export async function GET(
   request: NextRequest,
