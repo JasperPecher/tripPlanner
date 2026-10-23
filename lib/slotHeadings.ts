@@ -1,6 +1,5 @@
 /**
- * Liste der Überschriften / Slogans für den Casino-Header (GIG).
- * Hier kannst du beliebig viele eigene Einträge eintragen oder anpassen:
+ * Liste der Überschriften / Slogans für den Casino-Header
  */
 export const SLOT_HEADINGS: string[] = [
   "GIG - Gambling ist Geil!",
@@ -15,6 +14,12 @@ export const SLOT_HEADINGS: string[] = [
   "Setzen, lachen, verlieren",
   "…und wir gehen rein",
   "Tims Gamblingparadies",
+  "Tim Fly ist auch dabei",
+  "Und ab geht er der Peter",
+  "Der Schornsteinfeger gewinnt!",
+  "...ich bin nicht süchtig",
+  "Die Gewinne müssen nicht versteuert werden",
+  "Wer nicht mitmacht hat schon verloren :(",
 ];
 
 /**
