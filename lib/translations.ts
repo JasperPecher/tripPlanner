@@ -249,8 +249,7 @@ export const translations = {
       title: "Dein Profil",
       yourName: "Dein Name",
       paypalLink: "PayPal.Me Link",
-      paypalLinkDesc:
-        "Füge deinen PayPal.Me Link hinzu, damit andere Mitglieder ihre Schulden direkt bezahlen können.",
+      paypalLinkDesc: "Füge deinen PayPal.Me Link hinzu,um Geld zu empfangen.",
       testPaypal: "PayPal Link testen",
       weroNumber: "WERO Handynummer",
       weroNumberDesc: "Füge deine WERO Nummer hinzu, um Geld zu empfangen",
@@ -573,8 +572,7 @@ export const translations = {
       title: "Your Profile",
       yourName: "Your Name",
       paypalLink: "PayPal.Me Link",
-      paypalLinkDesc:
-        "Add your PayPal.Me link so other members can pay their debts directly.",
+      paypalLinkDesc: "Add your PayPal.Me link to receive payments.",
       testPaypal: "Test PayPal Link",
       weroNumber: "WERO Mobile Number",
       weroNumberDesc: "Add your WERO number to receive payments",
