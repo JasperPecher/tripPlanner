@@ -1095,9 +1095,9 @@ export function ExpenseTracker({
       )}
 
       <div className="bg-white dark:bg-stone-900 rounded-xl shadow-sm border border-stone-200 dark:border-stone-800">
-        <div className="p-4 border-b border-stone-200 dark:border-stone-800 flex flex-col sm:flex-row gap-4 justify-between items-center">
-          <div className="relative w-full sm:w-auto flex-1 max-w-sm">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400" />
+        <div className="p-4 border-b border-stone-200 dark:border-stone-800 flex flex-col sm:flex-row gap-4 justify-between sm:items-center">
+          <div className="relative w-full sm:w-auto flex-1 sm:max-w-sm">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" />
             <input
               type="text"
               placeholder={t.expenses.search}
@@ -1106,12 +1106,12 @@ export function ExpenseTracker({
               className="w-full pl-9 pr-4 py-2 text-sm border border-stone-300 dark:border-stone-600 rounded-lg bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-white outline-none focus:ring-2 focus:ring-orange-500"
             />
           </div>
-          <div className="flex items-center gap-2 w-full sm:w-auto">
-            <Filter className="w-4 h-4 text-stone-400" />
+          <div className="relative w-full sm:w-auto">
+            <Filter className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-stone-400 pointer-events-none" />
             <select
               value={filterPayerId}
               onChange={(e) => setFilterPayerId(e.target.value)}
-              className="w-full sm:w-auto px-3 py-2 text-sm border border-stone-300 dark:border-stone-600 rounded-lg bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-white outline-none focus:ring-2 focus:ring-orange-500"
+              className="w-full sm:w-auto pl-9 pr-8 py-2 text-sm border border-stone-300 dark:border-stone-600 rounded-lg bg-stone-50 dark:bg-stone-800 text-stone-900 dark:text-white outline-none focus:ring-2 focus:ring-orange-500"
             >
               <option value="all">{t.expenses.allPayers}</option>
               {members.map((m) => (
