@@ -576,7 +576,9 @@ export function ExpenseTracker({
           <div className="bg-white dark:bg-stone-900 w-full h-dvh sm:h-auto sm:max-h-[90vh] sm:max-w-lg sm:rounded-xl overflow-y-auto p-4 sm:p-6 pb-[calc(2rem+env(safe-area-inset-bottom))] sm:pb-6">
             <div className="flex items-center justify-between mb-4 pt-safe sm:pt-0">
               <h3 className="text-lg font-semibold dark:text-white">
-                {editingExpenseId ? "Edit Expense" : t.expenses.form.addTitle}
+                {editingExpenseId
+                  ? t.expenses.form.editTitle
+                  : t.expenses.form.addTitle}
               </h3>
               <button
                 onClick={closeForm}

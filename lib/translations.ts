@@ -126,6 +126,7 @@ export const translations = {
       deleteConfirm: "Bist du sicher, dass du diesen Eintrag löschen möchtest?",
       form: {
         addTitle: "Ausgabe hinzufügen",
+        editTitle: "Ausgabe bearbeiten",
         description: "Beschreibung",
         date: "Datum",
         descriptionPlaceholder: "z.B. Abendessen im Restaurant",
@@ -452,6 +453,7 @@ export const translations = {
       deleteConfirm: "Are you sure you want to delete this item?",
       form: {
         addTitle: "Add Expense",
+        editTitle: "Edit Expense",
         description: "Description",
         date: "Date",
         descriptionPlaceholder: "e.g., Dinner at restaurant",
