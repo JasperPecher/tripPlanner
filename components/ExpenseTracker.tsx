@@ -213,7 +213,7 @@ export function ExpenseTracker({
         <ResponsiveContainer width="100%" height="100%">
           <PieChart
             key={pieChartFilter}
-            margin={{ top: 20, right: 45, left: 45, bottom: 40 }}
+            margin={{ top: 40, right: 45, left: 45, bottom: 40 }}
           >
             <Pie
               data={pieChartData}
