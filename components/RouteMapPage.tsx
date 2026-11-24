@@ -1,12 +1,13 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef, useCallback } from "react";
 import {
   MapContainer,
   TileLayer,
   Marker,
   Popup,
   Polyline,
+  useMap,
   useMapEvents,
 } from "react-leaflet";
 import L from "leaflet";
@@ -26,6 +27,7 @@ import {
   Train,
   Bus,
   Footprints,
+  Minimize2,
 } from "lucide-react";
 import { renderToString } from "react-dom/server";
 import { useLocale } from "@/lib/LocaleContext";
@@ -77,6 +79,10 @@ export default function RouteMapPage({
   const [editDate, setEditDate] = useState("");
   const [editTravelType, setEditTravelType] = useState<string>("");
   const [updating, setUpdating] = useState(false);
+  const [mapInstance, setMapInstance] = useState<L.Map | null>(null);
+  const [isManuallyZoomed, setIsManuallyZoomed] = useState(false);
+  const isProgrammaticRef = useRef(true);
+  const hasAutoFittedRef = useRef(false);
 
   const travelTypes = [
     { id: "Car", icon: Car, label: "Car" },
@@ -287,16 +293,6 @@ export default function RouteMapPage({
     }
   };
 
-  // Component to handle map clicks
-  function MapEvents() {
-    useMapEvents({
-      click(e) {
-        setNewPoint(e.latlng);
-      },
-    });
-    return null;
-  }
-
   const activePoints = points.filter(
     (p) => p.latitude !== null && p.longitude !== null,
   );
@@ -323,6 +319,88 @@ export default function RouteMapPage({
         ])
       : ([51.03, 13.44] as [number, number]); // Dresden
 
+  const initialBounds =
+    activePoints.length > 1
+      ? L.latLngBounds(activePoints.map((p) => [p.latitude!, p.longitude!]))
+      : undefined;
+
+  const fitToPoints = useCallback(
+    (animate: boolean = true) => {
+      if (!mapInstance || activePoints.length === 0) return;
+      isProgrammaticRef.current = true;
+      mapInstance.invalidateSize();
+      if (activePoints.length === 1) {
+        mapInstance.setView(
+          [activePoints[0].latitude!, activePoints[0].longitude!],
+          12,
+          { animate },
+        );
+      } else {
+        const bounds = L.latLngBounds(
+          activePoints.map((p) => [p.latitude!, p.longitude!]),
+        );
+        mapInstance.fitBounds(bounds, {
+          padding: [50, 50],
+          animate,
+        });
+      }
+      setIsManuallyZoomed(false);
+      setTimeout(() => {
+        isProgrammaticRef.current = false;
+      }, 500);
+    },
+    [mapInstance, activePoints],
+  );
+
+  // Controller inside MapContainer to manage auto-fit and manual zoom detection
+  function MapController() {
+    const map = useMap();
+
+    useEffect(() => {
+      setMapInstance(map);
+    }, [map]);
+
+    useEffect(() => {
+      if (!hasAutoFittedRef.current && activePoints.length > 0) {
+        hasAutoFittedRef.current = true;
+        isProgrammaticRef.current = true;
+        map.invalidateSize();
+        if (activePoints.length === 1) {
+          map.setView(
+            [activePoints[0].latitude!, activePoints[0].longitude!],
+            12,
+            { animate: false },
+          );
+        } else {
+          const bounds = L.latLngBounds(
+            activePoints.map((p) => [p.latitude!, p.longitude!]),
+          );
+          map.fitBounds(bounds, {
+            padding: [50, 50],
+            animate: false,
+          });
+        }
+        setTimeout(() => {
+          isProgrammaticRef.current = false;
+        }, 500);
+      }
+    }, [map]);
+
+    useMapEvents({
+      click(e) {
+        setNewPoint(e.latlng);
+      },
+      zoomend() {
+        if (isProgrammaticRef.current) {
+          return;
+        }
+        setIsManuallyZoomed(true);
+      },
+    });
+
+    return null;
+  }
+
   return (
     <div className="space-y-6">
       <div className="bg-white dark:bg-stone-800 rounded-xl p-6 shadow-sm border border-stone-200 dark:border-stone-700">
@@ -338,28 +416,49 @@ export default function RouteMapPage({
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
           {/* Map Area */}
-          <div className="lg:col-span-2 h-100 lg:h-[calc(100vh-20rem)] lg:min-h-125 rounded-xl overflow-hidden border border-stone-200 dark:border-stone-700">
+          <div className="relative lg:col-span-2 h-100 lg:h-[calc(100vh-20rem)] lg:min-h-125 rounded-xl overflow-hidden border border-stone-200 dark:border-stone-700">
+            {isManuallyZoomed && activePoints.length > 0 && (
+              <button
+                type="button"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  fitToPoints(true);
+                }}
+                onMouseDown={(e) => e.stopPropagation()}
+                onDoubleClick={(e) => e.stopPropagation()}
+                className="absolute top-3 right-3 z-1000 bg-white/95 dark:bg-stone-800/95 backdrop-blur-sm text-stone-700 dark:text-stone-200 hover:text-orange-600 dark:hover:text-orange-400 hover:bg-white dark:hover:bg-stone-800 border border-stone-200 dark:border-stone-700 shadow-md px-3 py-1.5 rounded-lg text-xs font-medium flex items-center gap-1.5 transition-all duration-200 cursor-pointer"
+                title={t.map.resetZoom || "Reset zoom"}
+              >
+                <Minimize2 className="w-3.5 h-3.5 text-orange-500" />
+                <span>{t.map.resetZoom || "Reset zoom"}</span>
+              </button>
+            )}
+
             <MapContainer
               center={center}
-              zoom={5}
+              zoom={activePoints.length === 1 ? 12 : 5}
+              bounds={initialBounds}
+              boundsOptions={{ padding: [50, 50] }}
               style={{ height: "100%", width: "100%" }}
             >
               <TileLayer
                 attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
               />
-              <MapEvents />
+              <MapController />
 
               {activePoints.map((point) => {
-                const mapPinHtml = renderToString(<MapPin size={14} className="text-white" />);
-                
+                const mapPinHtml = renderToString(
+                  <MapPin size={14} className="text-white" />,
+                );
+
                 return (
-                <Marker
-                  key={point.id}
-                  position={[point.latitude!, point.longitude!]}
-                  icon={L.divIcon({
-                    className: "custom-div-icon",
-                    html: `
+                  <Marker
+                    key={point.id}
+                    position={[point.latitude!, point.longitude!]}
+                    icon={L.divIcon({
+                      className: "custom-div-icon",
+                      html: `
                       <div class="flex flex-col items-center" style="transform: translate(-50%, -100%);">
                         <div class="bg-white dark:bg-stone-800 px-2 py-0.5 rounded shadow-md border border-stone-200 dark:border-stone-700 text-xs font-medium text-stone-700 dark:text-white whitespace-nowrap mb-1">
                           ${point.location}
@@ -369,36 +468,44 @@ export default function RouteMapPage({
                         </div>
                       </div>
                     `,
-                    iconSize: [0, 0],
-                    iconAnchor: [0, 0],
-                  })}
-                >
-                  <Popup>
-                    <div className="p-1">
-                      <p className="font-semibold text-stone-800">
-                        {point.location}
-                      </p>
-                      {point.date && (
-                        <p className="text-xs text-stone-500 mt-1 flex items-center gap-1" suppressHydrationWarning>
-                          <Calendar className="w-3 h-3" />
-                          {formatDate(point.date)}
+                      iconSize: [0, 0],
+                      iconAnchor: [0, 0],
+                    })}
+                  >
+                    <Popup>
+                      <div className="p-1">
+                        <p className="font-semibold text-stone-800">
+                          {point.location}
                         </p>
-                      )}
-                      {point.travelType && (
-                        <p className="text-xs text-stone-500 mt-1 flex items-center gap-1" suppressHydrationWarning>
-                          {(() => {
-                            const Icon =
-                              travelTypes.find((t) => t.id === point.travelType)
-                                ?.icon || MapPin;
-                            return <Icon className="w-3 h-3" />;
-                          })()}
-                          {point.travelType}
-                        </p>
-                      )}
-                    </div>
-                  </Popup>
-                </Marker>
-              )})}
+                        {point.date && (
+                          <p
+                            className="text-xs text-stone-500 mt-1 flex items-center gap-1"
+                            suppressHydrationWarning
+                          >
+                            <Calendar className="w-3 h-3" />
+                            {formatDate(point.date)}
+                          </p>
+                        )}
+                        {point.travelType && (
+                          <p
+                            className="text-xs text-stone-500 mt-1 flex items-center gap-1"
+                            suppressHydrationWarning
+                          >
+                            {(() => {
+                              const Icon =
+                                travelTypes.find(
+                                  (t) => t.id === point.travelType,
+                                )?.icon || MapPin;
+                              return <Icon className="w-3 h-3" />;
+                            })()}
+                            {point.travelType}
+                          </p>
+                        )}
+                      </div>
+                    </Popup>
+                  </Marker>
+                );
+              })}
 
               {polylinePositions.length > 1 && (
                 <Polyline
@@ -408,21 +515,29 @@ export default function RouteMapPage({
                   opacity={0.7}
                 />
               )}
-              
+
               {sortedActivePoints.map((point, index) => {
                 if (index === 0 || !point.travelType) return null;
                 const prevPoint = sortedActivePoints[index - 1];
-                
+
                 // Shift the position slightly based on index to avoid overlaps on same segments
                 // Using 0.35, 0.5, 0.65 of the way along the line
-                const fraction = 0.35 + (index % 3) * 0.15; 
-                const midLat = prevPoint.latitude! + (point.latitude! - prevPoint.latitude!) * fraction;
-                const midLng = prevPoint.longitude! + (point.longitude! - prevPoint.longitude!) * fraction;
-                
-                const Icon = travelTypes.find(t => t.id === point.travelType)?.icon || MapPin;
+                const fraction = 0.35 + (index % 3) * 0.15;
+                const midLat =
+                  prevPoint.latitude! +
+                  (point.latitude! - prevPoint.latitude!) * fraction;
+                const midLng =
+                  prevPoint.longitude! +
+                  (point.longitude! - prevPoint.longitude!) * fraction;
+
+                const Icon =
+                  travelTypes.find((t) => t.id === point.travelType)?.icon ||
+                  MapPin;
                 // Force inline style or use parent div to ensure currentColor works
-                const iconHtml = renderToString(<Icon size={16} strokeWidth={2.5} />);
-                
+                const iconHtml = renderToString(
+                  <Icon size={16} strokeWidth={2.5} />,
+                );
+
                 return (
                   <Marker
                     key={`mid-${point.id}`}
@@ -630,7 +745,10 @@ export default function RouteMapPage({
                             {point.location}
                           </p>
                           {point.date && (
-                            <p className="text-xs text-stone-500 dark:text-stone-400 flex items-center gap-1 mt-0.5" suppressHydrationWarning>
+                            <p
+                              className="text-xs text-stone-500 dark:text-stone-400 flex items-center gap-1 mt-0.5"
+                              suppressHydrationWarning
+                            >
                               <Calendar className="w-3 h-3" />
                               {formatDate(point.date)}
                             </p>

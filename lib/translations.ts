@@ -304,6 +304,7 @@ export const translations = {
       addStop: "Stop hinzufügen",
       locationName: "Ortsname",
       deleteConfirm: "Bist du sicher?",
+      resetZoom: "Zoom zurücksetzen",
     },
     casino: {
       title: "Tims Gambling Vergnügen",
@@ -634,6 +635,7 @@ export const translations = {
       addStop: "Add Stop Here",
       locationName: "Location name",
       deleteConfirm: "Are you sure?",
+      resetZoom: "Reset zoom",
     },
     casino: {
       title: "Duty Slots",
