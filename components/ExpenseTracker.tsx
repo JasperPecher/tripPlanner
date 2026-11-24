@@ -18,6 +18,8 @@ import {
   BadgeEuro,
   Search,
   Filter,
+  Percent,
+  RotateCcw,
 } from "lucide-react";
 import {
   formatDate,
@@ -73,6 +75,21 @@ const CHART_COLORS = [
   "#64748b",
 ];
 
+function calculateEqualPercentages(
+  memberIds: string[],
+): Record<string, number> {
+  if (memberIds.length === 0) return {};
+  const count = memberIds.length;
+  const baseShare = Math.floor(100 / count);
+  const remainder = 100 - baseShare * count;
+  const result: Record<string, number> = {};
+  memberIds.forEach((id, index) => {
+    const add = index < remainder ? 1 : 0;
+    result[id] = baseShare + add;
+  });
+  return result;
+}
+
 export function ExpenseTracker({
   tripId,
   members,
@@ -87,6 +104,16 @@ export function ExpenseTracker({
   const [showForm, setShowForm] = useState(false);
   const [editingExpenseId, setEditingExpenseId] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [percentageInputs, setPercentageInputs] = useState<
+    Record<string, string>
+  >(() => {
+    const initialMap = calculateEqualPercentages(members.map((m) => m.id));
+    const inputs: Record<string, string> = {};
+    Object.entries(initialMap).forEach(([id, val]) => {
+      inputs[id] = val.toString();
+    });
+    return inputs;
+  });
   const [pieChartFilter, setPieChartFilter] = useState<string>(
     currentMember?.id || "overall",
   );
@@ -120,13 +147,7 @@ export function ExpenseTracker({
       (acc, m) => ({ ...acc, [m.id]: "" }),
       {} as Record<string, string>,
     ),
-    customPercentages: members.reduce(
-      (acc, m) => ({
-        ...acc,
-        [m.id]: members.length ? 100 / members.length : 0,
-      }),
-      {} as Record<string, number>,
-    ),
+    customPercentages: calculateEqualPercentages(members.map((m) => m.id)),
   });
 
   const balances = useMemo(
@@ -282,35 +303,210 @@ export function ExpenseTracker({
   }, [pieChartData, pieChartFilter]);
 
   const inputClasses =
-    "w-full px-4 py-2 border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none";
+    "w-full px-4 py-2.5 text-base sm:text-sm border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-800 text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 focus:border-transparent outline-none transition-colors";
 
-  const handlePercentageChange = (memberId: string, newValue: number) => {
-    // Only consider selected members
-    const selectedMembers = members.filter((m) => formData.splits[m.id]);
-    const memberIndex = selectedMembers.findIndex((m) => m.id === memberId);
+  const applyCascadePercentages = (memberId: string, rawNewValue: number) => {
+    const selected = members.filter((m) => formData.splits[m.id]);
+    if (selected.length <= 1) {
+      if (selected.length === 1) {
+        const onlyId = selected[0].id;
+        setFormData((prev) => ({
+          ...prev,
+          customPercentages: { ...prev.customPercentages, [onlyId]: 100 },
+        }));
+        setPercentageInputs((prev) => ({ ...prev, [onlyId]: "100" }));
+      }
+      return;
+    }
+
+    const memberIndex = selected.findIndex((m) => m.id === memberId);
     if (memberIndex === -1) return;
 
     const newPercentages = { ...formData.customPercentages };
+    const newInputs = { ...percentageInputs };
 
-    let sumBefore = 0;
-    for (let i = 0; i < memberIndex; i++) {
-      sumBefore += newPercentages[selectedMembers[i].id];
+    if (memberIndex === selected.length - 1) {
+      // Last member: adjust with the member directly above it
+      const prevMember = selected[memberIndex - 1];
+      let sumBeforePrev = 0;
+      for (let i = 0; i < memberIndex - 1; i++) {
+        sumBeforePrev += newPercentages[selected[i].id] || 0;
+      }
+      const maxForLast = Math.max(0, 100 - sumBeforePrev);
+      const clampedLast = Math.max(
+        0,
+        Math.min(maxForLast, Math.round(rawNewValue)),
+      );
+      newPercentages[memberId] = clampedLast;
+      newInputs[memberId] = clampedLast.toString();
+
+      const prevVal = 100 - sumBeforePrev - clampedLast;
+      newPercentages[prevMember.id] = prevVal;
+      newInputs[prevMember.id] = prevVal.toString();
+    } else {
+      // Members below memberIndex get adapted
+      let sumBefore = 0;
+      for (let i = 0; i < memberIndex; i++) {
+        sumBefore += newPercentages[selected[i].id] || 0;
+      }
+
+      const maxForMember = Math.max(0, 100 - sumBefore);
+      const clampedVal = Math.max(
+        0,
+        Math.min(maxForMember, Math.round(rawNewValue)),
+      );
+      newPercentages[memberId] = clampedVal;
+      newInputs[memberId] = clampedVal.toString();
+
+      const remaining = 100 - sumBefore - clampedVal;
+      const lowerMembers = selected.slice(memberIndex + 1);
+      const lowerCount = lowerMembers.length;
+
+      const baseShare = Math.floor(remaining / lowerCount);
+      const remainder = remaining - baseShare * lowerCount;
+
+      lowerMembers.forEach((m, idx) => {
+        const val = baseShare + (idx < remainder ? 1 : 0);
+        newPercentages[m.id] = val;
+        newInputs[m.id] = val.toString();
+      });
     }
 
-    const clampedValue = Math.min(newValue, 100 - sumBefore);
-    newPercentages[memberId] = clampedValue;
+    setFormData((prev) => ({ ...prev, customPercentages: newPercentages }));
+    setPercentageInputs(newInputs);
+  };
 
-    const remaining = 100 - sumBefore - clampedValue;
-    const remainingMembers = selectedMembers.length - 1 - memberIndex;
+  const handlePercentageSliderChange = (
+    memberId: string,
+    rawNewValue: number,
+  ) => {
+    applyCascadePercentages(memberId, rawNewValue);
+  };
 
-    if (remainingMembers > 0) {
-      const splitPercentage = remaining / remainingMembers;
-      for (let i = memberIndex + 1; i < selectedMembers.length; i++) {
-        newPercentages[selectedMembers[i].id] = splitPercentage;
+  const handlePercentageInputChange = (
+    memberId: string,
+    valueStr: string,
+  ) => {
+    const cleanStr = valueStr.replace(/[^0-9]/g, "");
+    setPercentageInputs((prev) => ({ ...prev, [memberId]: cleanStr }));
+    if (cleanStr !== "") {
+      const parsed = parseInt(cleanStr, 10);
+      if (!isNaN(parsed)) {
+        applyCascadePercentages(memberId, parsed);
       }
     }
+  };
 
-    setFormData({ ...formData, customPercentages: newPercentages });
+  const handlePercentageInputBlur = (memberId: string) => {
+    const raw = percentageInputs[memberId];
+    const parsed = parseInt(raw, 10);
+    const fallback = formData.customPercentages[memberId] ?? 0;
+    const finalVal = isNaN(parsed) ? fallback : parsed;
+    applyCascadePercentages(memberId, finalVal);
+  };
+
+  const handleEqualize = () => {
+    const selected = members.filter((m) => formData.splits[m.id]);
+    const equalMap = calculateEqualPercentages(selected.map((m) => m.id));
+    const nextPercentages = { ...formData.customPercentages, ...equalMap };
+    const nextInputs = { ...percentageInputs };
+    Object.entries(equalMap).forEach(([id, val]) => {
+      nextInputs[id] = val.toString();
+    });
+    setPercentageInputs(nextInputs);
+    setFormData((prev) => ({ ...prev, customPercentages: nextPercentages }));
+  };
+
+  const handleTakeCustomRemainder = (memberId: string) => {
+    if (customSplitDiff <= 0.01) return;
+    const cur = parseFloat(formData.customAmounts[memberId]) || 0;
+    const nextVal = Math.round((cur + customSplitDiff) * 100) / 100;
+    setFormData({
+      ...formData,
+      customAmounts: {
+        ...formData.customAmounts,
+        [memberId]: nextVal.toFixed(2),
+      },
+    });
+  };
+
+  const handleSelectSplitType = (
+    newType: "equal" | "custom" | "percentage",
+  ) => {
+    if (newType === "percentage") {
+      const selected = members.filter((m) => formData.splits[m.id]);
+      const currentSum = selected.reduce(
+        (sum, m) => sum + (formData.customPercentages[m.id] || 0),
+        0,
+      );
+      if (currentSum !== 100) {
+        const equalMap = calculateEqualPercentages(selected.map((m) => m.id));
+        const nextPercentages = { ...formData.customPercentages, ...equalMap };
+        const nextInputs = { ...percentageInputs };
+        Object.entries(equalMap).forEach(([id, val]) => {
+          nextInputs[id] = val.toString();
+        });
+        setPercentageInputs(nextInputs);
+        setFormData({
+          ...formData,
+          splitType: newType,
+          customPercentages: nextPercentages,
+        });
+        return;
+      }
+    }
+    setFormData({ ...formData, splitType: newType });
+  };
+
+  const handleToggleMember = (memberId: string, checked: boolean) => {
+    const newSplits = { ...formData.splits, [memberId]: checked };
+    const selected = members.filter((m) => newSplits[m.id]);
+
+    if (formData.splitType === "percentage" && selected.length > 0) {
+      const equalMap = calculateEqualPercentages(selected.map((m) => m.id));
+      const nextPercentages = { ...formData.customPercentages, ...equalMap };
+      const nextInputs = { ...percentageInputs };
+      Object.entries(equalMap).forEach(([id, val]) => {
+        nextInputs[id] = val.toString();
+      });
+      setPercentageInputs(nextInputs);
+      setFormData({
+        ...formData,
+        splits: newSplits,
+        customPercentages: nextPercentages,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        splits: newSplits,
+      });
+    }
+  };
+
+  const handleSelectAllMembers = (selectAll: boolean) => {
+    const newSplits: Record<string, boolean> = {};
+    members.forEach((m) => {
+      newSplits[m.id] = selectAll;
+    });
+    if (formData.splitType === "percentage" && selectAll) {
+      const equalMap = calculateEqualPercentages(members.map((m) => m.id));
+      const nextPercentages = { ...formData.customPercentages, ...equalMap };
+      const nextInputs = { ...percentageInputs };
+      Object.entries(equalMap).forEach(([id, val]) => {
+        nextInputs[id] = val.toString();
+      });
+      setPercentageInputs(nextInputs);
+      setFormData({
+        ...formData,
+        splits: newSplits,
+        customPercentages: nextPercentages,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        splits: newSplits,
+      });
+    }
   };
 
   const openEditForm = (expense: Expense) => {
@@ -318,6 +514,33 @@ export function ExpenseTracker({
     const isEqual = expense.splits.every(
       (s) => Math.abs(s.amount - expense.amount / expense.splits.length) < 0.02,
     );
+    const rawPercentages = members.map((m) => {
+      const split = expense.splits.find((s) => s.memberId === m.id);
+      return {
+        id: m.id,
+        val: split ? Math.round((split.amount / expense.amount) * 100) : 0,
+        isSplit: !!split,
+      };
+    });
+    const splitMembers = rawPercentages.filter((r) => r.isSplit);
+    const sum = splitMembers.reduce((acc, r) => acc + r.val, 0);
+    if (splitMembers.length > 0 && sum !== 100) {
+      const largest = splitMembers.reduce(
+        (max, r) => (r.val > max.val ? r : max),
+        splitMembers[0],
+      );
+      largest.val += 100 - sum;
+    }
+    const percentagesMap: Record<string, number> = {};
+    rawPercentages.forEach((r) => {
+      percentagesMap[r.id] = r.val;
+    });
+    const inputs: Record<string, string> = {};
+    Object.entries(percentagesMap).forEach(([id, val]) => {
+      inputs[id] = val.toString();
+    });
+    setPercentageInputs(inputs);
+
     setFormData({
       description: expense.description,
       date: new Date(expense.date).toISOString().split("T")[0],
@@ -339,16 +562,7 @@ export function ExpenseTracker({
         },
         {} as Record<string, string>,
       ),
-      customPercentages: members.reduce(
-        (acc, m) => {
-          const split = expense.splits.find((s) => s.memberId === m.id);
-          return {
-            ...acc,
-            [m.id]: split ? (split.amount / expense.amount) * 100 : 0,
-          };
-        },
-        {} as Record<string, number>,
-      ),
+      customPercentages: percentagesMap,
     });
     setShowForm(true);
   };
@@ -356,6 +570,9 @@ export function ExpenseTracker({
   const closeForm = () => {
     setShowForm(false);
     setEditingExpenseId(null);
+    const initialPercentages = calculateEqualPercentages(
+      members.map((m) => m.id),
+    );
     setFormData({
       description: "",
       date: new Date().toISOString().split("T")[0],
@@ -371,14 +588,13 @@ export function ExpenseTracker({
         (acc, m) => ({ ...acc, [m.id]: "" }),
         {} as Record<string, string>,
       ),
-      customPercentages: members.reduce(
-        (acc, m) => ({
-          ...acc,
-          [m.id]: members.length ? 100 / members.length : 0,
-        }),
-        {} as Record<string, number>,
-      ),
+      customPercentages: initialPercentages,
     });
+    const inputs: Record<string, string> = {};
+    Object.entries(initialPercentages).forEach(([id, val]) => {
+      inputs[id] = val.toString();
+    });
+    setPercentageInputs(inputs);
   };
 
   const handleSubmitExpense = async (e: React.FormEvent) => {
@@ -408,7 +624,18 @@ export function ExpenseTracker({
           memberId: m.id,
           amount: Math.round(splitAmount * 100) / 100,
         }));
+        const totalCalculated = splits.reduce((sum, s) => sum + s.amount, 0);
+        const centDiff = Math.round((amount - totalCalculated) * 100) / 100;
+        if (Math.abs(centDiff) > 0.001 && splits.length > 0) {
+          splits[0].amount =
+            Math.round((splits[0].amount + centDiff) * 100) / 100;
+        }
       } else if (formData.splitType === "percentage") {
+        if (isPercentageSplitInvalid) {
+          alert(t.expenses.form.percentageMustBe100);
+          setLoading(false);
+          return;
+        }
         splits = selectedMembers.map((m) => ({
           memberId: m.id,
           amount:
@@ -418,13 +645,15 @@ export function ExpenseTracker({
         }));
 
         const totalCustom = splits.reduce((sum, s) => sum + s.amount, 0);
-        if (Math.abs(totalCustom - amount) > 0.02) {
-          // Fix rounding issues by adjusting the first member's split
-          if (splits.length > 0) {
-            splits[0].amount =
-              Math.round((splits[0].amount + (amount - totalCustom)) * 100) /
-              100;
-          }
+        const centDiff = Math.round((amount - totalCustom) * 100) / 100;
+        if (Math.abs(centDiff) > 0.001 && splits.length > 0) {
+          // Adjust cent difference on the split with largest amount
+          const largestSplit = splits.reduce(
+            (max, s) => (s.amount > max.amount ? s : max),
+            splits[0],
+          );
+          largestSplit.amount =
+            Math.round((largestSplit.amount + centDiff) * 100) / 100;
         }
       } else {
         splits = selectedMembers.map((m) => ({
@@ -541,16 +770,38 @@ export function ExpenseTracker({
     }
   };
 
+  const selectedMembers = useMemo(
+    () => members.filter((m) => formData.splits[m.id]),
+    [members, formData.splits],
+  );
+
   const parsedAmount = parseFloat(formData.amount) || 0;
-  const customTotal = members
-    .filter((m) => formData.splits[m.id])
-    .reduce(
-      (sum, m) => sum + (parseFloat(formData.customAmounts[m.id]) || 0),
-      0,
-    );
-  const customSplitDiff = parsedAmount - customTotal;
+
+  const customTotal = useMemo(
+    () =>
+      selectedMembers.reduce(
+        (sum, m) => sum + (parseFloat(formData.customAmounts[m.id]) || 0),
+        0,
+      ),
+    [selectedMembers, formData.customAmounts],
+  );
+
+  const customSplitDiff = Math.round((parsedAmount - customTotal) * 100) / 100;
   const isCustomSplitInvalid =
     formData.splitType === "custom" && Math.abs(customSplitDiff) > 0.01;
+
+  const percentageTotal = useMemo(
+    () =>
+      selectedMembers.reduce(
+        (sum, m) => sum + (formData.customPercentages[m.id] || 0),
+        0,
+      ),
+    [selectedMembers, formData.customPercentages],
+  );
+
+  const percentageDiff = 100 - percentageTotal;
+  const isPercentageSplitInvalid =
+    formData.splitType === "percentage" && percentageDiff !== 0;
 
   return (
     <div className="space-y-6">
@@ -572,304 +823,504 @@ export function ExpenseTracker({
       </div>
 
       {showForm && (
-        <div className="fixed inset-0 z-200 bg-black/50 flex flex-col sm:items-center justify-center m-0! p-0! sm:p-4!">
-          <div className="bg-white dark:bg-stone-900 w-full h-dvh sm:h-auto sm:max-h-[90vh] sm:max-w-lg sm:rounded-xl overflow-y-auto p-4 sm:p-6 pb-[calc(2rem+env(safe-area-inset-bottom))] sm:pb-6">
-            <div className="flex items-center justify-between mb-4 pt-safe sm:pt-0">
-              <h3 className="text-lg font-semibold dark:text-white">
+        <div className="fixed inset-0 z-200 bg-black/60 backdrop-blur-xs flex flex-col sm:items-center justify-end sm:justify-center p-0 sm:p-4">
+          <div className="bg-white dark:bg-stone-900 w-full h-[95dvh] sm:h-auto sm:max-h-[90vh] sm:max-w-lg rounded-t-2xl sm:rounded-2xl flex flex-col shadow-2xl overflow-hidden animate-in fade-in sm:zoom-in-95 duration-200">
+            {/* Mobile pull indicator */}
+            <div className="w-12 h-1 bg-stone-300 dark:bg-stone-700 rounded-full mx-auto mt-2.5 sm:hidden shrink-0" />
+
+            {/* Header */}
+            <div className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-stone-200 dark:border-stone-800 shrink-0">
+              <h3 className="text-lg font-semibold text-stone-900 dark:text-white">
                 {editingExpenseId
                   ? t.expenses.form.editTitle
                   : t.expenses.form.addTitle}
               </h3>
               <button
+                type="button"
                 onClick={closeForm}
-                className="text-stone-400 hover:text-stone-600 dark:hover:text-stone-200"
+                className="p-2 -mr-2 rounded-full text-stone-400 hover:text-stone-600 dark:hover:text-stone-200 hover:bg-stone-100 dark:hover:bg-stone-800 transition-colors"
               >
                 <X className="w-5 h-5" />
               </button>
             </div>
-            <form onSubmit={handleSubmitExpense} className="space-y-4 w-full">
-              <div className="flex flex-col gap-4">
-                <div className="w-full min-w-0">
-                  <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
-                    {t.expenses.form.description}
-                  </label>
-                  <input
-                    type="text"
-                    required
-                    value={formData.description}
-                    onChange={(e) =>
-                      setFormData({ ...formData, description: e.target.value })
-                    }
-                    className={inputClasses}
-                    placeholder={t.expenses.form.descriptionPlaceholder}
-                  />
-                </div>
-                <div className="w-full min-w-0">
-                  <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
-                    {t.expenses.form.date || "Datum"}
-                  </label>
-                  <input
-                    type="date"
-                    required
-                    value={formData.date}
-                    onChange={(e) => {
-                      if (e.target.value) {
-                        setFormData({ ...formData, date: e.target.value });
-                      }
-                    }}
-                    style={{
-                      WebkitAppearance: "none",
-                      width: "100%",
-                      maxWidth: "100%",
-                      display: "block",
-                    }}
-                    className={`${inputClasses} [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:appearance-none min-w-0`}
-                  />
-                </div>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="min-w-0 w-full">
-                  <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
-                    {t.expenses.form.amount}
-                  </label>
-                  <input
-                    type="number"
-                    step="0.01"
-                    min="0"
-                    required
-                    value={formData.amount}
-                    onChange={(e) =>
-                      setFormData({ ...formData, amount: e.target.value })
-                    }
-                    className={inputClasses}
-                    placeholder="0.00"
-                  />
-                </div>
-                <div className="min-w-0">
-                  <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
-                    {t.expenses.form.paidBy}
-                  </label>
-                  <select
-                    value={formData.paidById}
-                    onChange={(e) =>
-                      setFormData({ ...formData, paidById: e.target.value })
-                    }
-                    className={inputClasses}
-                  >
-                    {members.map((m) => (
-                      <option key={m.id} value={m.id}>
-                        {m.name}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="col-span-2 sm:col-span-1 min-w-0">
-                  <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
-                    {t.expenses.category}
-                  </label>
-                  <select
-                    value={formData.category}
-                    onChange={(e) =>
-                      setFormData({ ...formData, category: e.target.value })
-                    }
-                    className={inputClasses}
-                  >
-                    <option value="food">{t.expenses.categories.food}</option>
-                    <option value="transport">
-                      {t.expenses.categories.transport}
-                    </option>
-                    <option value="accommodation">
-                      {t.expenses.categories.accommodation}
-                    </option>
-                    <option value="activity">
-                      {t.expenses.categories.activity}
-                    </option>
-                    <option value="shopping">
-                      {t.expenses.categories.shopping}
-                    </option>
-                    <option value="other">{t.expenses.categories.other}</option>
-                  </select>
-                </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-2">
-                  {t.expenses.form.splitType}
-                </label>
-                <div className="flex flex-col sm:flex-row gap-2 sm:gap-4">
-                  <label className="flex items-center gap-2 cursor-pointer">
+
+            {/* Form scroll area */}
+            <form
+              onSubmit={handleSubmitExpense}
+              className="flex flex-col flex-1 min-h-0"
+            >
+              <div className="overflow-y-auto flex-1 p-4 sm:p-6 space-y-4">
+                <div className="flex flex-col gap-4">
+                  <div className="w-full min-w-0">
+                    <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
+                      {t.expenses.form.description}
+                    </label>
                     <input
-                      type="radio"
-                      name="splitType"
-                      checked={formData.splitType === "equal"}
-                      onChange={() =>
-                        setFormData({ ...formData, splitType: "equal" })
+                      type="text"
+                      required
+                      value={formData.description}
+                      onChange={(e) =>
+                        setFormData({
+                          ...formData,
+                          description: e.target.value,
+                        })
                       }
-                      className="text-orange-500 focus:ring-orange-500"
+                      className={inputClasses}
+                      placeholder={t.expenses.form.descriptionPlaceholder}
                     />
-                    <span className="text-sm dark:text-stone-300">
-                      {t.expenses.form.equalSplit}
-                    </span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
+                  </div>
+                  <div className="w-full min-w-0">
+                    <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
+                      {t.expenses.form.date || "Datum"}
+                    </label>
                     <input
-                      type="radio"
-                      name="splitType"
-                      checked={formData.splitType === "percentage"}
-                      onChange={() =>
-                        setFormData({ ...formData, splitType: "percentage" })
-                      }
-                      className="text-orange-500 focus:ring-orange-500"
+                      type="date"
+                      required
+                      value={formData.date}
+                      onChange={(e) => {
+                        if (e.target.value) {
+                          setFormData({ ...formData, date: e.target.value });
+                        }
+                      }}
+                      style={{
+                        WebkitAppearance: "none",
+                        width: "100%",
+                        maxWidth: "100%",
+                        display: "block",
+                      }}
+                      className={`${inputClasses} min-h-11 [&::-webkit-clear-button]:hidden [&::-webkit-inner-spin-button]:appearance-none min-w-0`}
                     />
-                    <span className="text-sm dark:text-stone-300">
-                      {t.expenses.form.percentageSplit || "Percentage"}
-                    </span>
-                  </label>
-                  <label className="flex items-center gap-2 cursor-pointer">
-                    <input
-                      type="radio"
-                      name="splitType"
-                      checked={formData.splitType === "custom"}
-                      onChange={() =>
-                        setFormData({ ...formData, splitType: "custom" })
-                      }
-                      className="text-orange-500 focus:ring-orange-500"
-                    />
-                    <span className="text-sm dark:text-stone-300">
-                      {t.expenses.form.customAmounts}
-                    </span>
-                  </label>
+                  </div>
                 </div>
-              </div>
-              <div>
-                <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-2">
-                  {t.expenses.form.splitBetween}
-                </label>
-                <div className="space-y-2">
-                  {members.map((member) => (
-                    <div
-                      key={member.id}
-                      className="flex items-center gap-3 py-2 px-3 bg-stone-50 dark:bg-stone-800 rounded-lg"
-                    >
+
+                <div className="grid grid-cols-2 gap-3 sm:gap-4">
+                  <div className="min-w-0 w-full">
+                    <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
+                      {t.expenses.form.amount}
+                    </label>
+                    <div className="relative">
                       <input
-                        type="checkbox"
-                        checked={formData.splits[member.id]}
-                        onChange={(e) => {
-                          const newSplits = {
-                            ...formData.splits,
-                            [member.id]: e.target.checked,
-                          };
-                          const selected = members.filter(
-                            (m) => newSplits[m.id],
-                          );
-                          const newPercentages = {
-                            ...formData.customPercentages,
-                          };
-                          if (selected.length > 0) {
-                            const pct = 100 / selected.length;
-                            selected.forEach((m) => {
-                              newPercentages[m.id] = pct;
-                            });
-                          }
-                          setFormData({
-                            ...formData,
-                            splits: newSplits,
-                            customPercentages: newPercentages,
-                          });
-                        }}
-                        className="text-orange-500 focus:ring-orange-500 rounded"
+                        type="number"
+                        step="0.01"
+                        min="0"
+                        inputMode="decimal"
+                        required
+                        value={formData.amount}
+                        onChange={(e) =>
+                          setFormData({ ...formData, amount: e.target.value })
+                        }
+                        className={`${inputClasses} pr-8 font-semibold`}
+                        placeholder="0.00"
                       />
-                      <span className="flex-1 text-sm font-medium dark:text-white">
-                        {member.name}
+                      <span className="absolute right-3 top-1/2 -translate-y-1/2 text-stone-400 font-medium">
+                        €
                       </span>
-                      {formData.splitType === "custom" &&
-                        formData.splits[member.id] && (
-                          <input
-                            type="number"
-                            step="0.01"
-                            min="0"
-                            value={formData.customAmounts[member.id]}
-                            onChange={(e) =>
-                              setFormData({
-                                ...formData,
-                                customAmounts: {
-                                  ...formData.customAmounts,
-                                  [member.id]: e.target.value,
-                                },
-                              })
-                            }
-                            className="w-24 px-2 py-1 border border-stone-300 dark:border-stone-600 rounded text-sm bg-white dark:bg-stone-700 text-stone-900 dark:text-white"
-                            placeholder="0.00"
-                          />
-                        )}
-                      {formData.splitType === "equal" &&
-                        formData.splits[member.id] &&
-                        formData.amount && (
-                          <span className="text-sm text-stone-500 dark:text-stone-400">
-                            {formatCurrency(
-                              parseFloat(formData.amount) /
-                                members.filter((m) => formData.splits[m.id])
-                                  .length,
-                            )}
-                          </span>
-                        )}
-                      {formData.splitType === "percentage" &&
-                        formData.splits[member.id] && (
-                          <div className="flex items-center gap-2">
-                            <input
-                              type="range"
-                              min="0"
-                              max="100"
-                              step="1"
-                              value={formData.customPercentages[member.id] || 0}
-                              onChange={(e) =>
-                                handlePercentageChange(
-                                  member.id,
-                                  parseFloat(e.target.value),
-                                )
-                              }
-                              className="w-24 accent-orange-500"
-                            />
-                            <span className="text-sm w-12 text-right dark:text-stone-300">
-                              {Math.round(
-                                formData.customPercentages[member.id] || 0,
-                              )}
-                              %
-                            </span>
-                          </div>
-                        )}
                     </div>
-                  ))}
+                  </div>
+                  <div className="min-w-0">
+                    <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
+                      {t.expenses.form.paidBy}
+                    </label>
+                    <select
+                      value={formData.paidById}
+                      onChange={(e) =>
+                        setFormData({ ...formData, paidById: e.target.value })
+                      }
+                      className={inputClasses}
+                    >
+                      {members.map((m) => (
+                        <option key={m.id} value={m.id}>
+                          {m.name}
+                        </option>
+                      ))}
+                    </select>
+                  </div>
+                  <div className="col-span-2 min-w-0">
+                    <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-1">
+                      {t.expenses.category}
+                    </label>
+                    <select
+                      value={formData.category}
+                      onChange={(e) =>
+                        setFormData({ ...formData, category: e.target.value })
+                      }
+                      className={inputClasses}
+                    >
+                      <option value="food">{t.expenses.categories.food}</option>
+                      <option value="transport">
+                        {t.expenses.categories.transport}
+                      </option>
+                      <option value="accommodation">
+                        {t.expenses.categories.accommodation}
+                      </option>
+                      <option value="activity">
+                        {t.expenses.categories.activity}
+                      </option>
+                      <option value="shopping">
+                        {t.expenses.categories.shopping}
+                      </option>
+                      <option value="other">
+                        {t.expenses.categories.other}
+                      </option>
+                    </select>
+                  </div>
                 </div>
-                {isCustomSplitInvalid && (
+
+                {/* Split Type Selector */}
+                <div>
+                  <label className="block text-sm font-medium text-stone-700 dark:text-stone-300 mb-2">
+                    {t.expenses.form.splitType}
+                  </label>
+                  <div className="grid grid-cols-3 p-1 bg-stone-100 dark:bg-stone-800 rounded-xl gap-1">
+                    <button
+                      type="button"
+                      onClick={() => handleSelectSplitType("equal")}
+                      className={`flex items-center justify-center gap-1.5 py-2 px-1 text-xs sm:text-sm font-medium rounded-lg transition-all ${
+                        formData.splitType === "equal"
+                          ? "bg-white dark:bg-stone-700 text-orange-600 dark:text-orange-400 shadow-xs"
+                          : "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200"
+                      }`}
+                    >
+                      <Users className="w-4 h-4 shrink-0" />
+                      <span className="truncate">
+                        {t.expenses.form.equalSplit}
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectSplitType("percentage")}
+                      className={`flex items-center justify-center gap-1.5 py-2 px-1 text-xs sm:text-sm font-medium rounded-lg transition-all ${
+                        formData.splitType === "percentage"
+                          ? "bg-white dark:bg-stone-700 text-orange-600 dark:text-orange-400 shadow-xs"
+                          : "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200"
+                      }`}
+                    >
+                      <Percent className="w-4 h-4 shrink-0" />
+                      <span className="truncate">
+                        {t.expenses.form.percentageSplit}
+                      </span>
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => handleSelectSplitType("custom")}
+                      className={`flex items-center justify-center gap-1.5 py-2 px-1 text-xs sm:text-sm font-medium rounded-lg transition-all ${
+                        formData.splitType === "custom"
+                          ? "bg-white dark:bg-stone-700 text-orange-600 dark:text-orange-400 shadow-xs"
+                          : "text-stone-600 dark:text-stone-400 hover:text-stone-900 dark:hover:text-stone-200"
+                      }`}
+                    >
+                      <BadgeEuro className="w-4 h-4 shrink-0" />
+                      <span className="truncate">
+                        {t.expenses.form.customAmounts}
+                      </span>
+                    </button>
+                  </div>
+                </div>
+
+                {/* Percentage Status Toolbar (when percentage mode is active) */}
+                {formData.splitType === "percentage" && (
+                  <div className="space-y-2 p-3 bg-stone-50 dark:bg-stone-800/80 border border-stone-200 dark:border-stone-700 rounded-xl">
+                    <div className="flex flex-wrap items-center justify-between gap-2 text-xs sm:text-sm">
+                      <div className="flex items-center gap-2">
+                        <span className="font-semibold text-stone-700 dark:text-stone-300">
+                          {t.expenses.form.totalPercentage || "Total:"}
+                        </span>
+                        <span
+                          className={`font-bold px-2 py-0.5 rounded-full text-xs ${
+                            percentageDiff === 0
+                              ? "bg-emerald-100 text-emerald-700 dark:bg-emerald-950/60 dark:text-emerald-400"
+                              : percentageDiff > 0
+                                ? "bg-amber-100 text-amber-700 dark:bg-amber-950/60 dark:text-amber-400"
+                                : "bg-rose-100 text-rose-700 dark:bg-rose-950/60 dark:text-rose-400"
+                          }`}
+                        >
+                          {percentageTotal}%{" "}
+                          {percentageDiff === 0
+                            ? "✓"
+                            : percentageDiff > 0
+                              ? `(-${percentageDiff}%)`
+                              : `(+${Math.abs(percentageDiff)}%)`}
+                        </span>
+                      </div>
+                      <div className="flex items-center gap-1.5 ml-auto">
+                        <button
+                          type="button"
+                          onClick={handleEqualize}
+                          className="px-2.5 py-1 text-xs font-medium rounded-lg border border-stone-300 dark:border-stone-600 bg-white dark:bg-stone-700 text-stone-700 dark:text-stone-300 hover:bg-stone-100 dark:hover:bg-stone-600 transition-colors flex items-center gap-1 cursor-pointer"
+                          title={
+                            t.expenses.form.splitEqually || "Split equally"
+                          }
+                        >
+                          <RotateCcw className="w-3.5 h-3.5" />
+                          <span>{t.expenses.form.splitEqually || "Equal"}</span>
+                        </button>
+                      </div>
+                    </div>
+                    {/* Progress track */}
+                    <div className="w-full bg-stone-200 dark:bg-stone-700 rounded-full h-2 overflow-hidden">
+                      <div
+                        className={`h-full transition-all duration-300 ${
+                          percentageDiff === 0
+                            ? "bg-emerald-500"
+                            : percentageDiff > 0
+                              ? "bg-amber-500"
+                              : "bg-rose-500"
+                        }`}
+                        style={{
+                          width: `${Math.min(100, Math.max(0, percentageTotal))}%`,
+                        }}
+                      />
+                    </div>
+                    {percentageDiff !== 0 && (
+                      <p
+                        className={`text-xs font-medium ${
+                          percentageDiff > 0
+                            ? "text-amber-600 dark:text-amber-400"
+                            : "text-rose-600 dark:text-rose-400"
+                        }`}
+                      >
+                        {percentageDiff > 0
+                          ? `${t.expenses.form.missingAmount || "Remaining:"} ${percentageDiff}%`
+                          : `${t.expenses.form.overAmount || "Over by:"} ${Math.abs(percentageDiff)}%`}
+                      </p>
+                    )}
+                  </div>
+                )}
+
+                {/* Custom Split Difference status */}
+                {formData.splitType === "custom" && isCustomSplitInvalid && (
                   <div
-                    className={`text-sm mt-3 font-medium ${
+                    className={`text-xs sm:text-sm p-2.5 rounded-lg font-medium ${
                       customSplitDiff > 0
-                        ? "text-amber-600 dark:text-amber-400"
-                        : "text-red-600 dark:text-red-400"
+                        ? "bg-amber-50 text-amber-700 dark:bg-amber-950/50 dark:text-amber-400 border border-amber-200 dark:border-amber-800"
+                        : "bg-rose-50 text-rose-700 dark:bg-rose-950/50 dark:text-rose-400 border border-rose-200 dark:border-rose-800"
                     }`}
                   >
                     {customSplitDiff > 0
-                      ? `${t.expenses.form.missingAmount || "Missing:"} ${formatCurrency(customSplitDiff)}`
+                      ? `${t.expenses.form.missingAmount || "Remaining:"} ${formatCurrency(customSplitDiff)}`
                       : `${t.expenses.form.overAmount || "Over by:"} ${formatCurrency(Math.abs(customSplitDiff))}`}
                   </div>
                 )}
+
+                {/* Member selection & split details */}
+                <div>
+                  <div className="flex items-center justify-between mb-2">
+                    <label className="text-sm font-medium text-stone-700 dark:text-stone-300">
+                      {t.expenses.form.splitBetween} ({selectedMembers.length}/
+                      {members.length})
+                    </label>
+                    <div className="flex items-center gap-2 text-xs">
+                      <button
+                        type="button"
+                        onClick={() => handleSelectAllMembers(true)}
+                        className="text-orange-600 dark:text-orange-400 hover:underline font-medium cursor-pointer"
+                      >
+                        {t.expenses.form.selectAll || "All"}
+                      </button>
+                      <span className="text-stone-300 dark:text-stone-600">
+                        •
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => handleSelectAllMembers(false)}
+                        className="text-stone-500 dark:text-stone-400 hover:underline cursor-pointer"
+                      >
+                        {t.expenses.form.deselectAll || "None"}
+                      </button>
+                    </div>
+                  </div>
+
+                  <div className="space-y-2.5">
+                    {members.map((member) => {
+                      const isSelected = !!formData.splits[member.id];
+                      const currentPercentage =
+                        formData.customPercentages[member.id] || 0;
+                      const memberSplitAmount =
+                        formData.splitType === "equal"
+                          ? parsedAmount / Math.max(1, selectedMembers.length)
+                          : formData.splitType === "percentage"
+                            ? (currentPercentage / 100) * parsedAmount
+                            : parseFloat(formData.customAmounts[member.id]) ||
+                              0;
+
+                      if (!isSelected) {
+                        return (
+                          <div
+                            key={member.id}
+                            onClick={() => handleToggleMember(member.id, true)}
+                            className="flex items-center gap-3 py-2 px-3 bg-stone-50/60 dark:bg-stone-800/40 rounded-xl border border-transparent hover:border-stone-200 dark:hover:border-stone-700 transition-colors opacity-50 hover:opacity-100 cursor-pointer"
+                          >
+                            <input
+                              type="checkbox"
+                              checked={false}
+                              onChange={() => {}}
+                              className="w-5 h-5 text-orange-500 rounded focus:ring-orange-500 pointer-events-none"
+                            />
+                            <div className="w-7 h-7 rounded-full bg-stone-200 dark:bg-stone-700 text-stone-500 dark:text-stone-400 flex items-center justify-center text-xs font-semibold shrink-0">
+                              {member.name.charAt(0).toUpperCase()}
+                            </div>
+                            <span className="text-sm font-medium text-stone-500 dark:text-stone-400 truncate">
+                              {member.name}
+                            </span>
+                          </div>
+                        );
+                      }
+
+                      return (
+                        <div
+                          key={member.id}
+                          className="p-3 bg-stone-50 dark:bg-stone-800 rounded-xl border border-stone-200 dark:border-stone-700 transition-all shadow-2xs"
+                        >
+                          {/* Member Row Header */}
+                          <div className="flex items-center gap-2.5">
+                            <input
+                              type="checkbox"
+                              checked={true}
+                              onChange={(e) =>
+                                handleToggleMember(member.id, e.target.checked)
+                              }
+                              className="w-5 h-5 text-orange-500 rounded focus:ring-orange-500 cursor-pointer"
+                            />
+                            <div className="w-7 h-7 rounded-full bg-orange-100 dark:bg-orange-950/60 text-orange-600 dark:text-orange-400 flex items-center justify-center text-xs font-semibold shrink-0">
+                              {member.name.charAt(0).toUpperCase()}
+                            </div>
+                            <span className="text-sm font-semibold text-stone-900 dark:text-white truncate">
+                              {member.name}
+                            </span>
+                            <span className="text-sm font-semibold text-stone-800 dark:text-stone-200 ml-auto shrink-0">
+                              {parsedAmount > 0
+                                ? formatCurrency(memberSplitAmount)
+                                : formData.splitType === "percentage"
+                                  ? `${currentPercentage}%`
+                                  : "0,00 €"}
+                            </span>
+                          </div>
+
+                          {/* Controls for Percentage Split */}
+                          {formData.splitType === "percentage" && (
+                            <div className="flex items-center gap-2 mt-2.5 pt-2 border-t border-stone-200/60 dark:border-stone-700/60">
+                              <input
+                                type="range"
+                                min="0"
+                                max="100"
+                                step="1"
+                                value={currentPercentage}
+                                onChange={(e) =>
+                                  handlePercentageSliderChange(
+                                    member.id,
+                                    parseFloat(e.target.value),
+                                  )
+                                }
+                                className="flex-1 h-2.5 bg-stone-200 dark:bg-stone-700 rounded-lg accent-orange-500 cursor-pointer touch-none"
+                                aria-label={`${member.name} percentage`}
+                              />
+                              <div className="flex items-center gap-1 shrink-0">
+                                <input
+                                  type="text"
+                                  inputMode="numeric"
+                                  pattern="[0-9]*"
+                                  value={
+                                    percentageInputs[member.id] ??
+                                    currentPercentage.toString()
+                                  }
+                                  onChange={(e) =>
+                                    handlePercentageInputChange(
+                                      member.id,
+                                      e.target.value,
+                                    )
+                                  }
+                                  onBlur={() =>
+                                    handlePercentageInputBlur(member.id)
+                                  }
+                                  className="w-16 sm:w-20 px-2 py-1 text-right text-base sm:text-sm font-semibold border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-700 text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 outline-none"
+                                />
+                                <span className="text-xs sm:text-sm font-medium text-stone-500 dark:text-stone-400">
+                                  %
+                                </span>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* Controls for Custom Split */}
+                          {formData.splitType === "custom" && (
+                            <div className="flex items-center gap-2 mt-2.5 pt-2 border-t border-stone-200/60 dark:border-stone-700/60">
+                              <div className="flex-1" />
+                              <div className="flex items-center gap-1.5 shrink-0">
+                                <input
+                                  type="number"
+                                  step="0.01"
+                                  min="0"
+                                  inputMode="decimal"
+                                  value={
+                                    formData.customAmounts[member.id] || ""
+                                  }
+                                  onChange={(e) =>
+                                    setFormData({
+                                      ...formData,
+                                      customAmounts: {
+                                        ...formData.customAmounts,
+                                        [member.id]: e.target.value,
+                                      },
+                                    })
+                                  }
+                                  placeholder="0.00"
+                                  className="w-24 px-2 py-1 text-right text-base sm:text-sm font-semibold border border-stone-300 dark:border-stone-600 rounded-lg bg-white dark:bg-stone-700 text-stone-900 dark:text-white focus:ring-2 focus:ring-orange-500 outline-none"
+                                />
+                                <span className="text-xs sm:text-sm font-medium text-stone-500 dark:text-stone-400">
+                                  €
+                                </span>
+                              </div>
+                              {customSplitDiff > 0.01 && (
+                                <button
+                                  type="button"
+                                  onClick={() =>
+                                    handleTakeCustomRemainder(member.id)
+                                  }
+                                  className="text-xs px-2 py-1 rounded-md bg-orange-100 hover:bg-orange-200 dark:bg-orange-950/80 dark:hover:bg-orange-900 text-orange-700 dark:text-orange-300 font-medium shrink-0 transition-colors cursor-pointer"
+                                  title={
+                                    t.expenses.form.takeRemaining ||
+                                    "Take remainder"
+                                  }
+                                >
+                                  +{formatCurrency(customSplitDiff)}
+                                </button>
+                              )}
+                            </div>
+                          )}
+                        </div>
+                      );
+                    })}
+                  </div>
+                </div>
               </div>
-              <button
-                type="submit"
-                disabled={loading || isCustomSplitInvalid || !formData.date}
-                className="w-full bg-orange-500 text-white py-2.5 px-4 rounded-lg font-medium hover:bg-orange-600 disabled:opacity-50 flex items-center justify-center gap-2"
-              >
-                {loading ? (
-                  <>
-                    <Loader2 className="w-5 h-5 animate-spin" />
-                    {t.common.loading}
-                  </>
-                ) : editingExpenseId ? (
-                  "Save Changes"
-                ) : (
-                  t.expenses.form.addButton
-                )}
-              </button>
+
+              {/* Sticky Modal Footer with Submit Button */}
+              <div className="sticky bottom-0 bg-white/95 dark:bg-stone-900/95 backdrop-blur-xs px-4 sm:px-6 py-3 sm:py-4 border-t border-stone-200 dark:border-stone-800 shrink-0 pb-[calc(1rem+env(safe-area-inset-bottom))]">
+                <button
+                  type="submit"
+                  disabled={
+                    loading ||
+                    isCustomSplitInvalid ||
+                    isPercentageSplitInvalid ||
+                    !formData.date ||
+                    !formData.description.trim() ||
+                    parsedAmount <= 0 ||
+                    selectedMembers.length === 0
+                  }
+                  className="w-full bg-orange-500 text-white py-3 px-4 rounded-xl font-medium hover:bg-orange-600 disabled:opacity-50 flex items-center justify-center gap-2 shadow-sm transition-colors cursor-pointer disabled:cursor-not-allowed"
+                >
+                  {loading ? (
+                    <>
+                      <Loader2 className="w-5 h-5 animate-spin" />
+                      {t.common.loading}
+                    </>
+                  ) : editingExpenseId ? (
+                    "Save Changes"
+                  ) : (
+                    t.expenses.form.addButton
+                  )}
+                </button>
+              </div>
             </form>
           </div>
         </div>
