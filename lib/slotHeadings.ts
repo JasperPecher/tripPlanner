@@ -28,6 +28,8 @@ export const SLOT_HEADINGS: string[] = [
   "Auszahlung in Rupien leider nicht möglich",
   "Am Schluss gewinnt niemand",
   "Tim hat einen geheimen Cheatcode",
+  "Illegal, aber genial!",
+  "Ein Löwe gewinnt immer",
 ];
 
 /**
