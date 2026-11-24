@@ -20,6 +20,14 @@ export const SLOT_HEADINGS: string[] = [
   "...ich bin nicht süchtig",
   "Die Gewinne müssen nicht versteuert werden",
   "Wer nicht mitmacht hat schon verloren :(",
+  "All in!",
+  "Wie hoch ist nochmal mein Dispo?",
+  "Hier könnte Ihre Werbung stehen",
+  "Vegas für Arme",
+  "Gönn doch mal, ey",
+  "Auszahlung in Rupien leider nicht möglich",
+  "Am Schluss gewinnt niemand",
+  "Tim hat einen geheimen Cheatcode",
 ];
 
 /**
