@@ -8,7 +8,7 @@ export const SLOT_HEADINGS: string[] = [
   "Kohle, Kohle, Kohle",
   "Habicht hat zwei H!",
   "Ich bin doch nicht blöd!",
-  "Alles auf blau!",
+  "Alles auf rot!",
   "Das Glück ist mit den Dummen",
   "Schach->Matt",
   "Setzen, lachen, verlieren",
@@ -30,6 +30,12 @@ export const SLOT_HEADINGS: string[] = [
   "Tim hat einen geheimen Cheatcode",
   "Illegal, aber genial!",
   "Ein Löwe gewinnt immer",
+  "Drück die Leiter hoch",
+  "Nichts für Weicheier",
+  "Freude pur!",
+  "Mach hinne!",
+  "Das ist ein Safecall",
+  "Spaß für einen ganzen Abend",
 ];
 
 /**
