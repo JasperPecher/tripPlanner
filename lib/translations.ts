@@ -308,7 +308,6 @@ export const translations = {
     },
     casino: {
       title: "Tims Gambling Vergnügen",
-      subtitle: "Dreh an den Slots & bestimme, wer die Aufgabe übernimmt!",
       spinButton: "SPIN",
       spinning: "DREHT...",
       participantsTab: "Teilnehmer",
@@ -639,7 +638,6 @@ export const translations = {
     },
     casino: {
       title: "Duty Slots",
-      subtitle: "Spin the reels & decide who takes on the duty!",
       spinButton: "SPIN",
       spinning: "SPINNING...",
       participantsTab: "Players",

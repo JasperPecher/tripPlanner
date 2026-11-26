@@ -544,10 +544,6 @@ export function VegasSlotMachine({
                 <span>{slotHeading}</span>
               </div>
             </h1>
-            <p className="text-[10px] sm:text-xs text-amber-200/90 font-medium">
-              {t.casino?.subtitle ||
-                "Spin the reels & decide who takes on the duty!"}
-            </p>
           </div>
         </div>
 
