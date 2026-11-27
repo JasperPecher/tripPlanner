@@ -10,7 +10,7 @@ export const SLOT_HEADINGS: string[] = [
   "Ich bin doch nicht blöd!",
   "Alles auf rot!",
   "Das Glück ist mit den Dummen",
-  "Schach->Matt",
+  "Schach -> Matt",
   "Setzen, lachen, verlieren",
   "…und wir gehen rein",
   "Tims Gamblingparadies",
@@ -36,6 +36,11 @@ export const SLOT_HEADINGS: string[] = [
   "Mach hinne!",
   "Das ist ein Safecall",
   "Spaß für einen ganzen Abend",
+  "Trust me bro <3",
+  "Hier kann man seine Organe verwetten",
+  "Höher, schneller, weiter",
+  "Cry for me baby",
+  "Klassische Loose-Loose-Situation",
 ];
 
 /**
