@@ -42,6 +42,11 @@ export const SLOT_HEADINGS: string[] = [
   "Cry for me baby",
   "Klassische Loose-Loose-Situation",
   "Die nächste Freuzeit kommt bestimmt",
+  "Heute mal den Dispo statt die Jacke überziehen",
+  "Tim Fliege macht die Biege",
+  "Gambling war meine erste Liebe",
+  "Einzahlung nur in Rupien gestattet",
+  "Viel Glück und viel Segen auf all deinen Wegen",
 ];
 
 /**
