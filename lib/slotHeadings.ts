@@ -41,6 +41,7 @@ export const SLOT_HEADINGS: string[] = [
   "Höher, schneller, weiter",
   "Cry for me baby",
   "Klassische Loose-Loose-Situation",
+  "Die nächste Freuzeit kommt bestimmt",
 ];
 
 /**
